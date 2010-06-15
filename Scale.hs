@@ -6,7 +6,10 @@ import Maybe
 import Pitch
 
 type Intervals = [Int]
-data Scale = Scale Pitch Intervals deriving (Eq, Show)
+data Scale = Scale Pitch Intervals deriving (Eq)
+
+instance Show Scale where
+	show (Scale p i) = concat (map ((++ " ") . show . addPitch p) i)
 
 scalePitch :: Scale -> Int -> Pitch
 scalePitch (Scale p i) pos =

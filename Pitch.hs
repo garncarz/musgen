@@ -5,7 +5,10 @@ import Maybe
 
 type Tone = String
 type Octave = Int
-data Pitch = Pitch Tone Octave deriving (Eq, Show)
+data Pitch = Pitch Tone Octave deriving (Eq)
+
+instance Show Pitch where
+	show (Pitch t o) = t ++ (show o)
 
 instance Ord Pitch where
 	compare (Pitch t1 o1) (Pitch t2 o2)

@@ -10,33 +10,40 @@ data Pitch = Pitch Tone Octave deriving (Eq, Show)
 instance Ord Pitch where
 	compare (Pitch t1 o1) (Pitch t2 o2)
 		| o1 < o2 = LT
-		| o1 == o2 && p1 < p2 = LT
-		| o1 == o2 && p1 == p2 = EQ
+		| o1 == o2 && pos1 < pos2 = LT
+		| o1 == o2 && pos1 == pos2 = EQ
 		| otherwise = GT
 		where
-			p1 = fromJust (elemIndex t1 tones)
-			p2 = fromJust (elemIndex t2 tones)
+			pos1 = fromJust (elemIndex t1 tones)
+			pos2 = fromJust (elemIndex t2 tones)
 
 instance Enum Pitch where
 	succ (Pitch t1 o1) = Pitch t2 o2 where
-		p1 = fromJust (elemIndex t1 tones)
-		p2
-			| p1 - (length tones) == -1 = 0
-			| otherwise = p1 + 1
-		t2 = tones !! p2
+		pos1 = fromJust (elemIndex t1 tones)
+		pos2
+			| pos1 - (length tones) == -1 = 0
+			| otherwise = pos1 + 1
+		t2 = tones !! pos2
 		o2
-			| p2 == 0 = o1 + 1
+			| pos2 == 0 = o1 + 1
 			| otherwise = o1
 	pred (Pitch t1 o1) = Pitch t2 o2 where
-		p1 = fromJust (elemIndex t1 tones)
-		p2
-			| p1 == 0 = (length tones) - 1
-			| otherwise = p1 - 1
-		t2 = tones !! p2
+		pos1 = fromJust (elemIndex t1 tones)
+		pos2
+			| pos1 == 0 = (length tones) - 1
+			| otherwise = pos1 - 1
+		t2 = tones !! pos2
 		o2
-			| p1 == 0 = o1 - 1
+			| pos1 == 0 = o1 - 1
 			| otherwise = o1
 
+addPitch :: Pitch -> Int -> Pitch
+addPitch p 0 = p
+addPitch p add
+	| add > 0 = addPitch (succ p) (add - 1)
+	| add < 0 = addPitch (pred p) (add + 1)
+
+
 tones :: [Tone]
-tones = ["c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "b"]
+tones = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"]
 

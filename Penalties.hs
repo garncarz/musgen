@@ -2,36 +2,38 @@ module Penalties where
 
 import List
 import Types
+import Relations
 
-penalty :: Chord -> Flow -> Float
-penalty ch past = penaltiesSum ch past penalties
+type PenalType = Chord -> Flow -> MusicState -> Float
 
-penaltiesSum :: Chord -> Flow -> [Chord -> Flow -> Float] -> Float
-penaltiesSum _ _ [] = 0
-penaltiesSum ch past (p:ps) = p ch past + penaltiesSum ch past ps
+penalty :: Chord -> Flow -> MusicState -> Float
+penalty ch past st = penaltiesSum ch past st penalties
 
-penalties :: [Chord -> Flow -> Float]
-penalties = [penaltyJumps]
+penaltiesSum :: Chord -> Flow -> MusicState -> [PenalType] -> Float
+penaltiesSum _ _ _ [] = 0
+penaltiesSum ch past st (p:ps) = p ch past st + penaltiesSum ch past st ps
 
-penaltyDist :: Chord -> Flow -> Float
-penaltyDist (tones, dur) _ = minimum [
-	abs (realToFrac (sum tones) / genericLength tones - 60) / 10,
+penalties :: [PenalType]
+penalties = [penaltyDist, penaltySlow, penaltyJumps,
+	penaltyNotScale, penaltyNotTriad]
+
+penaltyDist (tones, dur) _ (base, _) = minimum [
+	abs (realToFrac (sum tones) / genericLength tones - fromIntegral base) / 10,
 	1]
 
-penaltySlow :: Chord -> Flow -> Float
-penaltySlow (_, dur) _
+penaltySlow (_, dur) _ _
 	| dur > 5 = 1
 	| otherwise = 0
 
+penaltyJumps (tones, _) ((ptones, _):_) _ =
+	(sum $ map (\t -> if toneJump t ptones then 0 else 1) tones)
+		/ genericLength tones
+penaltyJumps _ [] _ = 0
 
-oneJump :: [Tone] -> Tone -> Int
-oneJump pt t = fromEnum (not isNear) where
-	tUp = t + 2
-	tDown = t - 2
-	isNear = elem tUp pt || elem tDown pt
+penaltyNotScale (tones, _) _ (base, intervals) =
+	sum $ map (\t -> if toneFromScale t base intervals then 0 else 1) tones
 
-penaltyJumps :: Chord -> Flow -> Float
-penaltyJumps (tones, _) ((ptones, _):_)
-	= fromIntegral (sum (map (oneJump ptones) tones)) / genericLength tones
-penaltyJumps _ [] = 0
+penaltyNotTriad (tones, _) _ (_, intervals) =
+	if null tones || chordTriad tones intervals then 0 else 1
+
 

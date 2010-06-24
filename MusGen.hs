@@ -4,6 +4,7 @@ import Random
 
 import Midi
 import Penalties
+import Relations
 import Types
 
 
@@ -12,14 +13,12 @@ cMaj = ([60, 64, 67], 16)
 
 
 main :: IO()
-main = do {
-	newStdGen;
-	gen <- getStdGen;
+main = do
+	gen <- newStdGen
 	let chordsSrc = rndChords gen
-	; let chords = createFlow chordsSrc []
-	; exportFlow chords;
+	let chords = createFlow chordsSrc [] (60, minor)
+	exportFlow chords
 	print chords
-}
 
 
 rndChords :: RandomGen g => g -> Flow
@@ -32,12 +31,12 @@ rndChords g =
 	in (tones, dur) : rndChords g5
 
 
-createFlow :: Flow -> Flow -> Flow
-createFlow (ch:rest) past
-	| penalty ch past <= 0.5 && isEnd ch past = [ch]
-	| penalty ch past <= 0.5 = ch : createFlow rest (ch:past)
-	| otherwise = createFlow rest past
+createFlow :: Flow -> Flow -> MusicState -> Flow
+createFlow (ch:rest) past st
+	| penalty ch past st <= 0.5 && isEnd ch past st = [ch]
+	| penalty ch past st <= 0.5 = ch : createFlow rest (ch:past) st
+	| otherwise = createFlow rest past st
 
-isEnd :: Chord -> Flow -> Bool
-isEnd (tones, dur) past = length past > 20
+isEnd :: Chord -> Flow -> MusicState -> Bool
+isEnd (tones, dur) past st = length past > 20
 

@@ -3,7 +3,7 @@ module MusGen where
 import Random
 
 import Midi
-import Penalties
+import Chances
 import Relations
 import Types
 
@@ -33,8 +33,8 @@ rndChords g =
 
 createFlow :: Flow -> Flow -> MusicState -> Flow
 createFlow (ch:rest) past st
-	| penalty ch past st <= 0.5 && isEnd ch past st = [ch]
-	| penalty ch past st <= 0.5 = ch : createFlow rest (ch:past) st
+	| chance ch past st > 0.5 && isEnd ch past st = [ch]
+	| chance ch past st > 0.5 = ch : createFlow rest (ch:past) st
 	| otherwise = createFlow rest past st
 
 isEnd :: Chord -> Flow -> MusicState -> Bool

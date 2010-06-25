@@ -7,7 +7,7 @@ toneMidi :: Tone -> Volume -> MidiEvent
 toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})
 
 chordMidi :: Chord -> [MidiEvent]
-chordMidi ([], dur) = [(dur, Marker "time")]
+chordMidi ([], dur) = [(dur, Marker "")]
 chordMidi ((t:ts), dur) = [(toneMidi t 80)] ++ (chordMidi (ts, dur))
 	++ [(toneMidi t 0)]
 

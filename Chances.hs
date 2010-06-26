@@ -6,6 +6,8 @@ import Relations
 
 type ChanceType = Chord -> Flow -> MusicState -> Float
 
+floatMin = 0.01 :: Float
+
 chance :: ChanceType
 chance ch past st = foldl (*) 1
 	(map (\(chance, factor) -> (** factor) $ chance ch past st) chances)
@@ -18,10 +20,11 @@ chances = [
 	(chanceThick, 0.1),
 	(chanceFast, 0.5),
 	(chanceJumps, 0),
-	(chanceInScale, 0.9),
-	(chanceTriad, 0.5),
+	(chanceInScale, 1),
+	(chanceTriad, 0.6),
 	(chanceNotEmpty, 0.9),
-	(chance4Tones, 0.8)
+	(chance4Tones, 0.8),
+	(chanceSomeRhythm, 1)
 	]
 
 chanceThick (tones, dur) _ (base, _) = recip $ sum $
@@ -37,7 +40,7 @@ chanceInScale (tones, _) _ (base, intervals) = recip $ sum $
 	1 : map (\t -> if isToneFromScale t base intervals then 0 else 1) tones
 
 chanceTriad (tones, _) _ (base, intervals) =
-	if null tones || isFullTriad tones base intervals then 1 else 0.5
+	if null tones || isFullTriad tones base intervals then 1 else floatMin
 
 chanceTonicStart (tones, _) [] (base, intervals) =
 	if isTonic tones base intervals then 1 else 0
@@ -57,5 +60,12 @@ chanceNotEmpty ([], _) _ _ = 0.1
 chanceNotEmpty _ _ _ = 1
 
 chance4Tones (tones, _) _ _ =
-	if length tones == 4 then 1 else 0.5
+	if length tones == 4 then 1 else floatMin
+
+chanceSomeRhythm (_, dur) ((_, pdur):_) _
+	| dur == pdur = 1
+	| dur == 2 * pdur = 1
+	| pdur == 2 * dur = 1
+	| otherwise = 0
+chanceSomeRhythm _ [] _ = 1	
 

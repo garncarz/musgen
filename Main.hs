@@ -17,7 +17,7 @@ main :: IO()
 main = do
 	gen <- newStdGen
 	let chordsSrc = rndChords gen
-	let chords = createFlow chordsSrc [] (60, minor)
+	let chords = createFlow chordsSrc [] (62, minor)
 	print chords
 	exportFlow chords
 
@@ -29,6 +29,6 @@ createFlow (ch:rest) past st
 	| otherwise = createFlow rest past st
 
 isEnd :: Chord -> Flow -> MusicState -> Bool
-isEnd (tones, dur) past (base, intervals) = length past > 20 &&
+isEnd (tones, dur) past (base, intervals) = length past > 35 &&
 	isTonic tones base intervals
 

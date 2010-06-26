@@ -1,8 +1,9 @@
-module MusGen where
+module Main where
 
 import Random
 
 import Midi
+import MGRandom
 import Chances
 import Relations
 import Types
@@ -17,18 +18,8 @@ main = do
 	gen <- newStdGen
 	let chordsSrc = rndChords gen
 	let chords = createFlow chordsSrc [] (60, minor)
-	exportFlow chords
 	print chords
-
-
-rndChords :: RandomGen g => g -> Flow
-rndChords g =
-	let
-		(tonesCount, g2) = randomR (0, 5) g
-		(dur, g3) = randomR (1, 30) g2
-		(g4, g5) = split g3
-		tones = take tonesCount $ randomRs (0, 127) g4
-	in (tones, dur) : rndChords g5
+	exportFlow chords
 
 
 createFlow :: Flow -> Flow -> MusicState -> Flow

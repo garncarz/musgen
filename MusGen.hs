@@ -38,5 +38,6 @@ createFlow (ch:rest) past st
 	| otherwise = createFlow rest past st
 
 isEnd :: Chord -> Flow -> MusicState -> Bool
-isEnd (tones, dur) past st = length past > 20
+isEnd (tones, dur) past (base, intervals) = length past > 20 &&
+	isTonic tones base intervals
 

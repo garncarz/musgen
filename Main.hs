@@ -17,7 +17,7 @@ main :: IO()
 main = do
 	gen <- newStdGen
 	let chordsSrc = rndChords gen
-	let chords = createFlow chordsSrc [] (62, minor)
+	let chords = createFlow chordsSrc [] (60, major)
 	print chords
 	exportFlow chords
 

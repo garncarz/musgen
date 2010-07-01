@@ -74,7 +74,7 @@ isLeadingToneOk :: [Tone] -> [Tone] -> Tone -> Intervals -> Bool
 isLeadingToneOk first second base intervals =
 	let
 		ltint = intervals !! (length intervals - 1)
-		leadingTones = \tones -> nub $ filter (\t -> intervalFromTo base t ==
+		leadingTones tones = nub $ filter (\t -> intervalFromTo base t ==
 			ltint) tones
 		ltones1 = leadingTones first
 		ltones2 = leadingTones second

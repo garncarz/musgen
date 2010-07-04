@@ -4,14 +4,9 @@ import List
 import Maybe
 import Types
 
-scaleSize :: Int
-scaleSize = 12
-
-major :: Intervals
-major = [0, 2, 4, 5, 7, 9, 11]
-
-minor :: Intervals
-minor = [0, 2, 3, 5, 7, 8, 10]
+scaleSize = 12 :: Int
+major = [0, 2, 4, 5, 7, 9, 11] :: Intervals
+minor = [0, 2, 3, 5, 7, 8, 10] :: Intervals
 
 
 isToneJump :: Tone -> [Tone] -> Bool
@@ -37,9 +32,8 @@ isTriadFrom :: Tone -> Tone -> Intervals -> [Tone] -> Bool
 isTriadFrom _ _ _ [] = False
 isTriadFrom root base i tones
 	| pos == Nothing = False
-	| otherwise = foldl1 (&&) $
-		map (\t -> elem (intervalFromTo base t)
-			[i !! pos1, i !! pos2, i !! pos3]) tones
+	| otherwise = all (\t -> elem (intervalFromTo base t)
+		[i !! pos1, i !! pos2, i !! pos3]) tones
 	where
 		pos = elemIndex (intervalFromTo base root) i
 		pos1 = fromJust pos
@@ -47,8 +41,7 @@ isTriadFrom root base i tones
 		pos3 = intervalAt i (pos1 + 4)
 
 isTriad :: [Tone] -> Tone -> Intervals -> Bool
-isTriad tones base i = foldl (||) False $
-	map (\t -> isTriadFrom t base i tones) tones
+isTriad tones base i = any (\t -> isTriadFrom t base i tones) tones
 
 isFullTriad :: [Tone] -> Tone -> Intervals -> Bool
 isFullTriad tones base i = isTriad tones base i &&

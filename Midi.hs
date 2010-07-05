@@ -37,7 +37,7 @@ midiFile events base intervals = Midi {
 			]
 			++ events ++
 			[
-				(0, TrackEnd)
+				(5, TrackEnd)
 			]
 		]
 	}

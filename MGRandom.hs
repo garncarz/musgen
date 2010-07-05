@@ -1,4 +1,4 @@
-module MGRandom (rndChords, rndDurations, rndSplitL) where
+module MGRandom (rndChords, rndDurations, rndSplitL, rndTones) where
 
 import List
 

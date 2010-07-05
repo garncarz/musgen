@@ -10,43 +10,44 @@ import Relations
 import Types
 
 
-cMaj :: TimedChord
-cMaj = ([60, 64, 67], 16)
-
-startMS = MusicState {
-	base = 65,
-	intervals = major,
-	beat = 16,
-	remain = 16
-	}
-
-
 main :: IO()
 main = do
-	let st = startMS
 	gen <- newStdGen
-	let g = rndSplitL gen
-	let chordsSrc = rndChords (g !! 0)
-	let harmonyFlow = createHarmonyFlow chordsSrc [] st
-	let dursSrc = rndDurations (g !! 1)
-	let flow = createTimedFlow harmonyFlow dursSrc [] st
+	let
+		g = rndSplitL gen
+		base = head $ rndTones (g !! 0)
+		mjr = head $ randomRs (True, False) (g !! 1)
+		st = MusicState {
+			base = base,
+			intervals = if mjr then major else minor,
+			beat = 16,
+			remain = 16}
+		chordsSrc = rndChords (g !! 2)
+		harmonyFlow = createHarmonyFlow chordsSrc [] st (g !! 3)
+		dursSrc = rndDurations (g !! 4)
+		flow = createTimedFlow harmonyFlow dursSrc [] st (g !! 5)
+	print st
 	mapM_ putStrLn $ map show flow
 	exportFlow flow st
 
 
-createHarmonyFlow :: [Chord] -> [Chord] -> MusicState -> [Chord]
-createHarmonyFlow (ch:rest) past st
-	| chance > 0.5 = ch : createHarmonyFlow rest (ch:past) st
-	| otherwise = createHarmonyFlow rest past st
-	where chance = harmonyChance ch past st
+createHarmonyFlow :: RandomGen g => [Chord] -> [Chord] -> MusicState ->
+	g -> [Chord]
+createHarmonyFlow (ch:rest) past st gen
+	| chance > rndChance = ch : createHarmonyFlow rest (ch:past) st gen2
+	| otherwise = createHarmonyFlow rest past st gen2
+	where
+		chance = harmonyChance ch past st
+		(rndChance, gen2) = randomR (0.5 :: Float, 1) gen
 
 
-createTimedFlow :: [Chord] -> [Duration] -> [TimedChord] -> MusicState ->
-	[TimedChord]
-createTimedFlow (har:harRest) (dur:durRest) past st
-	| isEnd endCh past endSt && chanceEnd > 0.5 = [endCh]
-	| chance > 0.5 = ch : createTimedFlow harRest durRest (ch:past) newSt
-	| otherwise = createTimedFlow (har:harRest) durRest past st
+createTimedFlow :: RandomGen g => [Chord] -> [Duration] -> [TimedChord] ->
+	MusicState -> g -> [TimedChord]
+createTimedFlow (har:harRest) (dur:durRest) past st gen
+	| isEnd endCh past endSt && chanceEnd > rndChance = [endCh]
+	| chance > rndChance = ch :
+		createTimedFlow harRest durRest (ch:past) newSt gen2
+	| otherwise = createTimedFlow (har:harRest) durRest past st gen2
 	where
 		ch = (har, dur)
 		chance = rhythmChance ch past st
@@ -54,6 +55,7 @@ createTimedFlow (har:harRest) (dur:durRest) past st
 		endCh = (har, remain st)
 		endSt = (cutMusSt st endCh)
 		chanceEnd = rhythmChance endCh past st
+		(rndChance, gen2) = randomR (0.5 :: Float, 1) gen
 		
 
 cutMusSt :: MusicState -> TimedChord -> MusicState

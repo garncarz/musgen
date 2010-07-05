@@ -15,21 +15,13 @@ chordMidi ((t:ts), dur) = [(toneMidi t 80)] ++ (chordMidi (ts, dur))
 keySignature :: Tone -> Intervals -> (Int, Int)
 keySignature base i
 	| t == 0 && mjr || t == 9 && not mjr = (0, mjrI)
-	| t == 7 && mjr || t == 4 && not mjr = (1, mjrI)
-	| t == 2 && mjr || t == 11 && not mjr = (2, mjrI)
-	| t == 9 && mjr || t == 6 && not mjr = (3, mjrI)
-	| t == 4 && mjr || t == 1 && not mjr = (4, mjrI)
-	| t == 11 && mjr || t == 8 && not mjr = (5, mjrI)
-	| t == 6 && mjr || t == 3 && not mjr = (6, mjrI)
-	| t == 5 && mjr || t == 2 && not mjr = (-1, mjrI)
-	| t == 10 && mjr || t == 7 && not mjr = (-2, mjrI)
-	| t == 3 && mjr || t == 0 && not mjr = (-3, mjrI)
-	| t == 8 && mjr || t == 5 && not mjr = (-4, mjrI)
-	| otherwise = (0, 0)
+	| otherwise = (\(sharps, mjrI) -> (nextSharps sharps, mjrI))
+		(keySignature (base - 7) i)
 	where
 		t = intervalFromTo 60 base
 		mjr = i == major
 		mjrI = if mjr then 0 else 1
+		nextSharps sharps = if sharps == 6 then -5 else sharps + 1
 
 midiFile :: [MidiEvent] -> Tone -> Intervals -> Midi
 midiFile events base intervals = Midi {
@@ -39,8 +31,8 @@ midiFile events base intervals = Midi {
 		[
 			[
 				(0, ChannelPrefix 0),
-				(0, InstrumentName "Harpsichord"),
-				(0, ProgramChange 0 6),
+				(0, InstrumentName "Piano"),
+				(0, ProgramChange 0 0),
 				(0, (\(x, y) -> KeySignature x y) (keySignature base intervals))
 			]
 			++ events ++

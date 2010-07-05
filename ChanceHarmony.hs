@@ -15,10 +15,10 @@ chances = [
 	(chanceLeadingTone, 1),
 	(chanceTonicStart, 1),
 	(chanceNotDomThenSub, 1),
-	(chanceInScale, 0.5),
+	--(chanceInScale, 1),
 	(chanceThick, 0.1),
 	(chanceJumps, 0),
-	(chanceTriad, 0.8),
+	(chanceTriad, 0.9),
 	(chanceNotEmpty, 0.9)
 	--(chance4Tones, 0.8)
 	]

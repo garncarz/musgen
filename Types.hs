@@ -16,7 +16,7 @@ data MusicState = MusicState {
 	base :: Tone,
 	intervals :: Intervals,
 	beat :: BeatTime,
-	remain :: BeatTime}
+	remain :: BeatTime} deriving (Eq, Show)
 
 type MidiEvent = (Ticks, Message)
 

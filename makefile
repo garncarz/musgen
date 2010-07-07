@@ -5,17 +5,17 @@ build:
 run: build
 	./musgen
 	make ly
-	gnome-open export.pdf
-	gnome-open export.midi
+	gnome-open song.pdf
+	gnome-open song.midi
 
 tmp:
 	[ -d tmp ] || mkdir tmp
 
 ly: tmp
-	cp export.midi tmp/
-	cd tmp && midi2ly export.midi && mv export-midi.ly export.ly
-	-cd tmp && lilypond export.ly
-	cp tmp/export.pdf ./
+	cp song.midi tmp/
+	cd tmp && midi2ly song.midi && mv song-midi.ly song.ly
+	-cd tmp && lilypond song.ly
+	cp tmp/song.pdf ./
 
 
 clean:

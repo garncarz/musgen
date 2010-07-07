@@ -4,6 +4,8 @@ import Random
 
 import ChanceHarmony
 import ChanceRhythm
+import InstrumentBass
+import InstrumentSoprano
 import Midi
 import MGRandom
 import Relations
@@ -28,7 +30,11 @@ main = do
 		flow = createTimedFlow harmonyFlow dursSrc [] st (g !! 5)
 	print st
 	mapM_ putStrLn $ map show flow
-	exportFlow flow st
+	--exportMidi "harmony.midi" $ midiFile [harmonyMidiFlow flow st]
+	exportMidi "song.midi" $ midiFile [
+		harmonyTrack flow st,
+		sopranoTrack flow st,
+		bassTrack flow st]
 
 
 createHarmonyFlow :: RandomGen g => [Chord] -> [Chord] -> MusicState ->
@@ -70,5 +76,6 @@ cutMusSt st (_, dur) = MusicState {
 
 isEnd :: TimedChord -> Flow -> MusicState -> Bool
 isEnd (tones, dur) past st = length past > 35 &&
-	isTonic tones (base st) (intervals st)
+	isTonic tones (base st) (intervals st) &&
+	2 * dur >= beat st
 

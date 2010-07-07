@@ -12,6 +12,8 @@ type Chord = [Tone]
 type TimedChord = (Chord, Duration)
 type Flow = [TimedChord]
 
+type ToneToStop = (Tone, Duration)
+
 data MusicState = MusicState {
 	base :: Tone,
 	intervals :: Intervals,
@@ -19,6 +21,7 @@ data MusicState = MusicState {
 	remain :: BeatTime} deriving (Eq, Show)
 
 type MidiEvent = (Ticks, Message)
+type MidiTrack = [MidiEvent]
 
 
 floatMin = 0.1 :: Float

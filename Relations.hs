@@ -77,3 +77,28 @@ isLeadingToneOk first second base intervals =
 		length ltones2 < 2 && (ltones1 == [] || (ltones1 == [ltone] &&
 			(elem ltone second || elem tonic second)))
 
+isCounterpoint :: [Tone] -> [Tone] -> Bool
+isCounterpoint first second = (maxUp && minDown) || (maxDown && minUp) where
+	max1 = maximum first
+	max2 = maximum second
+	maxUp = max2 >= max1
+	maxDown = max2 <= max1
+	min1 = minimum first
+	min2 = minimum second
+	minUp = min2 >= min1
+	minDown = min2 <= min1
+
+isSopranoMoving :: [Tone] -> [Tone] -> Bool
+isSopranoMoving first second = max1 /= max2 where
+	max1 = maximum first
+	max2 = maximum second
+
+isBassMoving :: [Tone] -> [Tone] -> Bool
+isBassMoving first second = min1 /= min2 where
+	min1 = minimum first
+	min2 = minimum second
+
+percentageMoving :: [Tone] -> [Tone] -> Float
+percentageMoving first second = fromIntegral moves / genericLength second where
+	moves = sum $ map (\t -> if elem t first then 1 else 0) second
+

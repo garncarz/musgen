@@ -19,8 +19,10 @@ chances = [
 	(chanceThick, 0.1),
 	(chanceJumps, 0),
 	(chanceTriad, 0.9),
-	(chanceNotEmpty, 0.9)
-	--(chance4Tones, 0.8)
+	(chanceNotEmpty, 0.9),
+	--(chance4Tones, 0.8),
+	(chanceCounterpoint, 1),
+	(chanceMove, 1)
 	]
 
 chanceThick tones _ st = recip $ sum $
@@ -56,4 +58,20 @@ chanceNotEmpty _ _ _ = 1
 
 chance4Tones tones _ _ =
 	if length tones == 4 then 1 else floatMin
+
+chanceCounterpoint tones (ptones:_) _ =
+	if isCounterpoint ptones tones then 1 else floatMin
+chanceCounterpoint _ [] _ = 1
+
+chanceMove tones (ptones:_) _
+	| sopMv && bassMv && pct > 0.5 = 1
+	| sopMv && bassMv = 0.8
+	| sopMv || bassMv = 0.6
+	| pct > 0.5 = 0.5
+	| otherwise = floatMin
+	where
+		sopMv = isSopranoMoving ptones tones
+		bassMv = isBassMoving ptones tones
+		pct = percentageMoving ptones tones
+chanceMove _ [] _ = 1
 

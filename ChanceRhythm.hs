@@ -1,5 +1,6 @@
 module ChanceRhythm (rhythmChance) where
 
+import List
 import Types
 
 type ChanceType = TimedChord -> [TimedChord] -> MusicState -> Float
@@ -12,7 +13,8 @@ chances :: [(ChanceType, Float)]
 chances = [
 	(chanceBeatTime, 1),
 	(chanceRightSpeed, 0.5),
-	(chanceSomeRhythm, 0.5)
+	(chanceSomeRhythm, 0.5),
+	(chanceCopyRhythm, 0.1)
 	]
 
 chanceBeatTime (_, dur) _ st = if (remain st - dur >= 0) then 1 else floatZero
@@ -30,5 +32,21 @@ chanceSomeRhythm (_, dur) ((_, pdur):_) st
 	| dur == 2 * pdur = 1
 	| pdur == 2 * dur = 1
 	| otherwise = floatMin
-chanceSomeRhythm (_, dur) [] _ = if dur == 8 then 1 else floatZero
+chanceSomeRhythm (_, dur) [] _ = 1
+
+chanceCopyRhythm ch flow st =
+	if past == [] || isPrefixOf actual past then 1 else floatMin
+	where
+		actual = rhythmHead (ch:flow) (beat st) (beat st - remain st + dur) 0
+		past = rhythmHead (ch:flow) (beat st) (beat st - remain st + dur) 1
+		(_, dur) = ch
+		rhythmHead :: [TimedChord] -> Duration -> Duration -> Int -> [Duration]
+		rhythmHead flow beat passed skip
+			| passed < 0 || flow == [] = []
+			| passed == 0 && skip <= 0 = []
+			| passed == 0 = rhythmHead flow beat beat (skip - 1)
+			| passed > 0 && skip > 0 = rhythmHead rest beat (passed - dur) skip
+			| otherwise = (rhythmHead rest beat (passed - dur) skip) ++ [dur]
+			where
+				((_, dur):rest) = flow
 

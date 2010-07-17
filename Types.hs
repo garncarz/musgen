@@ -6,7 +6,6 @@ type Tone = Int
 type Intervals = [Int]
 type Volume = Int
 type Duration = Int
-type BeatTime = Int
 
 type Chord = [Tone]
 type TimedChord = (Chord, Duration)
@@ -17,8 +16,8 @@ type ToneToStop = (Tone, Duration)
 data MusicState = MusicState {
 	base :: Tone,
 	intervals :: Intervals,
-	beat :: BeatTime,
-	remain :: BeatTime} deriving (Eq, Show)
+	beat :: Duration,
+	remain :: Duration} deriving (Eq, Show)
 
 type MidiEvent = (Ticks, Message)
 type MidiTrack = [MidiEvent]

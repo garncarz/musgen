@@ -1,6 +1,7 @@
-build:
-	ghc --make Main
-	cp Main musgen
+build: tmp
+	cp *.hs tmp/
+	cd tmp && ghc --make Main
+	cp tmp/Main musgen
 
 run: build
 	./musgen
@@ -19,5 +20,8 @@ ly: tmp
 
 
 clean:
-	rm -fr *~ *.hi *.o tmp Main musgen
+	rm -fr *~ tmp musgen
+
+pack: clean
+	cd .. && tar -czf musgen.tar.gz musgen
 

@@ -4,11 +4,9 @@ import List
 import Types
 import Relations
 
-type ChanceType = Chord -> [Chord] -> MusicState -> Float
-
 harmonyChance :: ChanceType
-harmonyChance ch past st = foldl (*) 1
-	(map (\(chance, factor) -> (** factor) $ chance ch past st) chances)
+harmonyChance ch past = foldl (*) 1
+	(map (\(chance, factor) -> (** factor) $ chance ch past) chances)
 
 chances :: [(ChanceType, Float)]
 chances = [
@@ -25,53 +23,60 @@ chances = [
 	(chanceMove, 1)
 	]
 
-chanceThick tones _ st = recip $ sum $
-	1 : map (\t -> (/ 20) $ fromIntegral . abs $ t - (base st)) tones
+chanceThick ch _ = recip $ sum $
+	1 : map (\t -> (/ 20) $ fromIntegral . abs $ t - key1) tones1
+	where tones1 = tones ch; key1 = key ch
 
-chanceJumps _ [] _ = 1
-chanceJumps tones (ptones:_) _ = recip $ sum $
-	1 : map (\t -> if isToneJump t ptones then 1 else 0) tones
+chanceJumps _ [] = 1
+chanceJumps ch (past:_) = recip $ sum $
+	1 : map (\t -> if isToneJump t tones1 then 1 else 0) tones2
+	where tones1 = tones past; tones2 = tones ch
 
-chanceInScale tones _ st = if all (\t -> isToneFromScale t (base st)
-	(intervals st)) tones then 1 else floatMin
+chanceInScale ch _ = if all (\t -> isToneFromScale t key1 intervals1) tones1
+	then 1 else floatMin
+	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch
 
-chanceTriad tones _ st = if null tones ||
-	isFullTriad tones (base st) (intervals st) then 1 else floatMin
+chanceTriad ch _ = if null tones1 || isFullTriad tones1 key1 intervals1
+	then 1 else floatMin
+	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch
 
-chanceTonicStart tones [] st =
-	if isTonic tones (base st) (intervals st) then 1 else 0
-chanceTonicStart _ _ _ = 1
+chanceTonicStart ch [] = if isTonic tones1 key1 intervals1 then 1 else 0
+	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch
+chanceTonicStart _ _ = 1
 
-chanceNotDomThenSub tones (ptones:_) st =
-	if isDominant ptones (base st) (intervals st) &&
-		isSubdominant tones (base st) (intervals st)
-		then floatZero else 1
-chanceNotDomThenSub _ [] _ = 1
+chanceNotDomThenSub ch (past:_) = if isDominant tones1 key1 intervals1 &&
+	isSubdominant tones2 key2 intervals2 then floatZero else 1
+	where tones1 = tones past; key1 = key past; intervals1 = intervals past;
+		tones2 = tones ch; key2 = key ch; intervals2 = intervals ch
+chanceNotDomThenSub _ [] = 1
 
-chanceLeadingTone tones (ptones:_) st =
-	if isLeadingToneOk ptones tones (base st) (intervals st) then 1 else 0
-chanceLeadingTone tones [] st =
-	if isLeadingToneOk [] tones (base st) (intervals st) then 1 else 0
+chanceLeadingTone ch (past:_) = if isLeadingToneOk tones1 tones2 key2 intervals2
+	then 1 else 0
+	where tones1 = tones past; tones2 = tones ch; key2 = key ch;
+		intervals2 = intervals ch
+chanceLeadingTone ch [] = if isLeadingToneOk [] tones1 key1 intervals1
+	then 1 else 0
+	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch
 
-chanceNotEmpty [] _ _ = floatMin
-chanceNotEmpty _ _ _ = 1
+chanceNotEmpty ch _ = if tones ch == [] then floatMin else 1
 
-chance4Tones tones _ _ =
-	if length tones == 4 then 1 else floatMin
+chance4Tones ch _ = if length (tones ch) == 4 then 1 else floatMin
 
-chanceCounterpoint tones (ptones:_) _ =
-	if isCounterpoint ptones tones then 1 else floatMin
-chanceCounterpoint _ [] _ = 1
+chanceCounterpoint ch (past:_) = if isCounterpoint tones1 tones2
+	then 1 else floatMin
+	where tones1 = tones past; tones2 = tones ch
+chanceCounterpoint _ [] = 1
 
-chanceMove tones (ptones:_) _
+chanceMove ch (past:_)
 	| sopMv && bassMv && pct > 0.5 = 1
 	| sopMv && bassMv = 0.8
 	| sopMv || bassMv = 0.6
 	| pct > 0.5 = 0.5
 	| otherwise = floatMin
 	where
-		sopMv = isSopranoMoving ptones tones
-		bassMv = isBassMoving ptones tones
-		pct = percentageMoving ptones tones
-chanceMove _ [] _ = 1
+		tones1 = tones past; tones2 = tones ch
+		sopMv = isSopranoMoving tones1 tones2
+		bassMv = isBassMoving tones1 tones2
+		pct = percentageMoving tones1 tones2
+chanceMove _ [] = 1
 

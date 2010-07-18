@@ -18,13 +18,15 @@ rndTones gen =
 	let	(g1, g2) = split gen
 	in rndNormal 0 127 g1 : rndTones g2
 
-rndChords :: RandomGen g => g -> [Chord]
-rndChords gen =
+rndChords :: RandomGen g => Chord -> g -> Flow
+rndChords start gen =
 	let
 		g = rndSplitL gen
 		tonesCount = rndTonesCount (g !! 0)
 		tones = take tonesCount $ rndTones (g !! 1)
-	in tones : rndChords (g !! 2)
+	in HarmonyChord {tones = tones, key = key start,
+		intervals = intervals start} : rndChords start (g !! 2)
+
 
 rndNormal :: RandomGen g => Int -> Int -> g -> Int
 rndNormal from to gen = maximum [from, minimum [to, result]] where

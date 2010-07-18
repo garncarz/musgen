@@ -7,7 +7,7 @@ import Types
 takePart :: Flow -> [ToneToStop] -> [MidiEvent]
 takePart flow playing
 	| plToneEnds = toneMidi plTone 0 : takePart flow plRest
-	| toneStarts = toneMidi tone 90 : pauseMidi pause :
+	| toneStarts = toneMidi tone1 90 : pauseMidi pause :
 		takePart fRest newPlaying
 	| plToneContinues = pauseMidi pause : takePart fRest newPlaying
 	| otherwise = []
@@ -18,21 +18,23 @@ takePart flow playing
 		plTones = map (\(t, _) -> t) playing
 		
 		isFlow = length flow > 0
-		((ch, dur):fRest) = flow
-		tone = maximum ch
+		(ch:fRest) = flow
+		tone1 = maximum $ tones ch
+		dur1 = dur ch
 		
-		toneStarts = isFlow && (not isPlaying || (not $ elem tone plTones))
-		plToneEnds = isPlaying && plDur == 0 && (not isFlow || tone /= plTone)
-		plToneContinues = isPlaying && plDur == 0 && isFlow && plTone == tone
+		toneStarts = isFlow && (not isPlaying || (not $ elem tone1 plTones))
+		plToneEnds = isPlaying && plDur == 0 && (not isFlow || tone1 /= plTone)
+		plToneContinues = isPlaying && plDur == 0 && isFlow && plTone == tone1
 		
-		pause = minimum $ if isFlow then [dur] else []
+		pause = minimum $ if isFlow then [dur1] else []
 			++ if isPlaying then [plDur] else []
 		newPlaying = sortPlayingEnd $ map (\(t, d) -> (t, d - pause)) $
-			(tone, dur) : (if plToneContinues then plRest else playing)
+			(tone1, dur1) : (if plToneContinues then plRest else playing)
 		
 		sortPlayingEnd = sortBy (\(_, d1) (_, d2) -> compare d1 d2)
 
-sopranoTrack :: Flow -> MusicState -> MidiTrack
-sopranoTrack flow st = midiTrack 2 "Soprano" 74 (takePart flow [])
-	(base st) (intervals st)
+sopranoTrack :: Flow -> MidiTrack
+sopranoTrack flow = midiTrack 2 "Soprano" 74 (takePart flow [])
+	key1 intervals1
+	where (ch:_) = flow; key1 = key ch; intervals1 = intervals ch
 

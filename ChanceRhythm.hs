@@ -3,11 +3,9 @@ module ChanceRhythm (rhythmChance) where
 import List
 import Types
 
-type ChanceType = TimedChord -> [TimedChord] -> MusicState -> Float
-
 rhythmChance :: ChanceType
-rhythmChance ch past st = foldl (*) 1
-	(map (\(chance, factor) -> (** factor) $ chance ch past st) chances)
+rhythmChance ch past = foldl (*) 1
+	(map (\(chance, factor) -> (** factor) $ chance ch past) chances)
 
 chances :: [(ChanceType, Float)]
 chances = [
@@ -17,36 +15,40 @@ chances = [
 	(chanceCopyRhythm, 0.1)
 	]
 
-chanceBeatTime (_, dur) _ st = if (remain st - dur >= 0) then 1 else floatZero
+chanceBeatTime ch _ = if (remain1 - dur1 >= 0) then 1 else floatZero
+	where dur1 = dur ch; remain1 = remain ch
 
-chanceRightSpeed (_, dur) _ _
-	| dur == 8 = 1
-	| dur == 4 = 0.8
-	| dur == 16 = 0.8
-	| dur == 2 = 0.4
+chanceRightSpeed ch _
+	| dur1 == 8 = 1
+	| dur1 == 4 = 0.8
+	| dur1 == 16 = 0.8
+	| dur1 == 2 = 0.4
 	| otherwise = floatMin
+	where dur1 = dur ch
 
-chanceSomeRhythm (_, dur) ((_, pdur):_) st
-	| beat st >= 4 * remain st = 1
-	| dur == pdur = 0.9
-	| dur == 2 * pdur = 1
-	| pdur == 2 * dur = 1
+chanceSomeRhythm ch (past:_)
+	| beat2 >= 4 * remain2 = 1
+	| dur1 == dur2 = 0.9
+	| dur1 == 2 * dur2 = 1
+	| dur2 == 2 * dur1 = 1
 	| otherwise = floatMin
-chanceSomeRhythm (_, dur) [] _ = 1
+	where dur1 = dur past; dur2 = dur ch; beat2 = beat ch; remain2 = remain ch
+chanceSomeRhythm _ [] = 1
 
-chanceCopyRhythm ch flow st =
+chanceCopyRhythm ch flow =
 	if past == [] || isPrefixOf actual past then 1 else floatMin
 	where
-		actual = rhythmHead (ch:flow) (beat st) (beat st - remain st + dur) 0
-		past = rhythmHead (ch:flow) (beat st) (beat st - remain st + dur) 1
-		(_, dur) = ch
-		rhythmHead :: [TimedChord] -> Duration -> Duration -> Int -> [Duration]
+		actual = rhythmHead (ch:flow) beat1 (beat1 - remain1 + dur1) 0
+		past = rhythmHead (ch:flow) beat1 (beat1 - remain1 + dur1) 1
+		dur1 = dur ch; beat1 = beat ch; remain1 = remain ch
+		rhythmHead :: Flow -> Duration -> Duration -> Int -> [Duration]
 		rhythmHead flow beat passed skip
 			| passed < 0 || flow == [] = []
 			| passed == 0 && skip <= 0 = []
 			| passed == 0 = rhythmHead flow beat beat (skip - 1)
-			| passed > 0 && skip > 0 = rhythmHead rest beat (passed - dur) skip
-			| otherwise = (rhythmHead rest beat (passed - dur) skip) ++ [dur]
+			| passed > 0 && skip > 0 = rhythmHead rest beat (passed - dur1) skip
+			| otherwise = (rhythmHead rest beat (passed - dur1) skip) ++ [dur1]
 			where
-				((_, dur):rest) = flow
+				(ch:rest) = flow
+				dur1 = dur ch
 

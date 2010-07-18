@@ -7,17 +7,26 @@ type Intervals = [Int]
 type Volume = Int
 type Duration = Int
 
-type Chord = [Tone]
-type TimedChord = (Chord, Duration)
-type Flow = [TimedChord]
-
 type ToneToStop = (Tone, Duration)
 
-data MusicState = MusicState {
-	base :: Tone,
-	intervals :: Intervals,
-	beat :: Duration,
-	remain :: Duration} deriving (Eq, Show)
+data Chord =
+	HarmonyChord {
+		tones :: [Tone],
+		key :: Tone,
+		intervals :: Intervals}
+	| TimedChord {
+		tones :: [Tone],
+		key :: Tone,
+		intervals :: Intervals,
+		dur :: Duration,
+		beat :: Duration,
+		remain :: Duration}
+	deriving Eq
+instance Show Chord where
+	show ch = show (tones ch, dur ch)
+type Flow = [Chord]
+
+type ChanceType = Chord -> Flow -> Float
 
 type MidiEvent = (Ticks, Message)
 type MidiTrack = [MidiEvent]
@@ -25,7 +34,4 @@ type MidiTrack = [MidiEvent]
 
 floatMin = 0.1 :: Float
 floatZero = 0.001 :: Float
-
-nullChord :: TimedChord
-nullChord = ([], 0)
 

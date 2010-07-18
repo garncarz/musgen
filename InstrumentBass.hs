@@ -7,7 +7,7 @@ import Types
 takePart :: Flow -> [ToneToStop] -> [MidiEvent]
 takePart flow playing
 	| plToneEnds = toneMidi plTone 0 : takePart flow plRest
-	| toneStarts = toneMidi tone 80 : pauseMidi pause :
+	| toneStarts = toneMidi tone1 80 : pauseMidi pause :
 		takePart fRest newPlaying
 	| plToneContinues = pauseMidi pause : takePart fRest newPlaying
 	| otherwise = []
@@ -18,22 +18,28 @@ takePart flow playing
 		plTones = map (\(t, _) -> t) playing
 		
 		isFlow = length flow > 0
-		((ch, dur):fRest) = flow
-		tone = minimum ch
+		(ch:fRest) = flow
+		tone1 = minimum $ tones ch
+		dur1 = dur ch
 		
-		toneStarts = isFlow && (not isPlaying || (not $ elem tone plTones))
-		plToneEnds = isPlaying && plDur == 0 && (not isFlow || tone /= plTone)
-		plToneContinues = isPlaying && plDur == 0 && isFlow && plTone == tone
+		toneStarts = isFlow && (not isPlaying || (not $ elem tone1 plTones))
+		plToneEnds = isPlaying && plDur == 0 && (not isFlow || tone1 /= plTone)
+		plToneContinues = isPlaying && plDur == 0 && isFlow && plTone == tone1
 		
-		pause = minimum $ if isFlow then [dur] else []
+		pause = minimum $ if isFlow then [dur1] else []
 			++ if isPlaying then [plDur] else []
 		newPlaying = sortPlayingEnd $ map (\(t, d) -> (t, d - pause)) $
-			(tone, dur) : (if plToneContinues then plRest else playing)
+			(tone1, dur1) : (if plToneContinues then plRest else playing)
 		
 		sortPlayingEnd = sortBy (\(_, d1) (_, d2) -> compare d1 d2)
 
-bassTrack :: Flow -> MusicState -> MidiTrack
-bassTrack flow st = midiTrack 3 "Bass" 33 (takePart bassFlow [])
-	(base st) (intervals st) where
-		bassFlow = map (\(ch, dur) -> (map (\t -> t - 12) ch, dur)) flow
+bassTrack :: Flow -> MidiTrack
+bassTrack flow = midiTrack 3 "Bass" 33 (takePart bassFlow []) key1 intervals1
+	where
+		(ch:_) = flow; key1 = key ch; intervals1 = intervals ch
+		newChordTones ch tones = TimedChord {tones = tones, key = key ch,
+			intervals = intervals ch, dur = dur ch, beat = beat ch,
+			remain = remain ch}
+		bassFlow = map (\ch -> newChordTones ch (map (\t -> t - 12) (tones ch)))
+			flow
 

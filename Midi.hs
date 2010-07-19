@@ -39,7 +39,7 @@ midiTrack channel instrument program events key intervals =
 		(0, (\(x, y) -> KeySignature x y) (keySignature key intervals))
 	]
 	++ (eventsToChannel channel events) ++
-	[ (5, TrackEnd) ]
+	[ (8, TrackEnd) ]
 
 midiFile :: [MidiTrack] -> Midi
 midiFile tracks = Midi {

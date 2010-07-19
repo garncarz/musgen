@@ -13,24 +13,30 @@ chances = [
 	(chanceLeadingTone, 1),
 	(chanceTonicStart, 1),
 	(chanceNotDomThenSub, 1),
-	--(chanceInScale, 1),
-	(chanceThick, 0.1),
-	(chanceJumps, 0),
+	--(chanceInScale, 0.4),
+	(chanceThick, 0.8),
+	(chanceJumps, 0.6),
 	(chanceTriad, 0.9),
 	(chanceNotEmpty, 0.9),
-	--(chance4Tones, 0.8),
+	--(chance4Tones, 0.5),
 	(chanceCounterpoint, 1),
 	(chanceMove, 1)
 	]
 
-chanceThick ch _ = recip $ sum $
-	1 : map (\t -> (/ 20) $ fromIntegral . abs $ t - key1) tones1
-	where tones1 = tones ch; key1 = key ch
+chanceThick ch _ = if rng > 30 || dist > 10 then floatMin else 1
+	where
+		tones1 = tones ch; key1 = key ch
+		max = maximum tones1; min = minimum tones1
+		rng = max - min
+		avg = sum tones1 `div` length tones1
+		dist = abs $ avg - key1
 
 chanceJumps _ [] = 1
-chanceJumps ch (past:_) = recip $ sum $
-	1 : map (\t -> if isToneJump t tones1 then 1 else 0) tones2
-	where tones1 = tones past; tones2 = tones ch
+chanceJumps ch (past:_) = if avg < 5 then 1 else floatMin
+	where
+		tones1 = tones past; tones2 = tones ch
+		jumps = sum $ map (fromIntegral . toneJumpFrom tones1) tones2
+		avg = jumps / genericLength tones2
 
 chanceInScale ch _ = if all (\t -> isToneFromScale t key1 intervals1) tones1
 	then 1 else floatMin
@@ -60,7 +66,7 @@ chanceLeadingTone ch [] = if isLeadingToneOk [] tones1 key1 intervals1
 
 chanceNotEmpty ch _ = if tones ch == [] then floatMin else 1
 
-chance4Tones ch _ = if length (tones ch) == 4 then 1 else floatMin
+chance4Tones ch _ = if length (nub $ tones ch) == 4 then 1 else floatMin
 
 chanceCounterpoint ch (past:_) = if isCounterpoint tones1 tones2
 	then 1 else floatMin

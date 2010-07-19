@@ -17,6 +17,7 @@ rndTones :: RandomGen g => g -> [Tone]
 rndTones gen =
 	let	(g1, g2) = split gen
 	in rndNormal 0 127 g1 : rndTones g2
+	--in (head $ randomRs (0, 127) g1) : rndTones g2
 
 rndChords :: RandomGen g => Chord -> g -> Flow
 rndChords start gen =
@@ -34,8 +35,8 @@ rndNormal from to gen = maximum [from, minimum [to, result]] where
 	center = fromIntegral from + fromIntegral size / 2
 	rnds = randomRs (0 :: Float, 1) gen
 	number = sum $ take size rnds
-	--result = truncate $ 5 * (number - center) + center
-	result = truncate number
+	result = truncate $ 2 * (number - center) + center
+	--result = truncate number
 
 rndSplitL :: RandomGen g => g -> [g]
 rndSplitL g = let (g1, g2) = split g in g1 : rndSplitL g2

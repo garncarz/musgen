@@ -8,6 +8,8 @@ build: tmp
 run: build
 	./musgen
 	$(MAKE) ly
+
+open:
 	gnome-open song.pdf
 	gnome-open song.midi
 

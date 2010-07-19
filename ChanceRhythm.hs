@@ -21,8 +21,8 @@ chanceBeatTime ch _ = if (remain1 - dur1 >= 0) then 1 else floatZero
 chanceRightSpeed ch _
 	| dur1 == 8 = 1
 	| dur1 == 4 = 0.8
-	| dur1 == 16 = 0.8
-	| dur1 == 2 = 0.4
+	| dur1 == 16 = 0.6
+	| dur1 == 2 = 0.5
 	| otherwise = floatMin
 	where dur1 = dur ch
 

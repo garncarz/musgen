@@ -9,13 +9,10 @@ major = [0, 2, 4, 5, 7, 9, 11] :: Intervals
 minor = [0, 2, 3, 5, 7, 8, 10] :: Intervals
 
 
-isToneJump :: Tone -> [Tone] -> Bool
-isToneJump t pt = not isNear where
-	tUp = t + 2
-	tDown = t - 2
-	isNear = elem tUp pt || elem tDown pt
+toneJumpFrom :: [Tone] -> Tone -> Interval
+toneJumpFrom from tone = minimum $ map (\t -> abs $ t - tone) from
 
-intervalFromTo :: Tone -> Tone -> Int
+intervalFromTo :: Tone -> Tone -> Interval
 intervalFromTo base tone = i where
 	dist = (tone - base) `mod` scaleSize
 	i = if dist < 0 then dist + scaleSize else dist

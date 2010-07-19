@@ -3,7 +3,8 @@ module Types where
 import Codec.Midi
 
 type Tone = Int
-type Intervals = [Int]
+type Interval = Int
+type Intervals = [Interval]
 type Volume = Int
 type Duration = Int
 

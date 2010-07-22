@@ -32,11 +32,12 @@ chanceThick ch _ = if rng > 30 || dist > 10 then floatMin else 1
 		dist = abs $ avg - key1
 
 chanceJumps _ [] = 1
-chanceJumps ch (past:_) = if avg < 5 then 1 else floatMin
+chanceJumps ch (past:_) = if avg < 5 && maxJump < 5 then 1 else floatMin
 	where
 		tones1 = tones past; tones2 = tones ch
-		jumps = sum $ map (fromIntegral . toneJumpFrom tones1) tones2
-		avg = jumps / genericLength tones2
+		jumps = map (toneJumpFrom tones1) tones2
+		avg = fromIntegral (sum jumps) / genericLength tones2
+		maxJump = maximum jumps
 
 chanceInScale ch _ = if all (\t -> isToneFromScale t key1 intervals1) tones1
 	then 1 else floatMin

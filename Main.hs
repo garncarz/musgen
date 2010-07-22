@@ -58,15 +58,13 @@ createTimedFlow (har:harRest) (dur:durRest) past gen
 			tones = tones har, key = key har, intervals = intervals har,
 			dur = dur, beat = beat pch, remain = newRemain}
 		chance = rhythmChance ch past2
-		endCh = TimedChord {
-			tones = tones har, key = key har, intervals = intervals har,
-			dur = newRemain, beat = beat pch, remain = newRemain}
+		endCh = ch {dur = newRemain}
 		chanceEnd = rhythmChance endCh past2
 		(rndChance, gen2) = randomR (0.5 :: Float, 1) gen
 
 
 isEnd :: Chord -> Flow -> Bool
-isEnd ch past = length past > 35 &&	isTonic tones1 key1 intervals1 &&
+isEnd ch past = length past > 20 && isTonic tones1 key1 intervals1 &&
 	2 * dur1 >= beat1
 	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch;
 		dur1 = dur ch; beat1 = beat ch

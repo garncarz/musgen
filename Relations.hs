@@ -13,58 +13,59 @@ toneJumpFrom :: [Tone] -> Tone -> Interval
 toneJumpFrom from tone = minimum $ map (\t -> abs $ t - tone) from
 
 intervalFromTo :: Tone -> Tone -> Interval
-intervalFromTo base tone = i where
-	dist = (tone - base) `mod` scaleSize
+intervalFromTo tone1 tone2 = i where
+	dist = (tone2 - tone1) `mod` scaleSize
 	i = if dist < 0 then dist + scaleSize else dist
 
 intervalAt :: Intervals -> Int -> Tone
-intervalAt intervals pos = posN where
+intervalAt intervals pos = intervals !! pos3 where
 	pos2 = pos `mod` (length intervals)
-	posN = if pos2 < 0 then pos2 + (length intervals) else pos2
+	pos3 = if pos2 < 0 then pos2 + (length intervals) else pos2
 
 isToneFromScale :: Tone -> Tone -> Intervals -> Bool
-isToneFromScale tone base intervals = elem (intervalFromTo base tone) intervals
+isToneFromScale tone key intervals = elem (intervalFromTo key tone) intervals
 
 isTriadFrom :: Tone -> Tone -> Intervals -> [Tone] -> Bool
 isTriadFrom _ _ _ [] = False
-isTriadFrom root base i tones
+isTriadFrom root key intervals chord
 	| pos == Nothing = False
-	| otherwise = all (\t -> elem (intervalFromTo base t)
-		[i !! pos1, i !! pos2, i !! pos3]) tones
+	| otherwise = all (\t -> elem (intervalFromTo key t) [i1, i2, i3]) chord
 	where
-		pos = elemIndex (intervalFromTo base root) i
+		pos = elemIndex (intervalFromTo key root) intervals
 		pos1 = fromJust pos
-		pos2 = intervalAt i (pos1 + 2)
-		pos3 = intervalAt i (pos1 + 4)
+		i1 = intervals !! pos1
+		i2 = intervalAt intervals (pos1 + 2)
+		i3 = intervalAt intervals (pos1 + 4)
 
 isTriad :: [Tone] -> Tone -> Intervals -> Bool
-isTriad tones base i = any (\t -> isTriadFrom t base i tones) tones
+isTriad chord key intervals =
+	any (\t -> isTriadFrom t key intervals chord) chord
 
 isFullTriad :: [Tone] -> Tone -> Intervals -> Bool
-isFullTriad tones base i = isTriad tones base i &&
-	length (nub $ map (\t -> intervalFromTo base t) tones) > 2
+isFullTriad chord key intervals = isTriad chord key intervals &&
+	length (nub $ map (\t -> intervalFromTo key t) chord) > 2
 
 isTonic :: [Tone] -> Tone -> Intervals -> Bool
-isTonic ch base intervals = isTriadFrom base base intervals ch
+isTonic chord key intervals = isTriadFrom key key intervals chord
 
 isSubdominant :: [Tone] -> Tone -> Intervals -> Bool
-isSubdominant ch base intervals = isTriadFrom subRoot base intervals ch where
-	subRoot = base + intervals !! 3
+isSubdominant chord key intervals = isTriadFrom subRoot key intervals chord
+	where subRoot = key + intervals !! 3
 	
 isDominant :: [Tone] -> Tone -> Intervals -> Bool
-isDominant ch base intervals = isTriadFrom domRoot base intervals ch where
-	domRoot = base + intervals !! 4
+isDominant chord key intervals = isTriadFrom domRoot key intervals chord
+	where domRoot = key + intervals !! 4
 
 isMaxOneLeadingTone :: [Tone] -> Tone -> Intervals -> Bool
-isMaxOneLeadingTone ch base intervals = length leadingTones <= 1 where
-	leadingTones = nub $ filter (\t -> intervalFromTo base t ==
-			intervals !! (length intervals - 1)) ch
+isMaxOneLeadingTone chord key intervals = length leadingTones <= 1 where
+	leadingTones = nub $ filter (\t -> intervalFromTo key t == ltint) chord
+	ltint = intervals !! (length intervals - 1)
 
 isLeadingToneOk :: [Tone] -> [Tone] -> Tone -> Intervals -> Bool
-isLeadingToneOk first second base intervals =
+isLeadingToneOk first second key intervals =
 	let
 		ltint = intervals !! (length intervals - 1)
-		leadingTones tones = nub $ filter (\t -> intervalFromTo base t ==
+		leadingTones tones = nub $ filter (\t -> intervalFromTo key t ==
 			ltint) tones
 		ltones1 = leadingTones first
 		ltones2 = leadingTones second
@@ -96,6 +97,6 @@ isBassMoving first second = min1 /= min2 where
 	min2 = minimum second
 
 percentageMoving :: [Tone] -> [Tone] -> Float
-percentageMoving first second = fromIntegral moves / genericLength second where
-	moves = sum $ map (\t -> if elem t first then 1 else 0) second
+percentageMoving first second = moves / genericLength second where
+	moves = sum $ map (\t -> if elem t first then 0 else 1 :: Float) second
 

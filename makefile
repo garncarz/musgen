@@ -10,8 +10,8 @@ run: build
 	$(MAKE) ly
 
 open:
-	gnome-open song.pdf
-	gnome-open song.midi
+	firefox song.midi &
+	firefox song.pdf &
 
 tmp:
 	mkdir tmp

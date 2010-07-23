@@ -1,9 +1,7 @@
 DATE = `date +-%Y-%m-%d`
 
 build: tmp
-	cp -l *.hs tmp/
-	cd tmp && ghc --make Main
-	cp tmp/Main musgen
+	ghc --make Main -outputdir tmp -o musgen
 
 run: build
 	./musgen

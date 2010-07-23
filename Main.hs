@@ -64,7 +64,7 @@ createTimedFlow (har:harRest) (dur:durRest) past gen
 
 
 isEnd :: Chord -> Flow -> Bool
-isEnd ch past = length past > 20 && isTonic tones1 key1 intervals1 &&
+isEnd ch past = length past > 40 && isTonicTriadIn key1 intervals1 tones1 &&
 	2 * dur1 >= beat1
 	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch;
 		dur1 = dur ch; beat1 = beat ch

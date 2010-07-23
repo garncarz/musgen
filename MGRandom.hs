@@ -11,7 +11,7 @@ rndTonesCount gen = 4
 rndDurations :: RandomGen g => g -> [Duration]
 rndDurations gen = let (exp, gen2) = randomR (0 :: Int, 5) gen
 	in 2 ^ exp : rndDurations gen2
---rndDuration gen = let (dur, _) = randomR (1, 32) gen in dur
+--rndDurations gen = 4 : rndDurations gen
 
 rndTones :: RandomGen g => g -> [Tone]
 rndTones gen =

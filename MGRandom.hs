@@ -1,7 +1,6 @@
 module MGRandom (rndChords, rndDurations, rndSplitL, rndTones) where
 
 import List
-
 import Random
 import Types
 
@@ -9,8 +8,8 @@ rndTonesCount :: RandomGen g => g -> Int
 rndTonesCount gen = 4
 
 rndDurations :: RandomGen g => g -> [Duration]
-rndDurations gen = let (exp, gen2) = randomR (0 :: Int, 5) gen
-	in 2 ^ exp : rndDurations gen2
+rndDurations gen = let (rnd, gen2) = randomR (1 :: Int, 8) gen
+	in 2 * rnd : rndDurations gen2
 --rndDurations gen = 4 : rndDurations gen
 
 rndTones :: RandomGen g => g -> [Tone]
@@ -20,14 +19,40 @@ rndTones gen =
 	--in (head $ randomRs (0, 127) g1) : rndTones g2
 
 rndChords :: RandomGen g => Chord -> g -> Flow
-rndChords start gen =
+rndChords = rndChords2
+
+rndChords1 :: RandomGen g => Chord -> g -> Flow
+rndChords1 start gen =
 	let
 		g = rndSplitL gen
 		tonesCount = rndTonesCount (g !! 0)
 		tones = take tonesCount $ rndTones (g !! 1)
 	in HarmonyChord {tones = tones, key = key start,
-		intervals = intervals start} : rndChords start (g !! 2)
+		intervals = intervals start} : rndChords1 start (g !! 2)
 
+rndChords2 :: RandomGen g => Chord -> g -> Flow
+rndChords2 state gen = ch : rndChords2 state (g !! 0) where
+	g = rndSplitL gen
+	intervals = rndIntervals (g !! 1)
+	first = key state + intervals !! 0
+	second = first + intervals !! 1
+	third = second + intervals !! 2
+	fourth = third + intervals !! 3
+	tones = [first, second, third, fourth]
+	ch = state {tones = tones}
+
+rndIntervals :: RandomGen g => g -> Intervals
+rndIntervals gen = int : rndIntervals gOut where
+	(nr, gS) = randomR (0, 100 :: Int) gen
+	(sign, g2) = randomR (True, False) gS
+	(gOut, gT) = split g2
+	int1 = if nr < 30 then 0
+		else if nr < 50 then 4
+		else if nr < 70 then 3
+		else if nr < 80 then 2
+		else if nr < 90 then 5
+		else let (t, _) = randomR (0, 12) gT in t
+	int = if sign then int1 else negate int1
 
 rndNormal :: RandomGen g => Int -> Int -> g -> Int
 rndNormal from to gen = maximum [from, minimum [to, result]] where

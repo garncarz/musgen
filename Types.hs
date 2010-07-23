@@ -35,4 +35,5 @@ type MidiTrack = [MidiEvent]
 
 floatMin = 0.1 :: Float
 floatZero = 0.001 :: Float
+floatHalf = 0.5 + floatMin
 

@@ -34,12 +34,10 @@ takePart flow playing
 		sortPlayingEnd = sortBy (\(_, d1) (_, d2) -> compare d1 d2)
 
 bassTrack :: Flow -> MidiTrack
-bassTrack flow = midiTrack 3 "Bass" 33 (takePart bassFlow []) key1 intervals1
+bassTrack flow = midiTrack 3 "Bass" 19 (takePart bassFlow []) key1 intervals1
 	where
 		(ch:_) = flow; key1 = key ch; intervals1 = intervals ch
-		newChordTones ch tones = TimedChord {tones = tones, key = key ch,
-			intervals = intervals ch, dur = dur ch, beat = beat ch,
-			remain = remain ch}
-		bassFlow = map (\ch -> newChordTones ch (map (\t -> t - 12) (tones ch)))
-			flow
+		newChordTones ch = ch {tones = transpose $ tones ch}
+			where transpose = map (subtract 12)
+		bassFlow = map (\ch -> newChordTones ch) flow
 

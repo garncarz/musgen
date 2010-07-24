@@ -13,7 +13,7 @@ import Relations
 import Types
 
 
-main = main1
+main = main2
 
 
 main1 :: IO()
@@ -21,14 +21,15 @@ main1 = do
 	gen <- newStdGen
 	let
 		g = rndSplitL gen
-		key = head $ rndTones (g !! 0)
+		--key = head $ rndTones (g !! 0)
+		key = let (i, _) = randomR (-6, 6) (g !! 0) in i + 64
 		(mjr, _) = randomR (True, False) (g !! 1)
 		startHarmony = HarmonyChord {tones = [], key = key,
 			intervals = if mjr then major else minor}
 		chordsSrc = rndChords startHarmony (g !! 2)
 		harmonyFlow = createHarmonyFlow chordsSrc [] (g !! 3)
 		startRhythm = TimedChord {tones = [], key = 0, intervals = [],
-			dur = 0, beat = 16, remain = 16}
+			dur = 0, measure = 16, remain = 16, beats = 4}
 		dursSrc = rndDurations (g !! 4)
 		flow = createTimedFlow harmonyFlow dursSrc [startRhythm] (g !! 5)
 	mapM_ putStrLn $ map show flow
@@ -54,20 +55,21 @@ createTimedFlow (har:harRest) (dur:durRest) past gen
 		(pch:_) = past
 		past2 = if (Types.dur pch == 0) then [] else past
 		newRemain = let diff = remain pch - Types.dur pch in if diff > 0
-			then diff else beat pch
-		ch = TimedChord {
+			then diff else measure pch
+		ch = pch {
 			tones = tones har, key = key har, intervals = intervals har,
-			dur = dur, beat = beat pch, remain = newRemain}
+			dur = dur, remain = newRemain}
 		chance = rhythmChance ch past2
 		endCh = ch {dur = newRemain}
-		chanceEnd = rhythmChance endCh past2
+		--chanceEnd = rhythmChance endCh past2
+		chanceEnd = 1
 		(rndChance, gen2) = randomR (0.5 :: Float, 1) gen
 
 isEnd :: Chord -> Flow -> Bool
 isEnd ch past = length past > 40 && isTonicTriadIn key1 intervals1 tones1 &&
-	2 * dur1 >= beat1
+	2 * dur1 >= measure1
 	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch;
-		dur1 = dur ch; beat1 = beat ch
+		dur1 = dur ch; measure1 = measure ch
 
 
 
@@ -76,13 +78,14 @@ main2 = do
 	gen <- newStdGen
 	let
 		g = rndSplitL gen
-		key = head $ rndTones (g !! 0)
+		--key = head $ rndTones (g !! 0)
+		key = let (i, _) = randomR (-6, 6) (g !! 0) in i + 64
 		(mjr, _) = randomR (True, False) (g !! 1)
 		startHarmony = HarmonyChord {tones = [], key = key,
 			intervals = if mjr then major else minor}
 		harFlow = harmonyFlow [startHarmony] (g !! 2)
 		startRhythm = TimedChord {tones = [], key = 0, intervals = [],
-			dur = 0, beat = 16, remain = 16}
+			dur = 0, measure = 16, remain = 16, beats = 4}
 		flow = rhythmicFlow harFlow [startRhythm] (g !! 3)
 	mapM_ putStrLn $ map show flow
 	exportMidi "song.midi" $ midiFile [harmonyTrack flow, sopranoTrack flow,
@@ -128,10 +131,10 @@ nextInRhythm past har gen = if canBeNextInRhythm ch past (g !! 0)
 		dur = head $ rndDurations (g !! 2)
 		(pch:_) = past
 		newRemain = let diff = remain pch - Types.dur pch in if diff > 0
-			then diff else beat pch
-		ch = TimedChord {
+			then diff else measure pch
+		ch = pch {
 			tones = tones har, key = key har, intervals = intervals har,
-			dur = dur, beat = beat pch, remain = newRemain}
+			dur = dur, remain = newRemain}
 		(rndChance, _) = randomR (0.5 :: Float, 1) (g !! 3)
 
 canBeNextInRhythm :: RandomGen g => Chord -> Flow -> g -> Bool
@@ -149,7 +152,7 @@ createEndChord ch = ch {dur = remain ch}
 
 canBeEnd :: Chord -> Flow -> Bool
 canBeEnd ch past = length past > 40 && isTonicTriadIn key1 intervals1 tones1 &&
-	2 * dur1 >= beat1
+	2 * dur1 >= measure1
 	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch;
-		dur1 = dur ch; beat1 = beat ch
+		dur1 = dur ch; measure1 = measure ch
 

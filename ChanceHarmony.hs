@@ -76,11 +76,10 @@ chanceCounterpoint now (past:_) =
 chanceCounterpoint _ [] = 1
 
 chanceMove now (past:_)
-	| sopMv && bassMv && pct > 0.5 = 1
-	| sopMv && bassMv = 0.8
-	| sopMv || bassMv = 0.6
-	| pct > 0.5 = 0.5
-	| otherwise = floatMin
+	| not sopMv = floatMin
+	| not bassMv = floatHalf
+	| pct > 0.5 = 1
+	| otherwise = 0.8
 	where
 		tones1 = tones past; tones2 = tones now
 		sopMv = isSopranoMoving tones1 tones2

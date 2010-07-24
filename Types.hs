@@ -20,8 +20,9 @@ data Chord =
 		key :: Tone,
 		intervals :: Intervals,
 		dur :: Duration,
-		beat :: Duration,
-		remain :: Duration}
+		measure :: Duration,
+		remain :: Duration,
+		beats :: Int}
 	deriving Eq
 instance Show Chord where
 	show ch = show (tones ch, dur ch)

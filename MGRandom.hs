@@ -27,8 +27,7 @@ rndChords1 start gen =
 		g = rndSplitL gen
 		tonesCount = rndTonesCount (g !! 0)
 		tones = take tonesCount $ rndTones (g !! 1)
-	in HarmonyChord {tones = tones, key = key start,
-		intervals = intervals start} : rndChords1 start (g !! 2)
+	in start {tones = tones} : rndChords1 start (g !! 2)
 
 rndChords2 :: RandomGen g => Chord -> g -> Flow
 rndChords2 state gen = ch : rndChords2 state (g !! 0) where
@@ -46,11 +45,14 @@ rndIntervals gen = int : rndIntervals gOut where
 	(nr, gS) = randomR (0, 100 :: Int) gen
 	(sign, g2) = randomR (True, False) gS
 	(gOut, gT) = split g2
-	int1 = if nr < 30 then 0
-		else if nr < 50 then 4
-		else if nr < 70 then 3
-		else if nr < 80 then 2
-		else if nr < 90 then 5
+	int1 = if nr < 25 then 0
+		else if nr < 40 then 4
+		else if nr < 55 then 3
+		else if nr < 65 then 2
+		else if nr < 75 then 5
+		else if nr < 80 then 1
+		else if nr < 90 then 6
+		else if nr < 95 then 7
 		else let (t, _) = randomR (0, 12) gT in t
 	int = if sign then int1 else negate int1
 

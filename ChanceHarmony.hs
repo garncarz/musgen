@@ -4,6 +4,8 @@ import List
 import Types
 import Relations
 
+-- TODO přidat pravidlo proti opakování stejných [Tone]
+
 harmonyChance :: ChanceType
 harmonyChance now past = foldl (*) 1
 	(map (\(chance, factor) -> (** factor) $ chance now past) chances)

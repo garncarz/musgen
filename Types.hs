@@ -10,20 +10,14 @@ type Duration = Int
 
 type ToneToStop = (Tone, Duration)
 
-data Chord =
-	HarmonyChord {
-		tones :: [Tone],
-		key :: Tone,
-		intervals :: Intervals}
-	| TimedChord {
+data Chord = Chord {
 		tones :: [Tone],
 		key :: Tone,
 		intervals :: Intervals,
 		dur :: Duration,
 		measure :: Duration,
 		remain :: Duration,
-		beats :: Int}
-	deriving Eq
+		beats :: Int} deriving Eq
 instance Show Chord where
 	show ch = show (tones ch, dur ch)
 type Flow = [Chord]

@@ -1,16 +1,14 @@
-module MGRandom (rndChords, rndDurations, rndSplitL, rndTones) where
+module MGRandom (rndSplitL, rndTones, rndChordTones, rndDuration) where
 
 import List
 import Random
 import Types
 
+rndDuration :: RandomGen g => g -> Duration
+rndDuration gen = 2 * rnd where (rnd, _) = randomR (1 :: Int, 8) gen
+
 rndTonesCount :: RandomGen g => g -> Int
 rndTonesCount gen = 4
-
-rndDurations :: RandomGen g => g -> [Duration]
-rndDurations gen = let (rnd, gen2) = randomR (1 :: Int, 8) gen
-	in 2 * rnd : rndDurations gen2
---rndDurations gen = 4 : rndDurations gen
 
 rndTones :: RandomGen g => g -> [Tone]
 rndTones gen =
@@ -18,27 +16,16 @@ rndTones gen =
 	in rndNormal 0 127 g1 : rndTones g2
 	--in (head $ randomRs (0, 127) g1) : rndTones g2
 
-rndChords :: RandomGen g => Chord -> g -> Flow
-rndChords = rndChords2
-
-rndChords1 :: RandomGen g => Chord -> g -> Flow
-rndChords1 start gen =
-	let
-		g = rndSplitL gen
-		tonesCount = rndTonesCount (g !! 0)
-		tones = take tonesCount $ rndTones (g !! 1)
-	in start {tones = tones} : rndChords1 start (g !! 2)
-
-rndChords2 :: RandomGen g => Chord -> g -> Flow
-rndChords2 state gen = ch : rndChords2 state (g !! 0) where
-	g = rndSplitL gen
-	intervals = rndIntervals (g !! 1)
-	first = key state + intervals !! 0
+rndChordTones :: RandomGen g => g -> [Tone]
+rndChordTones = rndChordTones2
+rndChordTones1 gen = take count tones where
+	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
+rndChordTones2 gen = [first, second, third, fourth] where
+	intervals = rndIntervals gen
+	first = 64 + intervals !! 0
 	second = first + intervals !! 1
 	third = second + intervals !! 2
 	fourth = third + intervals !! 3
-	tones = [first, second, third, fourth]
-	ch = state {tones = tones}
 
 rndIntervals :: RandomGen g => g -> Intervals
 rndIntervals gen = int : rndIntervals gOut where

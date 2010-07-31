@@ -4,8 +4,6 @@ import List
 import Types
 import Relations
 
--- TODO přidat pravidlo proti opakování stejných [Tone]
-
 harmonyChance :: ChanceType
 harmonyChance now past = foldl (*) 1
 	(map (\(chance, factor) -> (** factor) $ chance now past) chances)
@@ -23,7 +21,9 @@ chances = [
 	--(chance4Tones, 0.5),
 	(chanceCounterpoint, 1),
 	(chanceMove, 1),
-	(chanceConsonance, 0.8)
+	(chanceConsonance, 0.8),
+	(chanceAntiRepetition, 1),
+	(chanceAntiRepetitionForSoprano, 1)
 	]
 
 chanceThick now _ = if rng > 30 || dist > 10 then floatMin else 1
@@ -97,4 +97,15 @@ chanceConsonance now (past:_) = if isConsonantIn key2 intervals2 tones2
 chanceConsonance now [] =
 	if isConsonantIn key1 intervals1 tones1 then 1 else floatMin
 	where tones1 = tones now; key1 = key now; intervals1 = intervals now
+
+chanceAntiRepetition _ [] = 1
+chanceAntiRepetition now past = 1 - sum [same 0, same 1, same 2] / 3 where
+	getTones ch = sort . nub $ tones ch
+	pTones i = if length past > i then getTones (past !! i) else [negate i]
+	same i = if getTones now == pTones i then floatHalf else 0
+
+chanceAntiRepetitionForSoprano _ [] = 1
+chanceAntiRepetitionForSoprano now past = 1 - sum [mv 0, mv 1, mv 2] / 3 where
+	pTones i = if length past > i then tones (past !! i) else [negate i]
+	mv i = if isSopranoMoving (tones now) (pTones i) then 0 else floatHalf
 

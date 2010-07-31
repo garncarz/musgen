@@ -20,12 +20,10 @@ rndChordTones :: RandomGen g => g -> [Tone]
 rndChordTones = rndChordTones2
 rndChordTones1 gen = take count tones where
 	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
-rndChordTones2 gen = [first, second, third, fourth] where
-	intervals = rndIntervals gen
-	first = 64 + intervals !! 0
-	second = first + intervals !! 1
-	third = second + intervals !! 2
-	fourth = third + intervals !! 3
+rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where
+	(g1, g2) = split gen
+	intervals = rndIntervals g1; count = rndTonesCount g2
+	arr 0 = 64 + intervals !! 0; arr i = arr (i - 1) + intervals !! i
 
 rndIntervals :: RandomGen g => g -> Intervals
 rndIntervals gen = int : rndIntervals gOut where

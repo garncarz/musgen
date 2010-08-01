@@ -39,22 +39,22 @@ generateFlow past gen =
 
 nextTonesChord :: RandomGen g => Flow -> g -> Chord
 nextTonesChord past gen = if ok then ch else nextTonesChord past (g !! 2) where
-	ok = chance > rndChance; chance = harmonyChance ch rpast
+	ok = chance >= minChance; chance = harmonyChance ch rpast
 	ch = pch {tones = rndChordTones (g !! 0), dur = 0, remain = newRemain}
 	newRemain = let diff = remain pch - Types.dur pch in if diff > 0
 			then diff else measure pch
 	rpast = realPast past; (pch:_) = past
 	g = rndSplitL gen
-	(rndChance, _) = randomR (0.4 :: Float, 1) (g !! 1)
+	(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)
 
 nextDurChord :: RandomGen g => Chord -> Flow -> g -> Chord
 nextDurChord ch past gen = if ok then ch1 else nextDurChord ch past (g !! 2)
 	where
-		ok = chance > rndChance; chance = rhythmChance ch1 rpast
+		ok = chance >= minChance; chance = rhythmChance ch1 rpast
 		ch1 = ch {dur = rndDuration (g !! 0)}
-		rpast = realPast past; (pch:_) = past
+		rpast = realPast past
 		g = rndSplitL gen
-		(rndChance, _) = randomR (0.4 :: Float, 1) (g !! 1)
+		(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)
 
 canBeEnd :: Chord -> Flow -> Bool
 canBeEnd ch past = length past > 40 && isTonicTriadIn key1 intervals1 tones1 &&

@@ -5,7 +5,7 @@ import Random
 import Types
 
 rndDuration :: RandomGen g => g -> Duration
-rndDuration gen = 2 * rnd where (rnd, _) = randomR (1 :: Int, 8) gen
+rndDuration gen = max 1 $ 2 * rnd where (rnd, _) = randomR (0 :: Int, 8) gen
 
 rndTonesCount :: RandomGen g => g -> Int
 rndTonesCount gen = 4

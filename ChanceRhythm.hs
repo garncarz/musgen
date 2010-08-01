@@ -10,21 +10,23 @@ rhythmChance now past = foldl (*) 1
 chances :: [(ChanceType, Float)]
 chances = [
 	(chanceMeasureTime, 1),
-	(chanceBeatTime, 1),
-	(chanceCopyRhythm, 0.8)
+	(chanceBeatTime, 0.9),
+	(chanceCopyRhythm, 0.75)
 	]
 
 chanceMeasureTime now _ = if (remain1 - dur1 >= 0) then 1 else floatZero
 	where dur1 = dur now; remain1 = remain now
 
-chanceBeatTime now _ =
-	if (dur1 > beat || (remain1 - dur1) `mod` beat > 0) then floatHalf else 1
+chanceBeatTime now _
+	| dur1 > beat = floatHalf
+	| (remain1 - dur1) `mod` beat /= 0 = 0.75
+	| otherwise = 1
 	where dur1 = dur now; remain1 = remain now;
 		beat = measure now `div` beats now
 
-chanceCopyRhythm now flow =
-	if prems == [] || elem remain1 prems then 1 else floatHalf where
-		remain1 = remain now
+chanceCopyRhythm now flow = if prems == [] || nextRemain == 0 ||
+	elem nextRemain prems then 1 else floatHalf where
+		nextRemain = remain now - dur now
 		prems = measureRems (now:flow) 1
 		measureRems :: Flow -> Int -> [Duration]
 		measureRems flow skip

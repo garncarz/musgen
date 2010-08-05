@@ -21,6 +21,9 @@ ly: tmp
 	cp tmp/song.pdf ./
 
 
+todo:
+	find . -name \*.hs -exec grep TODO {} -Hn \;
+
 clean:
 	rm -fr *~ tmp musgen
 

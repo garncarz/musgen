@@ -1,10 +1,11 @@
 module Midi (toneMidi, pauseMidi, midiTrack, midiFile, exportMidi) where
 
+-- TODO změna KeySignature v midiTrack automaticky podle Flow, ne jako arg.
+-- TODO přidat poznávání TimeSignature
+
 import Codec.Midi
 import Relations
 import Types hiding (key)
-
--- TODO změna KeySignature v midiTrack automaticky podle Flow, ne jako arg.
 
 toneMidi :: Tone -> Volume -> MidiEvent
 toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})

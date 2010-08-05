@@ -5,7 +5,7 @@ import Random
 import Types
 
 rndDuration :: RandomGen g => g -> Duration
-rndDuration gen = max 1 $ 2 * rnd where (rnd, _) = randomR (0 :: Int, 8) gen
+rndDuration gen = max 2 $ 2 * rnd where (rnd, _) = randomR (0 :: Int, 8) gen
 
 rndTonesCount :: RandomGen g => g -> Int
 rndTonesCount gen = 4
@@ -54,7 +54,7 @@ rndSplitL :: RandomGen g => g -> [g]
 rndSplitL g = let (g1, g2) = split g in g1 : rndSplitL g2
 
 
-testRndNormal :: IO()
+testRndNormal :: IO ()
 testRndNormal = do
 	gen <- newStdGen
 	let tones = take 10000 $ rndTones gen

@@ -1,6 +1,7 @@
 module Input where
 
 -- TODO ošetřit chyby vstupu
+-- TODO změnit formát argumentů na --arg=hodnota
 
 import List
 import Maybe

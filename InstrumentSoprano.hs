@@ -34,7 +34,5 @@ takePart flow playing
 		sortPlayingEnd = sortBy (\(_, d1) (_, d2) -> compare d1 d2)
 
 sopranoTrack :: Flow -> MidiTrack
-sopranoTrack flow = midiTrack 2 "Soprano" 1 (takePart flow [])
-	key1 intervals1
-	where (ch:_) = flow; key1 = key ch; intervals1 = intervals ch
+sopranoTrack flow = midiTrack 2 "Soprano" 1 (takePart flow []) (flow !! 0)
 

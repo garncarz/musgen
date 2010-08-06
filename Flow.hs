@@ -49,10 +49,11 @@ nextDurChord ch past gen = if ok then ch1 else nextDurChord ch past (g !! 2)
 		ch1 = ch {dur = rndDuration (g !! 0)}
 		rpast = realPast past
 		g = rndSplitL gen
-		(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)
+		--(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)
+		minChance = 0.5
 
 canBeEnd :: Chord -> Flow -> Bool
-canBeEnd ch past = length past > 100 && isTonicTriadIn key1 intervals1 tones1 &&
+canBeEnd ch past = length past > 20 && isTonicTriadIn key1 intervals1 tones1 &&
 	2 * dur1 >= measure1
 	where tones1 = tones ch; key1 = key ch; intervals1 = intervals ch;
 		dur1 = dur ch; measure1 = measure ch

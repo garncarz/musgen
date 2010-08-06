@@ -1,11 +1,9 @@
 module Midi (toneMidi, pauseMidi, midiTrack, midiFile, exportMidi) where
 
--- TODO změna KeySignature v midiTrack automaticky podle Flow, ne jako arg.
--- TODO přidat poznávání TimeSignature
-
 import Codec.Midi
 import Relations
 import Types hiding (key)
+import qualified Types (key)
 
 toneMidi :: Tone -> Volume -> MidiEvent
 toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})
@@ -14,32 +12,34 @@ pauseMidi :: Int -> MidiEvent
 --pauseMidi dur = (dur, Marker "")
 pauseMidi dur = (dur, NoteOff {channel = 0, key = 0, velocity = 0})
 
-keySignature :: Tone -> Intervals -> (Int, Int)
+keySignature :: Tone -> Intervals -> Message
 keySignature key intervals
-	| t == 0 && mjr || t == 9 && not mjr = (0, mjrI)
-	| otherwise = (\(sharps, mjrI) -> (nextSharps sharps, mjrI))
-		(keySignature (key - 7) intervals)
+	| t == 0 && mjr || t == 9 && not mjr = KeySignature 0 mjrI
+	| otherwise = KeySignature (nextSharps sharps2) mjrI2
 	where
 		t = intervalFromTo 60 key
 		mjr = intervals == major
 		mjrI = if mjr then 0 else 1
 		nextSharps sharps = if sharps == 6 then -5 else sharps + 1
+		KeySignature sharps2 mjrI2 = keySignature (key - 7) intervals
+
+timeSignature :: Duration -> Int -> Message
+timeSignature measure beats = TimeSignature numerator denominator clocks dunno
+	where numerator = beats; denominator = 2; clocks = 18; dunno = 8
 
 eventsToChannel :: Channel -> [MidiEvent] -> [MidiEvent]
 eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
-	then let msgUpdated = NoteOn {channel = chan, key = key msg,
-		velocity = velocity msg} in (ticks, msgUpdated)
+	then (ticks, msg {channel = chan})
 	else (ticks, msg))
 
-midiTrack :: Int -> String -> Int -> [MidiEvent] -> Tone -> Intervals ->
-	MidiTrack
-midiTrack channel instrument program events key intervals =
+midiTrack :: Int -> String -> Int -> [MidiEvent] -> Chord -> MidiTrack
+midiTrack channel instrument program events state =
 	[
 		(0, ChannelPrefix channel),
 		(0, InstrumentName instrument),
 		(0, ProgramChange channel program),
-		--(0, TimeSignature ),
-		(0, (\(x, y) -> KeySignature x y) (keySignature key intervals))
+		(0, keySignature (Types.key state) (intervals state)),
+		(0, timeSignature (measure state) (beats state))
 	]
 	++ (eventsToChannel channel events) ++
 	[ (8, TrackEnd) ]

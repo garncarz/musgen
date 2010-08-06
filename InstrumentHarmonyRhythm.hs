@@ -23,7 +23,5 @@ takePart flow = if dur1 <= 0 then error "dur1 <= 0"
 		ch2 = if overlap then ch {dur = dur1 - dur2, remain = nextBeat} else ch
 
 harmonyRhythmTrack :: Flow -> MidiTrack
-harmonyRhythmTrack flow = midiTrack 4 "Rhythm" 26 (takePart flow)
-	key1 intervals1
-	where (ch:_) = flow; key1 = key ch; intervals1 = intervals ch
+harmonyRhythmTrack flow = midiTrack 4 "Rhythm" 26 (takePart flow) (flow !! 0)
 

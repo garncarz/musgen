@@ -28,5 +28,5 @@ clean:
 	rm -fr *~ tmp musgen
 
 pack: clean
-	cd .. && tar -czf musgen$(DATE).tar.gz musgen --exclude=.svn
+	cd .. && tar -cJf musgen$(DATE).tar.xz musgen --exclude=.svn
 

@@ -22,7 +22,7 @@ ly: tmp
 
 
 todo:
-	find . -name \*.hs -exec grep TODO {} -Hn \;
+	@find . -name \*.hs -exec grep TODO {} -Hn \;
 
 clean:
 	rm -fr *~ tmp musgen

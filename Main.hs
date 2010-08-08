@@ -18,7 +18,7 @@ import System.Directory
 import qualified Types as T
 
 data Input = Input {key :: String, scale :: String, beats :: String,
-	new :: Bool} deriving (Data, Typeable, Show)
+	minMeasures :: String, new :: Bool} deriving (Data, Typeable, Show)
 
 use :: Mode Input
 use = mode $ Input {
@@ -28,6 +28,8 @@ use = mode $ Input {
 		text "Scale of harmony" & typ "major|minor" & empty "random",
 	beats = def &=
 		text "Beats per measure" & typ "INT" & empty "random",
+	minMeasures = def &=
+		text "Minimal number of measures" & typ "INT" & empty "20",
 	new = def &=
 		text "Generate new flow"}
 
@@ -42,7 +44,7 @@ main :: IO ()
 main = do
 	input <- cmdArgs "MusGen" [use]
 	gen <- newStdGen
-
+	
 	let
 		g = rndSplitL gen
 		input2 = input {
@@ -50,14 +52,16 @@ main = do
 				in show $ i + 76),
 			scale = argValue scale (let (i, _) = randomR (0, 1) (g !! 1)
 				in ["major", "minor"] !! i),
-			beats = argValue beats "4"}
+			beats = argValue beats "4",
+			minMeasures = argValue minMeasures "20"}
 			where argValue arg implicit =
 				if arg input /= "" then arg input else implicit
 		
-		chKey = read (key input2)
+		chKey = read $ key input2
 		chScale = scale input2
-		chBeats = read (beats input2)
+		chBeats = read $ beats input2
 		chMeasure = chBeats * 4
+		flMinMeasures = read $ minMeasures input2
 		
 		startChord = T.Chord {T.tones = [], T.key = chKey,
 			T.intervals = if chScale == "minor" then minor else major,
@@ -70,10 +74,11 @@ main = do
 		exitFailure
 		else return ()
 	checkArg chBeats "beats"
+	checkArg flMinMeasures "minMeasures"
 	
 	flowExists <- doesFileExist "flow.txt"
 	flow <- if flowExists && not (new input) then loadFlow
-		else produceFlow startChord
+		else produceFlow startChord flMinMeasures
 	exportMidi "song.midi" $ midiFile [harmonyTrack flow, sopranoTrack flow,
 		bassTrack flow, harmonyRhythmTrack flow]
 	putStrLn "MIDI generated."

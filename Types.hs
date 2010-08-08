@@ -19,7 +19,9 @@ data Chord = Chord {
 		remain :: Duration,
 		beats :: Int} deriving (Eq, Show, Read)
 showBrief :: Chord -> String
-showBrief ch = show (tones ch, dur ch)
+--showBrief ch = show (tones ch, dur ch, remain ch)
+showBrief ch = "(" ++ (show $ tones ch) ++ "," ++ (show $ dur ch) ++ "," ++
+	(show $ remain ch) ++ "->)"
 type Flow = [Chord]
 
 type ChanceType = Chord -> Flow -> Float

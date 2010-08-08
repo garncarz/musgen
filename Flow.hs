@@ -2,7 +2,6 @@ module Flow where
 
 import ChanceHarmony
 import ChanceRhythm
-import Input
 import MGRandom
 import Random
 import Relations
@@ -11,15 +10,17 @@ import Types
 loadFlow :: IO Flow
 loadFlow = do
 	content <- readFile "flow.txt"
-	return $ map read $ lines content
+	let flow = map read $ lines content
+	putStrLn "Loading flow..."
+	return flow
 
-produceFlow :: IO Flow
-produceFlow = do
+produceFlow :: Chord -> IO Flow
+produceFlow startChord = do
 	gen <- newStdGen
-	startChord <- getStartChord
 	let flow = nextFlow [startChord] gen
-	mapM_ putStrLn $ map showBrief flow
+	mapM_ putStrLn $ map show flow
 	writeFile "flow.txt" $ unlines $ map show flow
+	putStrLn "Flow generated."
 	return flow
 
 nextFlow :: RandomGen g => Flow -> g -> Flow

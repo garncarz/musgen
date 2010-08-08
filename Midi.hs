@@ -8,7 +8,7 @@ import qualified Types (key)
 toneMidi :: Tone -> Volume -> MidiEvent
 toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})
 
-pauseMidi :: Int -> MidiEvent
+pauseMidi :: Duration -> MidiEvent
 --pauseMidi dur = (dur, Marker "")
 pauseMidi dur = (dur, NoteOff {channel = 0, key = 0, velocity = 0})
 
@@ -23,9 +23,8 @@ keySignature key intervals
 		nextSharps sharps = if sharps == 6 then -5 else sharps + 1
 		KeySignature sharps2 mjrI2 = keySignature (key - 7) intervals
 
-timeSignature :: Duration -> Int -> Message
-timeSignature measure beats = TimeSignature numerator denominator clocks dunno
-	where numerator = beats; denominator = 2; clocks = 18; dunno = 8
+timeSignature :: Int -> Message
+timeSignature beats = TimeSignature beats 2 0 0
 
 eventsToChannel :: Channel -> [MidiEvent] -> [MidiEvent]
 eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
@@ -39,7 +38,7 @@ midiTrack channel instrument program events state =
 		(0, InstrumentName instrument),
 		(0, ProgramChange channel program),
 		(0, keySignature (Types.key state) (intervals state)),
-		(0, timeSignature (measure state) (beats state))
+		(0, timeSignature (beats state))
 	]
 	++ (eventsToChannel channel events) ++
 	[ (8, TrackEnd) ]

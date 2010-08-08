@@ -18,7 +18,6 @@ chanceMeasureTime now _ = if (remain1 - dur1 >= 0) then 1 else floatZero
 
 chanceBeatTime now flow
 	| (remain1 - dur1) `mod` beat == 0 = 1
-	| dur1 < beat = 0.75
 	| otherwise = chanceCopyRhythm now flow
 	where dur1 = dur now; remain1 = remain now;
 		beat = measure now `div` beats now

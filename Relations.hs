@@ -29,6 +29,22 @@ intervalAt intervals pos = intervals !! pos3 where
 	pos2 = pos `mod` (length intervals)
 	pos3 = if pos2 < 0 then pos2 + (length intervals) else pos2
 
+succToneIn :: Tone -> Intervals -> Tone -> Tone
+succToneIn key intervals tone = tone - int1 + intR where
+	int1 = intervalFromTo key tone
+	intL = last $ filter (<= int1) intervals
+	posL = fromJust $ elemIndex intL intervals
+	int2 = intervalAt intervals (posL + 1)
+	intR = if int2 < int1 then int2 + scaleSize else int2
+
+predToneIn :: Tone -> Intervals -> Tone -> Tone
+predToneIn key intervals tone = tone - int1 + intL where
+	int1 = intervalFromTo key tone
+	intR = head $ filter (>= int1) intervals
+	posR = fromJust $ elemIndex intR intervals
+	int2 = intervalAt intervals (posR - 1)
+	intL = if int2 > int1 then int2 - scaleSize else int2
+
 isFromScale :: Tone -> Intervals -> Tone -> Bool
 isFromScale key intervals tone = elem (intervalFromTo key tone) intervals
 
@@ -69,14 +85,17 @@ isDominantIn :: Tone -> Intervals -> [Tone] -> Bool
 isDominantIn key intervals chord = hasRoot domRoot chord
 	where domRoot = key + intervals !! 4
 
+isLeadingToneIn :: Tone -> Intervals -> Tone -> Bool
+isLeadingToneIn key intervals tone = intervalFromTo key tone == leadTone where
+	leadTone = intervals !! (length intervals - 1)
+
 isLeadingToneOkIn :: Tone -> Intervals -> [Tone] -> [Tone] -> Bool
 isLeadingToneOkIn key intervals first second =
 	let
-		ltint = intervals !! (length intervals - 1)
-		leadingTones tones = nub $ filter (\t -> intervalFromTo key t ==
-			ltint) tones
+		leadingTones = nub . filter (isLeadingToneIn key intervals)
 		ltones1 = leadingTones first; ltones2 = leadingTones second
-		ltone = ltones1 !! 0; tonic = ltone + scaleSize - ltint
+		ltone = ltones1 !! 0
+		tonic = ltone + scaleSize - intervals !! (length intervals - 1)
 	in
 		length ltones2 < 2 && (ltones1 == [] || (ltones1 == [ltone] &&
 			(elem ltone second || elem tonic second)))

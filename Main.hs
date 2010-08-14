@@ -27,7 +27,7 @@ use = mode $ Input {
 	scale = def &=
 		text "Scale of harmony" & typ "major|minor" & empty "random",
 	beats = def &=
-		text "Beats per measure" & typ "INT" & empty "random",
+		text "Beats per measure" & typ "INT" & empty "4",
 	minMeasures = def &=
 		text "Minimal number of measures" & typ "INT" & empty "20",
 	new = def &=
@@ -79,7 +79,10 @@ main = do
 	flowExists <- doesFileExist "flow.txt"
 	flow <- if flowExists && not (new input) then loadFlow
 		else produceFlow startChord flMinMeasures
-	exportMidi "song.midi" $ midiFile [harmonyTrack flow, sopranoTrack flow,
-		bassTrack flow, harmonyRhythmTrack flow]
+	exportMidi "song.midi" $ midiFile [
+		harmonyTrack flow (g !! 2),
+		sopranoTrack flow (g !! 3),
+		bassTrack flow (g !! 4),
+		harmonyRhythmTrack flow (g !! 5)]
 	putStrLn "MIDI generated."
 

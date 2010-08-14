@@ -1,6 +1,7 @@
 module InstrumentHarmonyRhythm (harmonyRhythmTrack) where
 
 import Midi
+import Random
 import Types
 
 chordMidi :: [Tone] -> Duration -> [MidiEvent]
@@ -22,6 +23,6 @@ takePart flow = if dur1 <= 0 then error "dur1 <= 0"
 		dur2 = if overlap then remain1 - nextBeat else dur1
 		ch2 = if overlap then ch {dur = dur1 - dur2, remain = nextBeat} else ch
 
-harmonyRhythmTrack :: Flow -> MidiTrack
-harmonyRhythmTrack flow = midiTrack 4 "Rhythm" 26 (takePart flow) (flow !! 0)
+harmonyRhythmTrack :: RandomGen g => Flow -> g -> MidiTrack
+harmonyRhythmTrack flow _ = midiTrack 4 "Rhythm" 26 (takePart flow) (flow !! 0)
 

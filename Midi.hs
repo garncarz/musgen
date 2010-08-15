@@ -1,4 +1,5 @@
-module Midi (toneMidi, pauseMidi, midiTrack, midiFile, exportMidi) where
+module Midi (toneMidi, pauseMidi, flow2Midi,
+	midiTrack, midiFile, exportMidi) where
 
 import Codec.Midi
 import Relations
@@ -11,6 +12,14 @@ toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})
 pauseMidi :: Duration -> MidiEvent
 --pauseMidi dur = (dur, Marker "")
 pauseMidi dur = (dur, NoteOff {channel = 0, key = 0, velocity = 0})
+
+flow2Midi :: Flow -> [MidiEvent]
+flow2Midi [] = []
+flow2Midi flow = startTones ++ [pauseMidi dur1] ++ endTones ++ flow2Midi rest
+	where
+		(ch:rest) = flow; dur1 = dur ch
+		startTones = map (\t -> toneMidi t 90) $ tones ch
+		endTones = map (\t -> toneMidi t 0) $ tones ch
 
 keySignature :: Tone -> Intervals -> Message
 keySignature key intervals
@@ -49,6 +58,6 @@ midiFile tracks = Midi {
 	timeDiv = TicksPerBeat 4,
 	tracks = tracks }
 
-exportMidi :: String -> Midi -> IO()
+exportMidi :: String -> Midi -> IO ()
 exportMidi filename midi = exportFile filename midi
 

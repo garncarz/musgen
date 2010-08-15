@@ -17,7 +17,7 @@ rndTones gen =
 	--in (head $ randomRs (0, 127) g1) : rndTones g2
 
 rndChordTones :: RandomGen g => g -> [Tone]
-rndChordTones = rndChordTones2
+rndChordTones = sort . rndChordTones2
 rndChordTones1 gen = take count tones where
 	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
 rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where

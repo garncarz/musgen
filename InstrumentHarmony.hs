@@ -14,7 +14,7 @@ harmonyChord chord = chordMidi tones1 dur1 where
 	measure1 = measure chord; remain1 = remain chord
 	key1 = key chord; intervals1 = intervals chord
 
-harmonyTrack :: RandomGen g => Flow -> g -> MidiTrack
+harmonyTrack :: InstrumentTrack
 harmonyTrack flow _ = midiTrack 1 "Harmony" 19 (concat $ map harmonyChord flow)
 	(flow !! 0)
 

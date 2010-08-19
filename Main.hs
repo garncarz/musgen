@@ -18,7 +18,8 @@ import System.Directory
 import qualified Types as T
 
 data Input = Input {key :: String, scale :: String, beats :: String,
-	minMeasures :: String, new :: Bool} deriving (Data, Typeable, Show)
+	tempo :: String, minMeasures :: String, new :: Bool, name :: String}
+	deriving (Data, Typeable, Show)
 
 use :: Mode Input
 use = mode $ Input {
@@ -28,10 +29,13 @@ use = mode $ Input {
 		text "Scale of harmony" & typ "major|minor" & empty "random",
 	beats = def &=
 		text "Beats per measure" & typ "INT" & empty "4",
+	tempo = def &=
+		text "Quarter notes per minute" & typ "INT" & empty "120",
 	minMeasures = def &=
 		text "Minimal number of measures" & typ "INT" & empty "20",
-	new = def &=
-		text "Generate new flow"}
+	new = def &= text "Generate new flow",
+	name = def &= text "Song name (to be used in filenames)"
+		& typ "SONG_NAME" & empty "song" & argPos 0 }
 
 checkArg :: a -> String -> IO ()
 checkArg arg name = do
@@ -53,20 +57,17 @@ main = do
 			scale = argValue scale (let (i, _) = randomR (0, 1) (g !! 1)
 				in ["major", "minor"] !! i),
 			beats = argValue beats "4",
-			minMeasures = argValue minMeasures "20"}
+			tempo = argValue tempo "120",
+			minMeasures = argValue minMeasures "20",
+			name = argValue name "song" }
 			where argValue arg implicit =
 				if arg input /= "" then arg input else implicit
-		
 		chKey = read $ key input2
 		chScale = scale input2
 		chBeats = read $ beats input2
+		midiTempo = 60000000 `div` (read $ tempo input2)
 		chMeasure = chBeats * 4
 		flMinMeasures = read $ minMeasures input2
-		
-		startChord = T.Chord {T.tones = [], T.key = chKey,
-			T.intervals = if chScale == "minor" then minor else major,
-			T.dur = 0, T.measure = chMeasure, T.remain = chMeasure,
-			T.beats = chBeats}
 	
 	checkArg chKey "key"
 	if not (elem chScale ["major", "minor"]) then do
@@ -74,15 +75,24 @@ main = do
 		exitFailure
 		else return ()
 	checkArg chBeats "beats"
+	checkArg midiTempo "tempo"
 	checkArg flMinMeasures "minMeasures"
 	
-	flowExists <- doesFileExist "flow.txt"
-	flow <- if flowExists && not (new input) then loadFlow
-		else produceFlow startChord flMinMeasures
-	exportMidi "song.midi" $ midiFile [
-		harmonyTrack flow (g !! 2),
-		sopranoTrack flow (g !! 3),
-		bassTrack flow (g !! 4),
-		harmonyRhythmTrack flow (g !! 5)]
+	let
+		flowFilename = name input2 ++ ".flow"
+		midiFilename = name input2 ++ ".midi"
+		startChord = T.Chord {T.tones = [], T.key = chKey,
+			T.intervals = if chScale == "minor" then minor else major,
+			T.dur = 0, T.measure = chMeasure, T.remain = chMeasure,
+			T.beats = chBeats}
+	
+	flowExists <- doesFileExist flowFilename
+	flow <- if flowExists && not (new input) then loadFlow flowFilename
+		else produceFlow startChord flMinMeasures flowFilename
+	exportMidi midiFilename $ midiFile [
+		harmonyTrack flow (g !! 2) midiTempo,
+		sopranoTrack flow (g !! 3) midiTempo,
+		bassTrack flow (g !! 4) midiTempo,
+		harmonyRhythmTrack flow (g !! 5) midiTempo]
 	putStrLn "MIDI generated."
 

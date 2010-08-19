@@ -7,19 +7,19 @@ import Random
 import Relations
 import Types
 
-loadFlow :: IO Flow
-loadFlow = do
-	content <- readFile "flow.txt"
+loadFlow :: String -> IO Flow
+loadFlow filename = do
+	content <- readFile filename
 	let flow = map read $ lines content
 	putStrLn "Loading flow..."
 	return flow
 
-produceFlow :: Chord -> Int -> IO Flow
-produceFlow startChord minMeasures = do
+produceFlow :: Chord -> Int -> String -> IO Flow
+produceFlow startChord minMeasures filename = do
 	gen <- newStdGen
 	let flow = nextFlow [startChord] 0 minMeasures gen
 	mapM_ putStrLn $ map showBrief flow
-	writeFile "flow.txt" $ unlines $ map show flow
+	writeFile filename $ unlines $ map show flow
 	putStrLn "Flow generated."
 	return flow
 

@@ -13,7 +13,7 @@ takePart flow = ch2 : takePart rest
 		tone1 = maximum $ tones ch
 		ch2 = ch {tones = [tone1]}
 
-sopranoTrack :: RandomGen g => Flow -> g -> MidiTrack
+sopranoTrack :: InstrumentTrack
 sopranoTrack flow gen = midiTrack 2 "Soprano" 1
 	(flow2Midi . melodyFlow gen $ takePart flow) (flow !! 0)
 

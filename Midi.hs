@@ -40,14 +40,16 @@ eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
 	then (ticks, msg {channel = chan})
 	else (ticks, msg))
 
-midiTrack :: Int -> String -> Int -> [MidiEvent] -> Chord -> MidiTrack
-midiTrack channel instrument program events state =
+midiTrack :: Channel -> String -> Preset -> [MidiEvent] -> Chord -> Tempo
+	-> MidiTrack
+midiTrack channel name instrument events state tempo =
 	[
 		(0, ChannelPrefix channel),
-		(0, InstrumentName instrument),
-		(0, ProgramChange channel program),
+		(0, InstrumentName name),
+		(0, ProgramChange channel instrument),
 		(0, keySignature (Types.key state) (intervals state)),
-		(0, timeSignature (beats state))
+		(0, timeSignature (beats state)),
+		(0, TempoChange tempo)
 	]
 	++ (eventsToChannel channel events) ++
 	[ (8, TrackEnd) ]

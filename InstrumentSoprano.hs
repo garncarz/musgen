@@ -15,5 +15,5 @@ takePart flow = ch2 : takePart rest
 
 sopranoTrack :: InstrumentTrack
 sopranoTrack flow gen = midiTrack 2 "Soprano" 1
-	(flow2Midi . melodyFlow gen $ takePart flow) (flow !! 0)
+	(flow2Midi . melodyFlow gen $ takePart flow) (head flow)
 

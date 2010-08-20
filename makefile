@@ -22,8 +22,11 @@ ly: tmp
 	cp tmp/song.pdf ./
 
 
-todo:
+todo: hlint
 	@find . -name \*.hs -exec grep TODO {} -Hn \;
+
+hlint:
+	@hlint *.hs -c -i "Use head"
 
 var:
 	(cat Var.hs 2> /dev/null | grep $(BUILD_DATE) -q) || \

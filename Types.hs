@@ -19,15 +19,15 @@ data Chord = Chord {
 	beats :: Int} deriving (Eq, Show, Read)
 showBrief :: Chord -> String
 --showBrief ch = show (tones ch, dur ch, remain ch)
-showBrief ch = "(" ++ (show $ tones ch) ++ "," ++ (show $ dur ch) ++ "," ++
-	(show $ remain ch) ++ "->)"
+showBrief ch = "(" ++ show (tones ch) ++ "," ++ show (dur ch) ++ "," ++
+	show (remain ch) ++ "->)"
 type Flow = [Chord]
 
 type ChanceType = Chord -> Flow -> Float
 
 type MidiEvent = (Ticks, Message)
 type MidiTrack = [MidiEvent]
-type InstrumentTrack = Flow -> StdGen -> (Tempo -> MidiTrack)
+type InstrumentTrack = Flow -> StdGen -> Tempo -> MidiTrack
 
 
 floatMin = 0.1 :: Float

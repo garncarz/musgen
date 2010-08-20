@@ -2,6 +2,7 @@
 module Main where
 
 import Control.Exception
+import Control.Monad
 import Flow
 import InstrumentBass
 import InstrumentHarmony
@@ -72,15 +73,14 @@ main = do
 		chKey = read $ key input2
 		chScale = scale input2
 		chBeats = read $ beats input2
-		midiTempo = 60000000 `div` (read $ tempo input2)
+		midiTempo = 60000000 `div` read (tempo input2)
 		chMeasure = chBeats * 4
 		flMinMeasures = read $ minMeasures input2
 	
 	checkArg chKey "key"
-	if not (elem chScale ["major", "minor"]) then do
+	when (chScale `notElem` ["major", "minor"]) $ do
 		putStrLn "Scale can be just major or minor"
 		exitFailure
-		else return ()
 	checkArg chBeats "beats"
 	checkArg midiTempo "tempo"
 	checkArg flMinMeasures "minMeasures"

@@ -18,8 +18,8 @@ flow2Midi [] = []
 flow2Midi flow = startTones ++ [pauseMidi dur1] ++ endTones ++ flow2Midi rest
 	where
 		(ch:rest) = flow; dur1 = dur ch
-		startTones = map (\t -> toneMidi t 90) $ tones ch
-		endTones = map (\t -> toneMidi t 0) $ tones ch
+		startTones = map (`toneMidi` 90) $ tones ch
+		endTones = map (`toneMidi` 0) $ tones ch
 
 keySignature :: Tone -> Intervals -> Message
 keySignature key intervals
@@ -51,7 +51,7 @@ midiTrack channel name instrument events state tempo =
 		(0, timeSignature (beats state)),
 		(0, TempoChange tempo)
 	]
-	++ (eventsToChannel channel events) ++
+	++ eventsToChannel channel events ++
 	[ (8, TrackEnd) ]
 
 midiFile :: [MidiTrack] -> Midi
@@ -61,5 +61,5 @@ midiFile tracks = Midi {
 	tracks = tracks }
 
 exportMidi :: String -> Midi -> IO ()
-exportMidi filename midi = exportFile filename midi
+exportMidi = exportFile
 

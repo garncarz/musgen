@@ -1,11 +1,11 @@
 module ChanceHarmony (harmonyChance) where
 
-import List
+import Data.List
 import Types
 import Relations
 
 harmonyChance :: ChanceType
-harmonyChance now past = foldl (*) 1
+harmonyChance now past = product
 	(map (\(chance, factor) -> (** factor) $ chance now past) chances)
 
 chances :: [(ChanceType, Float)]

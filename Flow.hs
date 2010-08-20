@@ -18,7 +18,7 @@ produceFlow :: Chord -> Int -> String -> IO Flow
 produceFlow startChord minMeasures filename = do
 	gen <- newStdGen
 	let flow = nextFlow [startChord] 0 minMeasures gen
-	mapM_ putStrLn $ map showBrief flow
+	mapM_ (putStrLn . showBrief) flow
 	writeFile filename $ unlines $ map show flow
 	putStrLn "Flow generated."
 	return flow
@@ -31,7 +31,7 @@ nextFlow past measures minMeasures gen = if isEnd then [endCh]
 		endCh = ch1 {dur = remain ch1}
 		isEnd = measures >= minMeasures && canBeEnd endCh rpast
 		ch = nextDurChord ch1 past (g !! 1)
-		measures2 = if (measure ch == remain ch) then measures + 1 else measures
+		measures2 = if measure ch == remain ch then measures + 1 else measures
 		rpast = realPast past; (pch:_) = past
 		g = rndSplitL gen
 
@@ -61,6 +61,6 @@ canBeEnd ch past = isTonicTriadIn key1 intervals1 tones1 && 2 * dur1 >= measure1
 		dur1 = dur ch; measure1 = measure ch
 
 realPast :: Flow -> Flow
-realPast past = if (dur pch == 0 && tones pch == []) then [] else past
+realPast past = if dur pch == 0 && tones pch == [] then [] else past
 	where (pch:_) = past
 

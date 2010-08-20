@@ -1,7 +1,7 @@
 module Relations where
 
-import List
-import Maybe
+import Data.List
+import Data.Maybe
 import Types
 
 scaleSize = 12 :: Int
@@ -26,8 +26,8 @@ intervalFromTo tone1 tone2 = i where
 
 intervalAt :: Intervals -> Int -> Tone
 intervalAt intervals pos = intervals !! pos3 where
-	pos2 = pos `mod` (length intervals)
-	pos3 = if pos2 < 0 then pos2 + (length intervals) else pos2
+	pos2 = pos `mod` length intervals
+	pos3 = if pos2 < 0 then pos2 + length intervals else pos2
 
 succToneIn :: Tone -> Intervals -> Tone -> Tone
 succToneIn key intervals tone = tone - int1 + intR where
@@ -46,15 +46,15 @@ predToneIn key intervals tone = tone - int1 + intL where
 	intL = if int2 > int1 then int2 - scaleSize else int2
 
 isFromScale :: Tone -> Intervals -> Tone -> Bool
-isFromScale key intervals tone = elem (intervalFromTo key tone) intervals
+isFromScale key intervals tone = intervalFromTo key tone `elem` intervals
 
 areFromScale :: Tone -> Intervals -> [Tone] -> Bool
-areFromScale key intervals tones = all (isFromScale key intervals) tones
+areFromScale key intervals = all (isFromScale key intervals)
 
 fitsIntervalsFrom :: Intervals -> Tone -> [Tone] -> Bool
 fitsIntervalsFrom _ _ [] = False
 fitsIntervalsFrom intervals root chord =
-	all (\t -> elem (intervalFromTo root t) intervals) chord
+	all (\t -> intervalFromTo root t `elem` intervals) chord
 
 fitsIntervals :: Intervals -> [Tone] -> Bool
 fitsIntervals intervals chord =
@@ -65,13 +65,13 @@ hasRoot root chord =
 	any (\i -> fitsIntervalsFrom i root chord) chordIntervals
 
 isTriad :: [Tone] -> Bool
-isTriad chord = any (\i -> fitsIntervals i chord)
+isTriad chord = any (`fitsIntervals` chord)
 	[majorTriad, minorTriad, diminishedTriad, augmentedTriad]
 
 isFullTriad :: [Tone] -> Bool
 isFullTriad chord = isTriad chord && length chIntervals > 2
 	where
-		first = chord !! 0
+		first = head chord
 		chIntervals = nub $ map (intervalFromTo first) chord
 
 isTonicTriadIn :: Tone -> Intervals -> [Tone] -> Bool
@@ -94,7 +94,7 @@ isLeadingToneOkIn key intervals first second =
 	let
 		leadingTones = nub . filter (isLeadingToneIn key intervals)
 		ltones1 = leadingTones first; ltones2 = leadingTones second
-		ltone = ltones1 !! 0
+		ltone = head ltones1
 		tonic = ltone + scaleSize - intervals !! (length intervals - 1)
 	in
 		length ltones2 < 2 && (ltones1 == [] || (ltones1 == [ltone] &&
@@ -117,8 +117,8 @@ isBassMoving first second = min1 /= min2
 
 percentageMoving :: [Tone] -> [Tone] -> Float
 percentageMoving first second = moves / genericLength second where
-	moves = sum $ map (\t -> if elem t first then 0 else 1 :: Float) second
+	moves = sum $ map (\t -> if t `elem` first then 0 else 1 :: Float) second
 
 isConsonantIn :: Tone -> Intervals -> [Tone] -> Bool
-isConsonantIn key intervals chord = areFromScale key intervals chord
+isConsonantIn = areFromScale
 

@@ -6,7 +6,7 @@ import Types
 
 chordMidi :: [Tone] -> Duration -> [MidiEvent]
 chordMidi [] dur = [pauseMidi dur]
-chordMidi (t:ts) dur = [toneMidi t 80] ++ (chordMidi ts dur) ++ [toneMidi t 0]
+chordMidi (t:ts) dur = [toneMidi t 80] ++ chordMidi ts dur ++ [toneMidi t 0]
 
 harmonyChord :: Chord -> [MidiEvent]
 harmonyChord chord = chordMidi tones1 dur1 where
@@ -15,6 +15,6 @@ harmonyChord chord = chordMidi tones1 dur1 where
 	key1 = key chord; intervals1 = intervals chord
 
 harmonyTrack :: InstrumentTrack
-harmonyTrack flow _ = midiTrack 1 "Harmony" 19 (concat $ map harmonyChord flow)
-	(flow !! 0)
+harmonyTrack flow _ = midiTrack 1 "Harmony" 19 (concatMap harmonyChord flow)
+	(head flow)
 

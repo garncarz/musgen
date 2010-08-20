@@ -1,6 +1,6 @@
 module MGRandom (rndSplitL, rndTones, rndChordTones, rndDuration) where
 
-import List
+import Data.List
 import Random
 import Types
 
@@ -23,7 +23,7 @@ rndChordTones1 gen = take count tones where
 rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where
 	(g1, g2) = split gen
 	intervals = rndIntervals g1; count = rndTonesCount g2
-	arr 0 = 64 + intervals !! 0; arr i = arr (i - 1) + intervals !! i
+	arr 0 = 64 + head intervals; arr i = arr (i - 1) + intervals !! i
 
 rndIntervals :: RandomGen g => g -> Intervals
 rndIntervals gen = int : rndIntervals gOut where
@@ -60,7 +60,7 @@ testRndNormal = do
 	let tones = take 10000 $ rndTones gen
 	let occur tone tones
 		| tone == 128 = []
-		| otherwise = (tone, (length $ findIndices (== tone) tones)) :
+		| otherwise = (tone, length $ findIndices (== tone) tones) :
 			occur (tone + 1) tones
-	mapM_ putStrLn $ map (\(x, y) -> show x ++ "\t" ++ show y) $ occur 0 tones
+	mapM_ (putStrLn . (\(x, y) -> show x ++ "\t" ++ show y)) (occur 0 tones)
 

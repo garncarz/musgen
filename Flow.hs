@@ -1,7 +1,7 @@
 module Flow where
 
 import ChanceHarmony
-import ChanceRhythm
+import ChanceHarmonyRhythm
 import MGRandom
 import Random
 import Relations
@@ -48,7 +48,7 @@ nextTonesChord past gen = if ok then ch else nextTonesChord past (g !! 2) where
 nextDurChord :: RandomGen g => Chord -> Flow -> g -> Chord
 nextDurChord ch past gen = if ok then ch1 else nextDurChord ch past (g !! 2)
 	where
-		ok = chance >= minChance; chance = rhythmChance ch1 rpast
+		ok = chance >= minChance; chance = harmonyRhythmChance ch1 rpast
 		ch1 = ch {dur = rndDuration (g !! 0)}
 		rpast = realPast past
 		g = rndSplitL gen

@@ -1,10 +1,10 @@
-module ChanceRhythm (rhythmChance) where
+module ChanceHarmonyRhythm (harmonyRhythmChance) where
 
 import List
 import Types
 
-rhythmChance :: ChanceType
-rhythmChance now past = foldl (*) 1
+harmonyRhythmChance :: ChanceType
+harmonyRhythmChance now past = foldl (*) 1
 	(map (\(chance, factor) -> (** factor) $ chance now past) chances)
 
 chances :: [(ChanceType, Float)]

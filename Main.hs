@@ -13,29 +13,36 @@ import Prelude hiding (catch)
 import Random
 import Relations
 import System
-import System.Console.CmdArgs
+import System.Console.CmdArgs hiding (name)
 import System.Directory
 import qualified Types as T
+import Var
 
 data Input = Input {key :: String, scale :: String, beats :: String,
 	tempo :: String, minMeasures :: String, new :: Bool, name :: String}
 	deriving (Data, Typeable, Show)
 
-use :: Mode Input
-use = mode $ Input {
+use = Input {
 	key = def &=
-		text "Key of harmony" & typ "MIDI_TONE" & empty "random",
+		help "Key of harmony" &= typ "MIDI_TONE" &= opt "random",
 	scale = def &=
-		text "Scale of harmony" & typ "major|minor" & empty "random",
+		help "Scale of harmony" &= typ "major|minor" &= opt "random",
 	beats = def &=
-		text "Beats per measure" & typ "INT" & empty "4",
+		help "Beats per measure" &= typ "INT" &= opt "4",
 	tempo = def &=
-		text "Quarter notes per minute" & typ "INT" & empty "120",
+		help "Quarter notes per minute" &= typ "INT" &= opt "120",
 	minMeasures = def &=
-		text "Minimal number of measures" & typ "INT" & empty "20",
-	new = def &= text "Generate new flow",
-	name = def &= text "Song name (to be used in filenames)"
-		& typ "SONG_NAME" & empty "song" & argPos 0 }
+		help "Minimal number of measures" &= typ "INT" &= opt "20",
+	new = def &= help "Generate new flow",
+	name = def &= help "Song name (to be used in filenames)"
+		&= typ "SONG_NAME" &= opt "song" &= argPos 0 }
+	&= program "musgen"
+	&= summary ("MusGen, build date: " ++ buildDate)
+	&= details [
+		"Generates a song fulfilling given parameters, " ++
+		"song's name is \"song\" by default.",
+		"Output is SONG_NAME.midi with playable MIDI data " ++
+		"and SONG_NAME.flow with reusable information about harmony flow."]
 
 checkArg :: a -> String -> IO ()
 checkArg arg name = do
@@ -46,7 +53,7 @@ checkArg arg name = do
 
 main :: IO ()
 main = do
-	input <- cmdArgs "MusGen" [use]
+	input <- cmdArgs use
 	gen <- newStdGen
 	
 	let

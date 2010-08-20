@@ -1,6 +1,7 @@
-DATE = `date +-%Y-%m-%d`
+DATE = `date +%Y-%m-%d`
+BUILD_DATE = "buildDate = \"$(DATE)\""
 
-build: tmp
+build: tmp var
 	ghc --make Main -outputdir tmp -o musgen -O2
 
 run: build
@@ -24,9 +25,14 @@ ly: tmp
 todo:
 	@find . -name \*.hs -exec grep TODO {} -Hn \;
 
+var:
+	(cat Var.hs 2> /dev/null | grep $(BUILD_DATE) -q) || \
+		(echo "module Var where" > Var.hs && \
+		echo $(BUILD_DATE) >> Var.hs)
+
 clean:
-	rm -fr *~ tmp musgen
+	rm -fr *~ tmp musgen Var.hs
 
 pack: clean
-	cd .. && tar -cJf musgen$(DATE).tar.xz musgen --exclude=.svn
+	cd .. && tar -cJf musgen-$(DATE).tar.xz musgen --exclude=.svn
 

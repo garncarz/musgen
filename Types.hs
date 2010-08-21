@@ -16,7 +16,7 @@ data Chord = Chord {
 	dur :: Duration,
 	measure :: Duration,
 	remain :: Duration,
-	beats :: Int} deriving (Eq, Show, Read)
+	beats :: Int } deriving (Eq, Show, Read)
 showBrief :: Chord -> String
 --showBrief ch = show (tones ch, dur ch, remain ch)
 showBrief ch = "(" ++ show (tones ch) ++ "," ++ show (dur ch) ++ "," ++
@@ -27,8 +27,10 @@ type ChanceType = Chord -> Flow -> Float
 
 type MidiEvent = (Ticks, Message)
 type MidiTrack = [MidiEvent]
-type InstrumentTrack = Flow -> StdGen -> Tempo -> MidiTrack
+type TrackDefs = [(Channel, String, Preset, Flow -> RndGen -> MidiTrack)]
+type TracksGen = Flow -> RndGen -> Tempo -> [MidiTrack]
 
+type RndGen = StdGen
 
 floatMin = 0.1 :: Float
 floatZero = 0.001 :: Float

@@ -23,7 +23,7 @@ produceFlow startChord minMeasures filename = do
 	putStrLn "Flow generated."
 	return flow
 
-nextFlow :: RandomGen g => Flow -> Int -> Int -> g -> Flow
+nextFlow :: Flow -> Int -> Int -> RndGen -> Flow
 nextFlow past measures minMeasures gen = if isEnd then [endCh]
 	else ch : nextFlow (ch:rpast) measures2 minMeasures (g !! 2)
 	where
@@ -35,7 +35,7 @@ nextFlow past measures minMeasures gen = if isEnd then [endCh]
 		rpast = realPast past; (pch:_) = past
 		g = rndSplitL gen
 
-nextTonesChord :: RandomGen g => Flow -> g -> Chord
+nextTonesChord :: Flow -> RndGen -> Chord
 nextTonesChord past gen = if ok then ch else nextTonesChord past (g !! 2) where
 	ok = chance >= minChance; chance = harmonyChance ch rpast
 	ch = pch {tones = rndChordTones (g !! 0), dur = 0, remain = newRemain}
@@ -45,7 +45,7 @@ nextTonesChord past gen = if ok then ch else nextTonesChord past (g !! 2) where
 	g = rndSplitL gen
 	(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)
 
-nextDurChord :: RandomGen g => Chord -> Flow -> g -> Chord
+nextDurChord :: Chord -> Flow -> RndGen -> Chord
 nextDurChord ch past gen = if ok then ch1 else nextDurChord ch past (g !! 2)
 	where
 		ok = chance >= minChance; chance = harmonyRhythmChance ch1 rpast

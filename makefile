@@ -23,13 +23,13 @@ ly: tmp
 
 
 todo: hlint
-	@find . -name \*.hs -exec grep TODO {} -Hn \;
+	find . -name \*.hs -exec grep TODO {} -Hn \;
 
 hlint:
-	@hlint *.hs -c -i "Use head"
+	hlint *.hs -c -i "Use head"
 
 var:
-	(cat Var.hs 2> /dev/null | grep $(BUILD_DATE) -q) || \
+	@(cat Var.hs 2> /dev/null | grep $(BUILD_DATE) -q) || \
 		(echo "module Var where" > Var.hs && \
 		echo $(BUILD_DATE) >> Var.hs)
 
@@ -37,5 +37,5 @@ clean:
 	rm -fr *~ tmp musgen Var.hs
 
 pack: clean
-	cd .. && tar -cJf musgen-$(DATE).tar.xz musgen --exclude=.svn
+	cd .. && tar -czf musgen-$(DATE).tar.gz musgen --exclude=.svn
 

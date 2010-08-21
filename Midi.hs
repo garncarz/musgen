@@ -1,7 +1,8 @@
 module Midi (toneMidi, pauseMidi, flow2Midi,
-	midiTrack, midiFile, exportMidi) where
+	makeTracks, midiTrack, midiFile, exportMidi) where
 
 import Codec.Midi
+import MGRandom
 import Relations
 import Types hiding (key)
 import qualified Types (key)
@@ -39,6 +40,13 @@ eventsToChannel :: Channel -> [MidiEvent] -> [MidiEvent]
 eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
 	then (ticks, msg {channel = chan})
 	else (ticks, msg))
+
+makeTracks :: TrackDefs -> Flow -> RndGen -> Tempo -> [MidiTrack]
+makeTracks tracks flow gen tempo =
+	map (\((channel, name, instrument, eventsGen), gen)
+		-> midiTrack channel name instrument (eventsGen flow gen) state tempo)
+		[(tracks !! i, genL !! i) | i <- [0..length tracks - 1]]
+	where state = head flow; genL = rndSplitL gen
 
 midiTrack :: Channel -> String -> Preset -> [MidiEvent] -> Chord -> Tempo
 	-> MidiTrack

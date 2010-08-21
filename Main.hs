@@ -4,10 +4,8 @@ module Main where
 import Control.Exception
 import Control.Monad
 import Flow
-import InstrumentBass
-import InstrumentHarmony
-import InstrumentHarmonyRhythm
-import InstrumentSoprano
+import InterpretationChurch
+import InterpretationRock
 import Midi
 import MGRandom
 import Prelude hiding (catch)
@@ -20,8 +18,8 @@ import qualified Types as T
 import Var
 
 data Input = Input {key :: String, scale :: String, beats :: String,
-	tempo :: String, minMeasures :: String, new :: Bool, name :: String}
-	deriving (Data, Typeable, Show)
+	tempo :: String, minMeasures :: String, interpretation :: String,
+	new :: Bool, name :: String} deriving (Data, Typeable, Show)
 
 use = Input {
 	key = def &=
@@ -34,6 +32,8 @@ use = Input {
 		help "Quarter notes per minute" &= typ "INT" &= opt "120",
 	minMeasures = def &=
 		help "Minimal number of measures" &= typ "INT" &= opt "20",
+	interpretation = def &=
+		help "Style of interpretation" &= typ "STYLE" &= opt "church",
 	new = def &= help "Generate new flow",
 	name = def &= help "Song name (to be used in filenames)"
 		&= typ "SONG_NAME" &= opt "song" &= argPos 0 }
@@ -41,7 +41,8 @@ use = Input {
 	&= summary ("MusGen, build date: " ++ buildDate)
 	&= details [
 		"Generates a song fulfilling given parameters, " ++
-		"song's name is \"song\" by default.",
+		"song's name is \"song\" by default. Available styles of " ++
+		"interpretation are: church, rock.",
 		"Output is SONG_NAME.midi with playable MIDI data " ++
 		"and SONG_NAME.flow with reusable information about harmony flow."]
 
@@ -67,6 +68,7 @@ main = do
 			beats = argValue beats "4",
 			tempo = argValue tempo "120",
 			minMeasures = argValue minMeasures "20",
+			interpretation = argValue interpretation "church",
 			name = argValue name "song" }
 			where argValue arg implicit =
 				if arg input /= "" then arg input else implicit
@@ -76,6 +78,7 @@ main = do
 		midiTempo = 60000000 `div` read (tempo input2)
 		chMeasure = chBeats * 4
 		flMinMeasures = read $ minMeasures input2
+		flInterpretation = interpretation input2
 	
 	checkArg chKey "key"
 	when (chScale `notElem` ["major", "minor"]) $ do
@@ -84,6 +87,9 @@ main = do
 	checkArg chBeats "beats"
 	checkArg midiTempo "tempo"
 	checkArg flMinMeasures "minMeasures"
+	when (flInterpretation `notElem` ["church", "rock"]) $ do
+		putStrLn "Invalid style of interpretation"
+		exitFailure
 	
 	let
 		flowFilename = name input2 ++ ".flow"
@@ -92,14 +98,13 @@ main = do
 			T.intervals = if chScale == "minor" then minor else major,
 			T.dur = 0, T.measure = chMeasure, T.remain = chMeasure,
 			T.beats = chBeats}
+		tracks = case flInterpretation of
+			"church" -> churchTracks
+			"rock" -> rockTracks
 	
 	flowExists <- doesFileExist flowFilename
 	flow <- if flowExists && not (new input) then loadFlow flowFilename
 		else produceFlow startChord flMinMeasures flowFilename
-	exportMidi midiFilename $ midiFile [
-		harmonyTrack flow (g !! 2) midiTempo,
-		sopranoTrack flow (g !! 3) midiTempo,
-		bassTrack flow (g !! 4) midiTempo,
-		harmonyRhythmTrack flow (g !! 5) midiTempo]
+	exportMidi midiFilename $ midiFile $ tracks flow (g !! 2) midiTempo
 	putStrLn "MIDI generated."
 

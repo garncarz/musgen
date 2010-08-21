@@ -4,19 +4,19 @@ import Data.List
 import Random
 import Types
 
-rndDuration :: RandomGen g => g -> Duration
+rndDuration :: RndGen -> Duration
 rndDuration gen = max 2 $ 2 * rnd where (rnd, _) = randomR (0 :: Int, 8) gen
 
-rndTonesCount :: RandomGen g => g -> Int
+rndTonesCount :: RndGen -> Int
 rndTonesCount gen = 4
 
-rndTones :: RandomGen g => g -> [Tone]
+rndTones :: RndGen -> [Tone]
 rndTones gen =
 	let	(g1, g2) = split gen
 	in rndNormal 0 127 g1 : rndTones g2
 	--in (head $ randomRs (0, 127) g1) : rndTones g2
 
-rndChordTones :: RandomGen g => g -> [Tone]
+rndChordTones :: RndGen -> [Tone]
 rndChordTones = sort . rndChordTones2
 rndChordTones1 gen = take count tones where
 	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
@@ -25,7 +25,7 @@ rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where
 	intervals = rndIntervals g1; count = rndTonesCount g2
 	arr 0 = 64 + head intervals; arr i = arr (i - 1) + intervals !! i
 
-rndIntervals :: RandomGen g => g -> Intervals
+rndIntervals :: RndGen -> Intervals
 rndIntervals gen = int : rndIntervals gOut where
 	(nr, gS) = randomR (0, 100 :: Int) gen
 	(sign, g2) = randomR (True, False) gS
@@ -41,7 +41,7 @@ rndIntervals gen = int : rndIntervals gOut where
 		else let (t, _) = randomR (0, 12) gT in t
 	int = if sign then int1 else negate int1
 
-rndNormal :: RandomGen g => Int -> Int -> g -> Int
+rndNormal :: Int -> Int -> RndGen -> Int
 rndNormal from to gen = maximum [from, minimum [to, result]] where
 	size = to - from
 	center = fromIntegral from + fromIntegral size / 2
@@ -50,7 +50,7 @@ rndNormal from to gen = maximum [from, minimum [to, result]] where
 	result = truncate $ 2 * (number - center) + center
 	--result = truncate number
 
-rndSplitL :: RandomGen g => g -> [g]
+rndSplitL :: RndGen -> [RndGen]
 rndSplitL g = let (g1, g2) = split g in g1 : rndSplitL g2
 
 

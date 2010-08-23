@@ -7,10 +7,10 @@ import Types
 
 tracks :: TrackDefs
 tracks = [
-	(1, "Harmony", 30, harmonyTrack),
-	(2, "Melody", 31, melodyTrack),
+	(1, "Harmony", 31, harmonyTrack),
+	(2, "Melody", 30, melodyTrack),
 	(3, "Bass", 34, bassTrack),
-	(4, "Rhythm", 29, harmonyRhythmTrack)
+	(4, "Rhythm", 30, harmonyRhythmTrack)
 	]
 
 rockTracks :: TracksGen
@@ -25,5 +25,6 @@ melodyTrack flow gen = (flow2Midi . melodyFlow gen) (takePart flow) where
 
 bassTrack flow _ = (flow2Midi . fingeredFlow) (octaveShift (-2) flow)
 
-harmonyRhythmTrack flow _ = (flow2Midi . chordRhythmFlow) flow
+harmonyRhythmTrack flow _ = (flow2Midi . chordRhythmFlow . octaveShift (-1))
+	flow
 

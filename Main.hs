@@ -38,7 +38,7 @@ use = Input {
 	name = def &= help "Song name (to be used in filenames)"
 		&= typ "SONG_NAME" &= opt "song" &= argPos 0 }
 	&= program "musgen"
-	&= summary ("MusGen, build date: " ++ buildDate)
+	&= summary ("MusGen, version date: " ++ versionDate)
 	&= details [
 		"Generates a song fulfilling given parameters, " ++
 		"song's name is \"song\" by default. Available styles of " ++

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function error { echo $1; exit 1; }
 

@@ -11,14 +11,13 @@ toneMidi :: Tone -> Volume -> MidiEvent
 toneMidi t vol = (0, NoteOn {channel = 0, key = t, velocity = vol})
 
 pauseMidi :: Duration -> MidiEvent
---pauseMidi dur = (dur, Marker "")
 pauseMidi dur = (dur, NoteOff {channel = 0, key = 0, velocity = 0})
 
 flow2Midi :: Flow -> [MidiEvent]
 flow2Midi [] = []
 flow2Midi flow = startTones ++ [pauseMidi dur1] ++ endTones ++ flow2Midi rest
 	where
-		(ch:rest) = flow; dur1 = dur ch
+		ch:rest = flow; dur1 = dur ch
 		startTones = map (`toneMidi` 90) $ tones ch
 		endTones = map (`toneMidi` 0) $ tones ch
 
@@ -41,7 +40,7 @@ eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
 	then (ticks, msg {channel = chan})
 	else (ticks, msg))
 
-makeTracks :: TrackDefs -> Flow -> RndGen -> Tempo -> [MidiTrack]
+makeTracks :: TracksDefs -> Flow -> RndGen -> Tempo -> [MidiTrack]
 makeTracks tracks flow gen tempo =
 	map (\((channel, name, instrument, eventsGen), gen)
 		-> midiTrack channel name instrument (eventsGen flow gen) state tempo)

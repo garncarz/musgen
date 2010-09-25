@@ -27,7 +27,7 @@ type ChanceType = Chord -> Flow -> Float
 
 type MidiEvent = (Ticks, Message)
 type MidiTrack = [MidiEvent]
-type TrackDefs = [(Channel, String, Preset, Flow -> RndGen -> MidiTrack)]
+type TracksDefs = [(Channel, String, Preset, Flow -> RndGen -> MidiTrack)]
 type TracksGen = Flow -> RndGen -> Tempo -> [MidiTrack]
 
 type RndGen = StdGen

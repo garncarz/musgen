@@ -4,8 +4,7 @@ module Main where
 import Control.Exception
 import Control.Monad
 import Flow
-import InterpretationChurch
-import InterpretationRock
+import Interpretation
 import Midi
 import MGRandom
 import Prelude hiding (catch)
@@ -33,7 +32,8 @@ use = Input {
 	minMeasures = def &=
 		help "Minimal number of measures" &= typ "INT" &= opt "20",
 	interpretation = def &=
-		help "Style of interpretation" &= typ "STYLE" &= opt "church",
+		help "Style of interpretation" &= typ "STYLE" &= opt
+		((\(name, _) -> name) $ interpretations !! 0),
 	new = def &= help "Generate new flow",
 	name = def &= help "Song name (to be used in filenames)"
 		&= typ "SONG_NAME" &= opt "song" &= argPos 0 }
@@ -42,7 +42,8 @@ use = Input {
 	&= details [
 		"Generates a song fulfilling given parameters, " ++
 		"song's name is \"song\" by default. Available styles of " ++
-		"interpretation are: church, rock.",
+		"interpretation are: " ++ (init . init . concat $
+		map (\(name, _) -> name ++ ", ") interpretations) ++ ".",
 		"Output is SONG_NAME.midi with playable MIDI data " ++
 		"and SONG_NAME.flow with reusable information about harmony flow."]
 
@@ -68,7 +69,8 @@ main = do
 			beats = argValue beats "4",
 			tempo = argValue tempo "120",
 			minMeasures = argValue minMeasures "20",
-			interpretation = argValue interpretation "church",
+			interpretation = argValue interpretation $
+				(\(name, _) -> name) $ interpretations !! 0,
 			name = argValue name "song" }
 			where argValue arg implicit =
 				if arg input /= "" then arg input else implicit
@@ -87,9 +89,8 @@ main = do
 	checkArg chBeats "beats"
 	checkArg midiTempo "tempo"
 	checkArg flMinMeasures "minMeasures"
-	when (flInterpretation `notElem` ["church", "rock"]) $ do
-		putStrLn "Invalid style of interpretation"
-		exitFailure
+	when (flInterpretation `notElem` map (\(name, _) -> name) interpretations) $
+		do putStrLn "Invalid style of interpretation"; exitFailure
 	
 	let
 		flowFilename = name input2 ++ ".flow"
@@ -98,9 +99,10 @@ main = do
 			T.intervals = if chScale == "minor" then minor else major,
 			T.dur = 0, T.measure = chMeasure, T.remain = chMeasure,
 			T.beats = chBeats}
-		tracks = case flInterpretation of
-			"church" -> churchTracks
-			"rock" -> rockTracks
+		tracks = makeTracks (findTracks flInterpretation interpretations) where
+			findTracks iName ((iName2, tracksDefs):rest)
+				| iName == iName2 = tracksDefs
+				| otherwise = findTracks iName rest
 	
 	flowExists <- doesFileExist flowFilename
 	flow <- if flowExists && not (new input) then loadFlow flowFilename

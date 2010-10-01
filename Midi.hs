@@ -18,7 +18,7 @@ flow2Midi [] = []
 flow2Midi flow = startTones ++ [pauseMidi dur1] ++ endTones ++ flow2Midi rest
 	where
 		ch:rest = flow; dur1 = dur ch
-		startTones = map (`toneMidi` 90) $ tones ch
+		startTones = map (`toneMidi` 127) $ tones ch
 		endTones = map (`toneMidi` 0) $ tones ch
 
 keySignature :: Tone -> Intervals -> Message
@@ -35,21 +35,22 @@ keySignature key intervals
 timeSignature :: Int -> Message
 timeSignature beats = TimeSignature beats 2 0 0
 
-eventsToChannel :: Channel -> [MidiEvent] -> [MidiEvent]
-eventsToChannel chan = map (\(ticks, msg) -> if isNoteOn msg
-	then (ticks, msg {channel = chan})
+eventsParam :: Channel -> Float -> [MidiEvent] -> [MidiEvent]
+eventsParam chan vol = map (\(ticks, msg) -> if isNoteOn msg
+	then (ticks, msg {channel = chan,
+		velocity = round $ vol * fromIntegral (velocity msg)})
 	else (ticks, msg))
 
 makeTracks :: TracksDefs -> Flow -> RndGen -> Tempo -> [MidiTrack]
 makeTracks tracks flow gen tempo =
-	map (\((channel, name, instrument, eventsGen), gen)
-		-> midiTrack channel name instrument (eventsGen flow gen) state tempo)
-		[(tracks !! i, genL !! i) | i <- [0..length tracks - 1]]
+	map (\((channel, name, instrument, volume, eventsGen), gen)
+		-> midiTrack channel name instrument volume (eventsGen flow gen) state
+		tempo) [(tracks !! i, genL !! i) | i <- [0..length tracks - 1]]
 	where state = head flow; genL = rndSplitL gen
 
-midiTrack :: Channel -> String -> Preset -> [MidiEvent] -> Chord -> Tempo
-	-> MidiTrack
-midiTrack channel name instrument events state tempo =
+midiTrack :: Channel -> String -> Preset -> Float -> [MidiEvent] -> Chord ->
+	Tempo -> MidiTrack
+midiTrack channel name instrument volume events state tempo =
 	[
 		(0, ChannelPrefix channel),
 		(0, InstrumentName name),
@@ -58,7 +59,7 @@ midiTrack channel name instrument events state tempo =
 		(0, timeSignature (beats state)),
 		(0, TempoChange tempo)
 	]
-	++ eventsToChannel channel events ++
+	++ eventsParam channel volume events ++
 	[ (8, TrackEnd) ]
 
 midiFile :: [MidiTrack] -> Midi

@@ -35,8 +35,7 @@ use = Input {
 		help "Style of interpretation" &= typ "STYLE" &= opt
 		(fst $ interpretations !! 0),
 	new = def &= help "Generate new flow",
-	name = def &= help "Song name (to be used in filenames)"
-		&= typ "SONG_NAME" &= opt "song" &= argPos 0 }
+	name = def &= typ "SONG_NAME" &= opt "song" &= argPos 0 }
 	&= program "musgen"
 	&= summary ("MusGen, version date: " ++ versionDate)
 	&= details [
@@ -97,8 +96,7 @@ main = do
 		midiFilename = name input2 ++ ".midi"
 		startChord = T.Chord {T.tones = [], T.key = chKey,
 			T.intervals = if chScale == "minor" then minor else major,
-			T.dur = 0, T.measure = chMeasure, T.remain = chMeasure,
-			T.beats = chBeats}
+			T.dur = 0, T.measure = chMeasure, T.begin = 0, T.beats = chBeats}
 		tracks = makeTracks (findTracks flInterpretation interpretations) where
 			findTracks iName ((iName2, tracksDefs):rest)
 				| iName == iName2 = tracksDefs

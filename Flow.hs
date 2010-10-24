@@ -38,9 +38,8 @@ nextFlow past measures minMeasures gen = if isEnd then [endCh]
 nextTonesChord :: Flow -> RndGen -> Chord
 nextTonesChord past gen = if ok then ch else nextTonesChord past (g !! 2) where
 	ok = chance >= minChance; chance = harmonyChance ch rpast
-	ch = pch {tones = rndChordTones (g !! 0), dur = 0, remain = newRemain}
-	newRemain = let diff = remain pch - Types.dur pch in if diff > 0
-			then diff else measure pch
+	ch = pch {tones = rndChordTones (g !! 0), dur = 0, begin = newBegin}
+	newBegin = (begin pch + Types.dur pch) `mod` measure pch
 	rpast = realPast past; (pch:_) = past
 	g = rndSplitL gen
 	(minChance, _) = randomR (0.5 :: Float, 0.7) (g !! 1)

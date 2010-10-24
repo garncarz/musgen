@@ -13,14 +13,16 @@ data Chord = Chord {
 	tones :: [Tone],
 	key :: Tone,
 	intervals :: Intervals,
+	begin :: Duration,
 	dur :: Duration,
 	measure :: Duration,
-	remain :: Duration,
 	beats :: Int } deriving (Eq, Show, Read)
+remain :: Chord -> Duration
+remain ch = measure ch - begin ch
 showBrief :: Chord -> String
 --showBrief ch = show (tones ch, dur ch, remain ch)
-showBrief ch = "(" ++ show (tones ch) ++ "," ++ show (dur ch) ++ "," ++
-	show (remain ch) ++ "->)"
+showBrief ch = "(" ++ show (tones ch) ++ ",b" ++ show (begin ch) ++ ",d" ++
+	show (dur ch) ++ ",r" ++ show (remain ch) ++ ")"
 type Flow = [Chord]
 
 type ChanceType = Chord -> Flow -> Float

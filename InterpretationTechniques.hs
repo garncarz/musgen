@@ -51,7 +51,7 @@ chordRhythmFlow flow = ch1 : chordRhythmFlow flow2 where
 	ch1 = if overlap then ch {dur = dur2} else ch
 	dur2 = remain1 - nextBeat
 	flow2 = if overlap then ch2:rest else rest
-	ch2 = ch {dur = dur1 - dur2, remain = nextBeat}
+	ch2 = ch {dur = dur1 - dur2, begin = begin ch + dur2}
 
 octaveShift :: Int -> Flow -> Flow
 octaveShift shift =

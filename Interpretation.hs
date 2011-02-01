@@ -2,6 +2,8 @@ module Interpretation (interpretations) where
 
 import InterpretationTechniques
 import Midi
+import MGRandom
+import Random
 import Types
 
 interpretations :: [(String, TracksDefs)]
@@ -36,19 +38,41 @@ rockTracks = [
 	]
 
 
-harmonyTrack flow _ = flow2Midi flow
+harmonyTrack flow _ = flow
 
-sopranoTrack flow gen = (flow2Midi . sopranoFlow gen) (takePart flow) where
-	takePart [] = []
-	takePart flow = ch2 : takePart rest	where
-		(ch:rest) = flow; tone1 = maximum $ tones ch; ch2 = ch {tones = [tone1]}
+sopranoTrack flow gen = sopranoFlow gen flow
 
-bassTrack flow _ = (flow2Midi . fingeredFlow) (octaveShift (-2) flow)
+--bassTrack flow gen = fingeredFlow gen $ octaveShift (-2) flow
+--bassTrack flow gen = walkingBass gen (octaveShift (-2) flow)
 
-harmonyRhythmTrack flow _ = (flow2Midi . chordRhythmFlow) flow
+--harmonyRhythmTrack flow gen = chordRhythmFlow gen flow
+harmonyRhythmTrack flow gen = brokenChord1_5_10 gen flow
 
-harmonyRhythmTrackRock flow _ = (flow2Midi . chordRhythmFlow . octaveShift (-1))
-	flow
+harmonyRhythmTrackRock flow gen = chordRhythmFlow gen (octaveShift (-1) flow)
 
-additionTrack flow gen = (flow2Midi . randomMelodyFlow gen) flow
+additionTrack flow gen = randomMelodyFlow gen flow
+
+
+bassTrack flow gen = switchBassInner flow gen 0 where
+	switchBassInner [] _ _ = []
+	switchBassInner flow gen track = flow1 ++
+		switchBassInner (flow2 flow $ sumDur flow1) (genL !! 2) track
+		where
+		flow1 = (pFlow1 !! 0) : takeWhile (\ch -> begin ch /= 0)
+			[pFlow1 !! i | i <- [1..length pFlow1 - 1]]
+		pFlow1 = ([fingeredFlow, walkingBass] !! alg) (genL !! 1)
+			(octaveShift (-2) flow)
+		(alg, _) = randomR (0 :: Int, 1) $ genL !! 0
+		
+		sumDur :: Flow -> Int
+		sumDur [] = 0
+		sumDur flow = dur ch + sumDur rest where ch:rest = flow
+		
+		flow2 :: Flow -> Int -> Flow
+		flow2 [] _ = []
+		flow2 flow sum
+			| sum <= 0 = flow
+			| otherwise = flow2 (tail flow) (sum - dur (flow !! 0))
+		
+		genL = rndSplitL gen
 

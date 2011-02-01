@@ -44,8 +44,9 @@ eventsParam chan vol = map (\(ticks, msg) -> if isNoteOn msg
 makeTracks :: TracksDefs -> Flow -> RndGen -> Tempo -> [MidiTrack]
 makeTracks tracks flow gen tempo =
 	map (\((channel, name, instrument, volume, eventsGen), gen)
-		-> midiTrack channel name instrument volume (eventsGen flow gen) state
-		tempo) [(tracks !! i, genL !! i) | i <- [0..length tracks - 1]]
+		-> midiTrack channel name instrument volume
+		(flow2Midi $ eventsGen flow gen) state tempo)
+		[(tracks !! i, genL !! i) | i <- [0..length tracks - 1]]
 	where state = head flow; genL = rndSplitL gen
 
 midiTrack :: Channel -> String -> Preset -> Float -> [MidiEvent] -> Chord ->

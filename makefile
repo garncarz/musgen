@@ -20,6 +20,13 @@ hlint:
 	hlint *.hs -c -i "Use head"
 
 
+tex: tmp
+	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/thesis.lytex
+	cd tmp && lilypond-book --pdf thesis.lytex
+	cd tmp && pdflatex thesis.tex
+	cp tmp/thesis.pdf ./
+
+
 clean:
 	rm -fr *~ tmp musgen
 

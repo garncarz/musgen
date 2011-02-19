@@ -1,0 +1,64 @@
+\documentclass[11pt, titlepage]{report}
+
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
+\usepackage{verbatim}
+
+\usepackage[top=2cm, left=2.75cm]{geometry}
+\textwidth 16cm
+\textheight 23cm
+\renewcommand{\baselinestretch}{1.2}
+
+\usepackage[
+  % pdftex,
+  unicode,
+  colorlinks,
+  bookmarks,
+  bookmarksnumbered,
+  hypertexnames=false,
+  breaklinks
+]{hyperref}
+
+\hypersetup{
+  pdftitle={MusGen},
+  pdfauthor={Ondřej Garncarz},
+  pdfsubject={Generating music compositions by a computer},
+  pdfkeywords={}
+}
+
+% \hypersetup{colorlinks=false}  % für pressen
+
+\newcommand{\the }{the }
+\newcommand{\The}{The }
+
+% \newcommand{\the }{le }
+% \newcommand{\The}{Le }
+
+
+\begin{document}
+
+\title{Generating music compositions by a computer}
+\author{Ondřej Garncarz}
+\date{\today}
+\maketitle
+
+
+\setcounter{page}{0}
+\tableofcontents
+
+
+\chapter{Preamble}
+
+\The creation of music is a wonderful process known to humankind for a very long time, interesting not only because of \the output. During history, people have become able to write \the music down and analyze it. Sheet music turns out to be made just of few primitives satisfying rules of music which are easy to be interpreted mathematically. Also, it can be transferred back to music by letting musicians interpret it or, in the last few decades, by letting even computers do it which is very easy to achieve.
+
+\The goal of this thesis is to algorithmically analyse one of possible processes of \the creation of music and to show it implemented.
+
+
+\chapter{Lilypond test}
+\lilypond[quote,fragment,staffsize=20]{<b b'> c''}
+
+\The note, \the music
+
+
+\end{document}
+

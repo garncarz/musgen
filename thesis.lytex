@@ -54,6 +54,43 @@
 \The goal of this thesis is to algorithmically analyse one of possible processes of \the creation of music and to show it implemented.
 
 
+\chapter{Introduction to music theory}
+
+This chapter is willing to introduce some basic terms which will be useful later in \the process of creation. Understanding of relations is connected with insight into algorithms and names are \the ones this thesis will reuse.
+
+\section{Song}
+
+Although a little simplifying, let's call a musical work a song.
+
+\section{Tone}
+
+Tones are musical sounds of which \the song is composed. They can be produced in many ways --- singed, played on a instrument or created synthetically. They don't even have to be produced, they can exist in an abstract form as sheet music's notes. They can have diverse qualities depending on their essence:
+
+\begin{description}
+\item[Pitch] is a frequency of \the sound.\footnote{Precisely said: \the fundamental frequency.}
+\item[Duration] is a time of how long \the sound is lasting.
+\item[Dynamics] is a strenght of \the expression, simplified a loudness.
+\item[Color (timbre)] is an expression itself. Because \the tone isn't just a sound wave of \the fundamental frequency but a mixture of sound waves rooted from \the loudest --- fundamental --- one, \the expression varies on ratios of their strenghts. This is what makes different instruments sound diffrently.
+\end{description}
+
+It's important to remark that \the qualities can be approached as relative or absolute --- for \the musical use \the relative approach is much more important --- we want to know how tones are related to each other, we don't pay too much attention to a physical point of view.
+
+In this thesis, the essential qualities are pitch and duration.
+
+
+\section{Chord}
+
+
+
+
+\section{Harmony}
+
+
+\chapter{One of possible processes of \the creation of music}
+
+Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach. Let's understand harmony as a bond between tones actually soundning. This bond is, moreover, affected by \the harmonic base of \the song.
+
+
 \chapter{Lilypond test}
 \lilypond[quote,fragment,staffsize=20]{<b b'> c''}
 

@@ -3,6 +3,7 @@
 \usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage{verbatim}
+\usepackage{subfig}
 
 \usepackage[top=2cm, left=2.75cm]{geometry}
 \textwidth 16cm
@@ -26,7 +27,7 @@
   pdfkeywords={}
 }
 
-% \hypersetup{colorlinks=false}  % für pressen
+% \hypersetup{colorlinks=false}  % for printing
 
 \newcommand{\the }{the }
 \newcommand{\The}{The }
@@ -73,28 +74,93 @@ Tones are musical sounds of which \the song is composed. They can be produced in
 \item[Color (timbre)] is an expression itself. Because \the tone isn't just a sound wave of \the fundamental frequency but a mixture of sound waves rooted from \the loudest --- fundamental --- one, \the expression varies on ratios of their strenghts. This is what makes different instruments sound diffrently.
 \end{description}
 
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{c' cis' es' e'}
+\caption{An example of tones of different pitches, in ascending order}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{f'4 f'2}
+\caption{An example of tones of different durations}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{b'\mp b'\f}
+\caption{An example of tones of different dynamics}
+\end{figure}
+
 It's important to remark that \the qualities can be approached as relative or absolute --- for \the musical use \the relative approach is much more important --- we want to know how tones are related to each other, we don't pay too much attention to a physical point of view.
 
 In this thesis, the essential qualities are pitch and duration.
 
+\The distance between two tones --- their pitches --- is called an interval. \The distance of 12 semitones\footnote{A semitone is \the smallest distance from \the classical point of view.} is an important one --- an octave --- defining a pitch twice as high (or low). For \the simplicity in a lot of practices, distances bigger than \the octave can be recalculated as \the value modulo 12 and those under zero --- an unison --- can be added by 12 resulting in all intervals being from \the unison to \the octave.
+
+
+\section{Melody}
+
+A melody is a sequence of tones.
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{d''4 e''8 f'' b'4.}
+\caption{An example of a melody}
+\end{figure}
+
 
 \section{Chord}
 
+A chord is a set of tones sounding at a moment.
 
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<c' g' c''>}
+\caption{An example of a chord}
+\end{figure}
 
 
 \section{Harmony}
+
+Harmony is a relation between notes in a chord. Moreover, a progression of harmony sets ``a feeling'' of a song whereas a melody can be viewed as ``a particular message''.
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d'> <f' a' c'> <c' e' g'>}
+\caption{An example of a progression of harmony}
+\end{figure}
+
+
+\section{Scale}
+
+Songs (or their parts) are usually based on a set of tones called a scale.
+
+\begin{figure}[h!]
+\centering
+\subfloat[C major]{\lilypond[fragment, staffsize=20]{c'8 d' e' f' g' a' b' c''}}
+\subfloat[E major]{\lilypond[fragment, staffsize=20]{e'8 fis' gis' a' b' cis'' dis'' e''}}
+\caption{An example of two scales}
+\end{figure}
+
+A scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of scale's name stands for. Scales this thesis aim at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
+
+\begin{figure}[h!]
+\centering
+\subfloat[C major]{\lilypond[fragment, staffsize=20]{c'8 d' e' f' g' a' b' c''}}
+\subfloat[C minor]{\lilypond[fragment, staffsize=20]{c'8 d' es' f' g' as' b' c''}}
+\caption{An example of scales based on C but differing in intervals}
+\end{figure}
+
+
+\section{Diatonic function}
+
+A diatonic function (or a harmonic function) defines a relation between a chord and a scale.
 
 
 \chapter{One of possible processes of \the creation of music}
 
 Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach. Let's understand harmony as a bond between tones actually soundning. This bond is, moreover, affected by \the harmonic base of \the song.
-
-
-\chapter{Lilypond test}
-\lilypond[quote,fragment,staffsize=20]{<b b'> c''}
-
-\The note, \the music
 
 
 \end{document}

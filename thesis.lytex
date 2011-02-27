@@ -3,6 +3,7 @@
 \usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage{verbatim}
+\usepackage[center]{caption}
 \usepackage{subfig}
 
 \usepackage[top=2cm, left=2.75cm]{geometry}
@@ -42,7 +43,6 @@
 \author{Ondřej Garncarz}
 \date{\today}
 \maketitle
-
 
 \setcounter{page}{0}
 \tableofcontents
@@ -112,18 +112,18 @@ A melody is a sequence of tones.
 
 \section{Chord}
 
-A chord is a set of tones sounding at a moment.
+A chord is a set of tones sounding at a moment. Sometimes a subset of a chord can be viewed as of \the same nature as \the chord.
 
 \begin{figure}[h!]
 \centering
-\lilypond[fragment, staffsize=20]{<c' g' c''>}
-\caption{An example of a chord}
+\lilypond[fragment, staffsize=20]{<c' e' g' c''> <c' g' c''>}
+\caption{An example of a chord\\followed by a chord of \the same nature but with one tone suppressed}
 \end{figure}
 
 
 \section{Harmony}
 
-Harmony is a relation between notes in a chord. Moreover, a progression of harmony sets ``a feeling'' of a song whereas a melody can be viewed as ``a particular message''.
+Harmony is a relation between notes in a chord. \The chord can be viewed as an union of a root tone and other tones which have some distance from \the root tone. Moreover, a progression of harmony sets ``a feeling'' of a song whereas a melody can be viewed as ``a particular message''.
 
 \begin{figure}[h!]
 \centering
@@ -143,7 +143,7 @@ Songs (or their parts) are usually based on a set of tones called a scale.
 \caption{An example of two scales}
 \end{figure}
 
-A scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of scale's name stands for. Scales this thesis aim at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
+A scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of scale's name stands for. Scales this thesis aims at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
 
 \begin{figure}[h!]
 \centering
@@ -155,12 +155,44 @@ A scale is based on its key tone --- that's \the one \the scale is named after -
 
 \section{Diatonic function}
 
-A diatonic function (or a harmonic function) defines a relation between a chord and a scale.
+A diatonic function (or a harmonic function) defines a relation between a chord and a scale. Let's consider a C major scale as a referential scale in examples.
+
+\subsection{Tonic chord}
+
+\The tonic chord commonly begins and ends a song and defines its scale. It's a chord perceived as a tranquillity. \The root tone is \the key tone of \the scale (C), other tones are \the third and \the fifth of \the scale (E and G).
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<c' e' g' c''>}
+\caption{A tonic chord}
+\end{figure}
+
+\subsection{Dominant chord}
+
+\The dominant chord is a thrilling chord which is usually resolved (followed) by \the tonic one. \The root tone is \the fifth tone of \the scale (G), other tones are \the last and \the second of \the scale (B and D).
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<g' b' d''> <e' g' c''>}
+\caption{A dominant chord, resolved in a tonic one}
+\end{figure}
+
+A tone of particular interest is \the leading tone, \the last tone of \the scale (H) --- due to \the strict harmony theory it must be resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
+
+\subsection{Subdominant chord}
+
+\The subdominant chord is somewhere between \the tonic and \the dominant. It can be viewed as a preparation for a dominant chord with a medium amount of thrill. \The root tone is \the fourth tone of \the scale (F), other tones are \the sixth and \the first of \the scale (A and C).
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<f' a' c''> <g' b' d''> <e' g' c''>}
+\caption{A subdominant chord, followed by a dominant one resolved in a tonic one}
+\end{figure}
 
 
 \chapter{One of possible processes of \the creation of music}
 
-Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach. Let's understand harmony as a bond between tones actually soundning. This bond is, moreover, affected by \the harmonic base of \the song.
+Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach.
 
 
 \end{document}

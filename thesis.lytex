@@ -33,8 +33,8 @@
 \newcommand{\the }{the }
 \newcommand{\The}{The }
 
-% \newcommand{\the }{le }
-% \newcommand{\The}{Le }
+%\newcommand{\the }{le }
+%\newcommand{\The}{Le }
 
 
 \begin{document}
@@ -44,9 +44,9 @@
 \date{\today}
 \maketitle
 
-\setcounter{page}{0}
 \tableofcontents
 
+\listoffigures
 
 \chapter{Preamble}
 
@@ -193,6 +193,66 @@ A tone of particular interest is \the leading tone, \the last tone of \the scale
 \chapter{One of possible processes of \the creation of music}
 
 Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach.
+
+\section{Input}
+
+\The generator program takes as input these parameters which \the generated song should fulfill:
+
+\begin{itemize}
+\item Key of harmony, given as tone's MIDI number.
+\item Scale's intervals of harmony. There are two options: major and minor\footnote{Meant \the natural minor.}.
+\item Beats per measure, given as an integer.
+\item Tempo of \the song, given as a count of quarter notes per minute.
+\item Minimal duration of \the song, given as a minimal count of measures.
+\item An interpretation style of \the song. Possible options are: church, pop and rock.
+\end{itemize}
+
+User can also specify song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program will print help, as captured in Figure \ref{help-fig}.
+
+\begin{figure}[h!]
+\verbatiminput{help.txt}
+\caption{Program's help output}
+\label{help-fig}
+\end{figure}
+
+
+\section{Output}
+
+\The program execution can be seen as having two phases where each produces an output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by a suffix \verb=.flow=. An example of a file containing harmony flow of a short song is depicted in Figure \ref{output-flow-fig}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
+
+\begin{figure}[h!]
+\begin{verbatim}
+Chord {tones = [65,68,72], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 0, dur = 8, measure = 16, beats = 4}
+Chord {tones = [61,67,70,73], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 8, dur = 2, measure = 16, beats = 4}
+Chord {tones = [65,68,72], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 10, dur = 4, measure = 16, beats = 4}
+Chord {tones = [61,67,70,73], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 14, dur = 2, measure = 16, beats = 4}
+Chord {tones = [58,70,73,77], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 0, dur = 6, measure = 16, beats = 4}
+Chord {tones = [67,70,73], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 6, dur = 10, measure = 16, beats = 4}
+Chord {tones = [65,70,73,77], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 0, dur = 8, measure = 16, beats = 4}
+Chord {tones = [67,72,75], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 8, dur = 6, measure = 16, beats = 4}
+Chord {tones = [65,68,73,77], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 14, dur = 2, measure = 16, beats = 4}
+Chord {tones = [67,70,73], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 0, dur = 4, measure = 16, beats = 4}
+Chord {tones = [65,68,72,77], key = 77, intervals = [0,2,3,5,7,8,10],
+begin = 4, dur = 12, measure = 16, beats = 4}
+\end{verbatim}
+\caption{An example of saved harmony flow}
+\label{output-flow-fig}
+\end{figure}
+
+
+\section{Runtime environment}
+
+
 
 
 \end{document}

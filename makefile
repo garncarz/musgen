@@ -23,7 +23,6 @@ hlint:
 tex: tmp
 	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/thesis.lytex
 	cd tmp && lilypond-book --pdf thesis.lytex
-	if [[ ! -f tmp/help.txt ]]; then ./musgen -? > tmp/help.txt; fi
 	cd tmp && pdflatex thesis.tex
 	cp tmp/thesis.pdf ./
 

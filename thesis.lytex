@@ -195,6 +195,9 @@ A tone of particular interest is \the leading tone, \the last tone of \the scale
 Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach.
 
 
+\chapter{Implementation}
+
+
 \section{Input}
 
 \The generator program takes as input these parameters which \the generated song should fulfill:
@@ -227,6 +230,39 @@ There is also a script named \textsc{midi2pdf.sh} which given a generated song's
 Script \textsc{midi2pdf.sh} is written in \textsc{BASH}\footnote{\url{http://www.gnu.org/software/bash/}} and uses \textsc{LilyPond}\footnote{\url{http://lilypond.org/}}.
 
 See Appendix \ref{exemplary-use} for exemplary use of \the program.
+
+
+\section{MIDI}
+
+Dute to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
+
+\subsection{MIDI messages}
+
+Let's have a look at some basic MIDI messages --- as defined in \the Haskell package \textsc{HCodecs}, see \cite{midi-hcodecs} --- \the generator program uses:
+
+\begin{description}
+\item[NoteOn] tells us what tone on what channel should be played with what velocity.
+\item[NoteOff] tells us virtually \the same as NoteOn but is meant to mute \the tone.
+\item[KeySignature] tells us how many sharps or flats \the musical staff has and whether it's a major scale.
+\item[TimeSignature] tells us two numbers which are written at \the beginning of \the musical staff, indicating \the time signature.
+\item[ChannelPrefix] tells us what channel is meant by following messages.
+\item[InstrumentName] tells us \the name of an instrument, just informational message.
+\item[ProgramChange] tells us what channel has what MIDI instrument.
+\item[TempoChange] tells us \the new tempo in an uncommon format of \the value of microseconds per minute divided by beats per minute, see \cite{midi-tempo}.
+\item[TrackEnd] tells us \the MIDI track ends, all tracks should end with this message.
+\end{description}
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{midi-wiki} Musical Instrument Digital Interface. \emph{Wikipedia, the free encyclopedia} [online]. [cited 18th March 2011]. $<$\url{http://en.wikipedia.org/wiki/Musical_Instrument_Digital_Interface}$>$.
+
+\bibitem{midi-hcodecs} Codec.Midi. [online]. [cited 18th March 2011]. $<$\url{http://hackage.haskell.org/packages/archive/HCodecs/0.2/doc/html/Codec-Midi.html}$>$.
+
+\bibitem{midi-tempo} MIDI File Format. \emph{\The Sonic Spot} [online]. [cited 18th March 2011]. $<$\url{http://www.sonicspot.com/guide/midifiles.html}$>$.
+
+\end{thebibliography}
 
 
 \appendix

@@ -1,10 +1,30 @@
-\documentclass[11pt, titlepage]{report}
+\documentclass[a4paper, 11pt, titlepage]{report}
 
-\usepackage{a4wide}
+\newif \iffrench  % French?
+% \frenchtrue  % oui
+\newif \ifprint  % document for print?
+% \printtrue  % yes
+
 \usepackage[utf8]{inputenc}
 \usepackage{verbatim}
 \usepackage[center]{caption}
 \usepackage{subfig}
+
+\iffrench
+\usepackage[T1]{fontenc}
+\usepackage{calligra}
+\renewcommand{\rmdefault}{calligra}
+\renewcommand{\sfdefault}{calligra}
+\renewcommand{\ttdefault}{calligra}
+\def \Ondrej {Ondrej }
+\def \the {le }
+\def \The {Le }
+
+\else
+\def \Ondrej {Ondřej }
+\def \the {the }
+\def \The {The }
+\fi
 
 \usepackage[top=2cm, left=2.75cm]{geometry}
 \textwidth 16cm
@@ -12,13 +32,10 @@
 \renewcommand{\baselinestretch}{1.2}
 
 \usepackage[
-  % pdftex,
   unicode,
   colorlinks,
   bookmarks,
-  bookmarksnumbered,
-  hypertexnames=false,
-  breaklinks
+  bookmarksnumbered
 ]{hyperref}
 
 \hypersetup{
@@ -28,19 +45,13 @@
   pdfkeywords={}
 }
 
-% \hypersetup{colorlinks=false}  % for printing
-
-\newcommand{\the }{the }
-\newcommand{\The}{The }
-
-%\newcommand{\the }{le }
-%\newcommand{\The}{Le }
+\ifprint \hypersetup{colorlinks=false} \fi
 
 
 \begin{document}
 
 \title{Generating music compositions by a computer}
-\author{Ondřej Garncarz}
+\author{\Ondrej Garncarz}
 \date{\today}
 \maketitle
 
@@ -50,7 +61,7 @@
 
 \chapter{Preamble}
 
-\The creation of music is a wonderful process known to humankind for a very long time, interesting not only because of \the output. During history, people have become able to write \the music down and analyze it. Sheet music turns out to be made just of few primitives satisfying rules of music which are easy to be interpreted mathematically. Also, it can be transferred back to music by letting musicians interpret it or, in the last few decades, by letting even computers do it which is very easy to achieve.
+\The creation of music is a wonderful process known to humankind for a very long time, interesting not only because of output. During history, people have become able to write music down and analyze it. Sheet music turns out to be made just of few primitives satisfying rules of music which are easy to be interpreted mathematically. Also, it can be transferred back to music by letting musicians interpret it or, in the last few decades, by letting even computers do it which is very easy to achieve.
 
 \The goal of this thesis is to algorithmically analyse one of possible processes of \the creation of music and to show it implemented.
 
@@ -211,12 +222,12 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 \item An interpretation style of \the song. Possible options are: church, pop and rock.
 \end{itemize}
 
-User can also specify song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program will print help, as captured in Appendix \ref{exemplary-use}.
+User can also specify song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program prints help, as captured in Appendix \ref{exemplary-use}.
 
 
 \section{Output}
 
-\The program execution can be seen as having two phases where each produces an output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by a suffix \verb=.flow=. An example of a file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
+\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by a suffix \verb=.flow=. An example of a file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
 
 There is also a script named \textsc{midi2pdf.sh} which given a generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Appendix \ref{example-lily}.
 
@@ -236,22 +247,39 @@ See Appendix \ref{exemplary-use} for exemplary use of \the program.
 
 Dute to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
 
+We'll use a MIDI file format which is composed of MIDI tracks where each represents a specific interpretation of harmony flow for a specific intrument. A track is a list of MIDI events where each is defined by a delay since \the preceding event and a MIDI message.
+
 \subsection{MIDI messages}
 
 Let's have a look at some basic MIDI messages --- as defined in \the Haskell package \textsc{HCodecs}, see \cite{midi-hcodecs} --- \the generator program uses:
 
 \begin{description}
-\item[NoteOn] tells us what tone on what channel should be played with what velocity.
-\item[NoteOff] tells us virtually \the same as NoteOn but is meant to mute \the tone.
-\item[KeySignature] tells us how many sharps or flats \the musical staff has and whether it's a major scale.
-\item[TimeSignature] tells us two numbers which are written at \the beginning of \the musical staff, indicating \the time signature.
-\item[ChannelPrefix] tells us what channel is meant by following messages.
-\item[InstrumentName] tells us \the name of an instrument, just informational message.
-\item[ProgramChange] tells us what channel has what MIDI instrument.
-\item[TempoChange] tells us \the new tempo in an uncommon format of \the value of microseconds per minute divided by beats per minute, see \cite{midi-tempo}.
-\item[TrackEnd] tells us \the MIDI track ends, all tracks should end with this message.
+\item[NoteOn] tells what tone on what channel should be played with what volume, zero volume means muting \the tone.
+\item[KeySignature] tells how many sharps or flats a musical staff has and whether it's a major scale.
+\item[TimeSignature] tells two numbers which are written at \the beginning of a musical staff, indicating a time signature.
+\item[ChannelPrefix] tells what channel is meant by following messages.
+\item[InstrumentName] tells a name of an instrument, just informational message.
+\item[ProgramChange] tells what channel has what MIDI instrument.
+\item[TempoChange] tells a new tempo in an uncommon format of \the value of microseconds per minute divided by beats per minute, see \cite{midi-tempo}.
+\item[TrackEnd] tells a MIDI track ends, all tracks should end with this message.
 \end{description}
 
+\subsection{Implemented functions and monad in relation to MIDI output}
+
+These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
+
+\begin{description}
+\item[toneMidi] is a function of a tone and a volume, defining a MIDI event that starts playing \the tone with \the volume.
+\item[pauseMidi] is a function of a duration, defining a MIDI event that moves \the MIDI play forward by \the duration.
+\item[flow2Midi] is a function of a musical flow, defining a list of MIDI events playing this flow. Note that each part of flow is in fact an isolated chord, so there's no way to create pervading tones in one flow. Another note: volume set for \the events is constant, set to \the MIDI maximum of 127.
+\item[keySignature] is a function of a tone and a list of intervals, defining a message part of a MIDI event that represents a MIDI key signature of a scale made of \the tone as \the key and \the intervals.
+\item[timeSignature] is a function of an integer, defining a MIDI event that sets \the time signature with \the integer as \the upper number, \the lower number is 4.
+\item[eventsParam] is a function of a channel number, a float and a list of MIDI events, defining an altered list where every tone playing event is set to be played on \the given channel with volume being multiplied by \the float.
+\item[midiTrack] is a function of a channel number, an instrument name, an instrument MIDI number, a volume, a list of MIDI events, a beginning chord stating \the scale of a track, and a tempo, defining a list of MIDI events fully covering \the track made of \the input list and adjusted to \the rest of arguments.
+\item[makeTracks] is a function of a list of definitions of MIDI tracks, a musical flow, a random generator and a tempo, defining a list of MIDI tracks where each is created by an interpretation of \the flow as defined for \the track with \the use of a new random generator splited from \the input one, processed by \the function midiTrack to meet \the other arguments.
+\item[midiFile] is a function of a list of MIDI tracks, defining a content of a MIDI file made of \the tracks.
+\item[exportMidi] is a monad which given a filename and a content of a MIDI file exports \the content into a file with \the name.
+\end{description}
 
 
 \begin{thebibliography}{9}
@@ -270,10 +298,11 @@ Let's have a look at some basic MIDI messages --- as defined in \the Haskell pac
 \chapter{Examples}
 
 
-\section{An exemplary use of \the program}
+\section{Exemplary use of \the program}
 \label{exemplary-use}
 
 \begin{verbatim}
+$ cabal install hcodecs cmdargs
 $ make
 mkdir tmp
 ghc --make Main -outputdir tmp -o musgen -O2
@@ -339,7 +368,7 @@ $ ./midi2pdf.sh song.midi
 \end{verbatim}
 
 
-\section{An example of saved harmony flow}
+\section{Example of saved harmony flow}
 \label{example-flow}
 
 This harmony flow was produced as seen in Appendix \ref{exemplary-use}.
@@ -388,7 +417,7 @@ begin = 6, dur = 6, measure = 12, beats = 3}
 \end{verbatim}
 
 
-\section{An example of generated song in sheet music}
+\section{Example of generated song in sheet music}
 \label{example-lily}
 
 This song was produced as seen in Appendix \ref{exemplary-use}.

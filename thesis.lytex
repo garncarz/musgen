@@ -143,6 +143,9 @@ Harmony is a relation between notes in a chord. \The chord can be viewed as an u
 \end{figure}
 
 
+% TODO: beat, measure
+
+
 \section{Scale}
 
 Songs (or their parts) are usually based on a set of tones called a scale.
@@ -219,7 +222,7 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 \item Beats per measure, given as an integer.
 \item Tempo of \the song, given as a count of quarter notes per minute.
 \item Minimal duration of \the song, given as a minimal count of measures.
-\item An interpretation style of \the song. Possible options are: church, pop and rock.
+\item Interpretation style of \the song. Possible options are: church, pop and rock.
 \end{itemize}
 
 User can also specify song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program prints help, as captured in Appendix \ref{exemplary-use}.
@@ -227,9 +230,9 @@ User can also specify song's name and make \the program generate a new flow, oth
 
 \section{Output}
 
-\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by a suffix \verb=.flow=. An example of a file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
+\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by \the suffix \verb=.flow=. An example of \the file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
 
-There is also a script named \textsc{midi2pdf.sh} which given a generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Appendix \ref{example-lily}.
+There is also a script named \textsc{midi2pdf.sh} which given \the generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Appendix \ref{example-lily}.
 
 
 \section{Environment}
@@ -240,12 +243,32 @@ There is also a script named \textsc{midi2pdf.sh} which given a generated song's
 
 Script \textsc{midi2pdf.sh} is written in \textsc{BASH}\footnote{\url{http://www.gnu.org/software/bash/}} and uses \textsc{LilyPond}\footnote{\url{http://lilypond.org/}}.
 
-See Appendix \ref{exemplary-use} for exemplary use of \the program.
+See Appendix \ref{exemplary-use} for an exemplary use of \the program.
+
+
+\section{Interpretation}
+
+\subsection{Techniques used in interpretation}
+
+\The interpretation techniques are implemented by functions contained in \the file \textsc{InterpretationTechniques.hs}.
+
+There's an auxiliary function named \textbf{octaveShift} which is a function of an integer and a musical flow, defining a flow made of \the input flow transposed by \the integer count of octaves.
+
+Other functions are standardized to \the form of a function of an random generator and a musical flow, defining a musical flow. Sometimes \the random generator can be unused if not needed. These are \the functions and how they define \the output flow:
+
+\begin{description}
+\item[sopranoFlow] defines \the flow made of \the soprano part\footnote{\The highest tones.} of \the input flow.
+\item[randomMelodyFlow] defines \the flow made of \the input flow where just one tone is randomly picked from each chord.
+\item[fingeredFlow] defines \the flow made of \the input flow where each chord is arranged to a sequence of its tones in \the form: \the first, \the third, \the second, \the third, \the second, \ldots, \the sequence meeting \the beat of \the flow.
+\item[chordRhythmFlow] defines \the flow made of \the input flow where each chord is repeated to meet \the beat of \the flow.
+\item[brokenChord1\_5\_10] defines \the flow made of \the input flow where each chord is repeated in alternating forms, the first form being \the first and \the third tone of \the chord, \the second form being \the second tone transposed up by an octave; \the repetition meeting \the beat of \the flow.
+\item[walkingBass] defines \the flow made of \the input flow where each chord is arranged to a sequence of tones with \the first tone being \the first tone of \the chord, others going up and down in \the scale of \the flow to approach \the first tone of \the succeeding chord or \the first tone of \the actual chord if it's \the last one; \the sequence meeting \the beat of \the flow but twice \the speed.
+\end{description}
 
 
 \section{MIDI}
 
-Dute to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
+Due to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
 
 We'll use a MIDI file format which is composed of MIDI tracks where each represents a specific interpretation of harmony flow for a specific intrument. A track is a list of MIDI events where each is defined by a delay since \the preceding event and a MIDI message.
 

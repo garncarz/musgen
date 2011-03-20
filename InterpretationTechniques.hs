@@ -42,7 +42,7 @@ fingeredFlow gen flow = fingeredChord ch 0 ++ fingeredFlow gen rest where
 
 			ch2 = ch {tones = [chTone pos], dur = dur2}
 			chRest = ch {dur = dur1 - dur2, begin = begin ch2 + dur ch2}
-			-- remain od chRest neupraveno záměrně pro urychlení hry
+			-- chRest's remain not changed deliberately for speeding up
 
 chordRhythmFlow :: RndGen -> Flow -> Flow
 chordRhythmFlow _ [] = []
@@ -92,7 +92,7 @@ walkingBass gen flow = walkingBassInner gen flow 0 where
 		toneDown = predToneIn (key ch) (intervals ch) lastTone
 		tone = if lastTone == 0 then tones ch !! 0
 			else if abs (toneUp - endTone) < abs (toneDown - endTone) &&
-				abs (toneUp - endTone) > 0 then toneUp else toneDown
+				toneUp /= endTone then toneUp else toneDown
 		
 		ch1 = ch {tones = [tone], dur = min walkingDur $ dur ch}
 		ch2 = ch {begin = begin ch + dur ch1, dur = dur ch - dur ch1}

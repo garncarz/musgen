@@ -26,7 +26,7 @@
 \def \The {The }
 \fi
 
-\usepackage[top=2cm, left=2.75cm]{geometry}
+\usepackage[top=3.3cm, left=2.5cm]{geometry}
 \textwidth 16cm
 \textheight 23cm
 \renewcommand{\baselinestretch}{1.2}
@@ -35,7 +35,8 @@
   unicode,
   colorlinks,
   bookmarks,
-  bookmarksnumbered
+  bookmarksnumbered,
+  pagebackref
 ]{hyperref}
 
 \hypersetup{
@@ -237,7 +238,7 @@ There is also a script named \textsc{midi2pdf.sh} which given \the generated son
 
 \section{Environment}
 
-\The generator program is written in \textsc{Haskell} using two extra packages for processing MIDI data and command line arguments, named \textsc{HCodecs} and \textsc{CmdArgs}. \The program can be run with \textsc{GHC}\footnote{\url{http://www.haskell.org/ghc/}}, \the packages can be installed with \textsc{Cabal}\footnote{\url{http://www.haskell.org/cabal/}}.
+\The generator program is written in \textsc{Haskell} using two extra packages for processing MIDI data and command line arguments, named \textsc{HCodecs}\footnote{\url{http://hackage.haskell.org/package/HCodecs}} and \textsc{CmdArgs}\footnote{\url{http://hackage.haskell.org/package/cmdargs}}. \The program can be run with \textsc{GHC}\footnote{\url{http://www.haskell.org/ghc/}}, \the packages can be installed with \textsc{Cabal}\footnote{\url{http://www.haskell.org/cabal/}}.
 
 \The process of building source codes into a runnable binary can be initiated by calling program \textsc{make}\footnote{\url{http://www.gnu.org/software/make/}} with no arguments.
 
@@ -283,17 +284,32 @@ See Appendix \ref{exemplary-use} for an exemplary use of \the program.
 
 \subsection{Random generator}
 
-\textsc{MGRandom.hs}:
+For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or chord's tones.
 
 \begin{description}
-\item[rndDuration]
-\item[rndTonesCount]
-\item[rndTones]
-\item[rndChordTones]
-\item[rndIntervals]
-\item[rndNormal]
-\item[rndSplitL]
-\item[testRndNormal]
+\item[rndDuration] is a function of a random generator, defining a duration randomly picked from even numbers from 2 to 16.
+\item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For symplifying things, \the result is always 4.
+\item[rndIntervals] is a function of a random generator, defining an infinite list of (musical) intervals where each is a product of a random sign and an unsigned interval which is picked like this:
+
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Probability} & \textbf{Interval} \\ \hline
+25\% & 0 \\ \hline
+15\% & 4 \\ \hline
+15\% & 3 \\ \hline
+10\% & 2 \\ \hline
+10\% & 5 \\ \hline
+10\% & 6 \\ \hline
+5\% & 1 \\ \hline
+5\% & 7 \\ \hline
+5\% & randomly picked from 0 to 12 \\
+\hline
+\end{tabular}
+\item[rndNormal] is a function of an integer meaning an minimum, an integer meaning an maximum and a random generator, defining an integer randomly picked from \the normal distribution\footnote{Precisely said not \the normal distribution, but a slightly modified similar one --- \the Irwin–Hall distribution which is easy to implement: wanting a random number from $0$ to $max$, we sum $max$ random values from \the interval $<0, 1>$, see \cite{normal-wiki}.} of \the range.
+\item[rndTones] is a function of a random generator, defining an infinite list of random tones generated with \the use of rndNormal for \the possible MIDI tones from 0 to 127.
+\item[rndChordTones] is a function of a random generator, defining a sorted list of tones meant as a chord. It is using rndTonesCount and rndIntervals. \The tones are trying to reach \the number of rndTonesCount and are made sequentially by adding \the corresponding value of rndIntervals to \the preceding tone, starting with \the MIDI center value 64 plus \the first interval. This process is meant to ensure chords are balanced to \the center, not exaggerating.
+\item[rndSplitL] is a function of a random generator, defining an infinite list of random generators made by splitting \the input one.
+\item[testRndNormal] is a testing monad which generates 10000 tones using rndTones and prints counts of occurrences of possible tone values to verify normality of \the used randomization.
 \end{description}
 
 
@@ -447,7 +463,7 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 \begin{description}
 \item[toneMidi] is a function of a tone and a volume, defining a MIDI event that starts playing \the tone with \the volume.
 \item[pauseMidi] is a function of a duration, defining a MIDI event that moves \the MIDI play forward by \the duration.
-\item[flow2Midi] is a function of a musical flow, defining a list of MIDI events playing this flow. Note that each part of flow is in fact an isolated chord, so there's no way to create pervading tones in one flow. Another note: volume set for \the events is constant, set to \the MIDI maximum of 127.
+\item[flow2Midi] is a function of a musical flow, defining a list of MIDI events playing this flow. Note that each part of flow is in fact an isolated chord, so there's no way to create pervading tones in one flow. Another note: volume set for \the events is constant, set to \the MIDI maximum 127.
 \item[keySignature] is a function of a tone and a list of intervals, defining a message part of a MIDI event that represents a MIDI key signature of a scale made of \the tone as \the key and \the intervals.
 \item[timeSignature] is a function of an integer, defining a MIDI event that sets \the time signature with \the integer as \the upper number, \the lower number is 4.
 \item[eventsParam] is a function of a channel number, a float and a list of MIDI events, defining an altered list where every tone playing event is set to be played on \the given channel with volume being multiplied by \the float.
@@ -459,6 +475,8 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 
 
 \begin{thebibliography}{9}
+
+\bibitem{normal-wiki} Normal distribution --- Generating values from normal distribution. \emph{Wikipedia, the free encyclopedia} [online]. [cited 22nd March 2011]. $<$\url{http://en.wikipedia.org/wiki/Normal_distribution\#Generating_values_from_normal_distribution}$>$.
 
 \bibitem{midi-wiki} Musical Instrument Digital Interface. \emph{Wikipedia, the free encyclopedia} [online]. [cited 18th March 2011]. $<$\url{http://en.wikipedia.org/wiki/Musical_Instrument_Digital_Interface}$>$.
 

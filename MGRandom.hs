@@ -5,25 +5,10 @@ import Random
 import Types
 
 rndDuration :: RndGen -> Duration
-rndDuration gen = max 2 $ 2 * rnd where (rnd, _) = randomR (0 :: Int, 8) gen
+rndDuration gen = 2 * rnd where (rnd, _) = randomR (1 :: Int, 8) gen
 
 rndTonesCount :: RndGen -> Int
 rndTonesCount gen = 4
-
-rndTones :: RndGen -> [Tone]
-rndTones gen =
-	let	(g1, g2) = split gen
-	in rndNormal 0 127 g1 : rndTones g2
-	--in (head $ randomRs (0, 127) g1) : rndTones g2
-
-rndChordTones :: RndGen -> [Tone]
-rndChordTones = sort . rndChordTones2
-rndChordTones1 gen = take count tones where
-	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
-rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where
-	(g1, g2) = split gen
-	intervals = rndIntervals g1; count = rndTonesCount g2
-	arr 0 = 64 + head intervals; arr i = arr (i - 1) + intervals !! i
 
 rndIntervals :: RndGen -> Intervals
 rndIntervals gen = int : rndIntervals gOut where
@@ -49,6 +34,21 @@ rndNormal from to gen = maximum [from, minimum [to, result]] where
 	number = sum $ take size rnds
 	result = truncate $ 2 * (number - center) + center
 	--result = truncate number
+
+rndTones :: RndGen -> [Tone]
+rndTones gen =
+	let	(g1, g2) = split gen
+	in rndNormal 0 127 g1 : rndTones g2
+	--in (head $ randomRs (0, 127) g1) : rndTones g2
+
+rndChordTones :: RndGen -> [Tone]
+rndChordTones = sort . rndChordTones2
+rndChordTones1 gen = take count tones where
+	count = rndTonesCount g1; tones = rndTones g2; (g1, g2) = split gen
+rndChordTones2 gen = take count $ nub [arr i | i <- [1..2 * count]] where
+	(g1, g2) = split gen
+	intervals = rndIntervals g1; count = rndTonesCount g2
+	arr 0 = 64 + head intervals; arr i = arr (i - 1) + intervals !! i
 
 rndSplitL :: RndGen -> [RndGen]
 rndSplitL g = let (g1, g2) = split g in g1 : rndSplitL g2

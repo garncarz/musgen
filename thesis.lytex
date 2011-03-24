@@ -286,6 +286,15 @@ See Appendix \ref{exemplary-use} for an exemplary use of \the program.
 
 For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or chord's tones.
 
+When working with random numbers in Haskell, there can be chosen one of two main ways:
+
+\begin{itemize}
+\item Getting random numbers from monads, but that leads to forcing functions using those numbers and all functions above\footnote{In a definition chain.} to be monads too, which deforms a functional approach a bit.
+\item Getting random numbers from functions whose one argument must be a random generator. This approach, used in \the program, is pure functional but every used random generator needs to be unique, otherwise functions will return always \the same results because of \the definition of a function as unambiguous. But this is no problem --- functions above can split their input random generators and then pass new and unique ones.
+\end{itemize}
+
+For more information about randomness in Haskell see \cite{rnd-hask}.
+
 \begin{description}
 \item[rndDuration] is a function of a random generator, defining a duration randomly picked from even numbers from 2 to 16.
 \item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For symplifying things, \the result is always 4.
@@ -315,16 +324,16 @@ For \the sake of randomization we'll utilize a set of frequently used randomizat
 
 \section{Harmony flow}
 
-\textsc{Flow.hs}:
+A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:
 
 \begin{description}
-\item[loadFlow]
-\item[produceFlow]
-\item[nextFlow]
-\item[nextTonesChord]
-\item[nextDurChord]
-\item[canBeEnd]
-\item[realPast]
+\item[loadFlow] is a monad which given a filename reads a content of \the file and returns a harmony flow contained in \the content.
+\item[produceFlow] is a monad which given a chord meant as a determination of flow's scale, an integer meant as flow's minimal required measure count and a filename produces a new harmony flow based on \the input parameters using a new random generator. \The flow is briefly printed, saved in \the file and also returned.
+\item[nextFlow] is a function of a past harmony flow, an integer meaning a measures count, an integer meaning a minimal required measures count and a random generator, defining a harmony flow which is a sequel of \the input flow.
+\item[nextTonesChord] is a function of a past harmony flow and a random generator, defining a chord harmonicly following \the input flow, having a zero duration. Until a suitable chord is found, new ones are created invoking rndChordTones and rated by harmonyChance --- \the quality of \the suitable chord must beat a minimal required quality which is a random float between 0.5 and 0.7.
+\item[nextDurChord] is a function of a chord, a past harmony flow and a random generator, defining a chord harmonicly equivalent with \the input chord, having a duration suitable for a sequel of \the input flow. Until a suitable duration is found, new ones are created invoking rndDuration and rated by harmonyRhythmChance --- \the quality of \the suitable duration must beat a minimal required quality which is 0.5.
+\item[canBeEnd] is a function of a chord and a past harmony flow, defining a boolean value whether \the chord can end \the flow. Harmonical rule checking function isTonicTriadIn is used to determine \the possibility of ending, \the chord also can't be shorter in duration than half \the measure duration.
+\item[realPast] is a helper function of a harmony flow, defining a harmony flow which is equivalent to \the input flow if it's a regular flow, otherwise to an empty flow (that's in \the case \the input flow starts with an empty chord, meaning it's a helper flow determining flow's scale and beat).
 \end{description}
 
 \subsection{Relations}
@@ -475,6 +484,8 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 
 
 \begin{thebibliography}{9}
+
+\bibitem{rnd-hask} Randomness. \emph{Learn You a Haskell for Great Good!} [online]. [cited 24th March 2011]. $<$\url{http://learnyouahaskell.com/input-and-output\#randomness}$>$.
 
 \bibitem{normal-wiki} Normal distribution --- Generating values from normal distribution. \emph{Wikipedia, the free encyclopedia} [online]. [cited 22nd March 2011]. $<$\url{http://en.wikipedia.org/wiki/Normal_distribution\#Generating_values_from_normal_distribution}$>$.
 

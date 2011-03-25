@@ -260,29 +260,41 @@ See Appendix \ref{exemplary-use} for an exemplary use of \the program.
 
 \subsection{Types}
 
-\textsc{Types.hs}:
+Haskell comes with a set of basic types which aren't of much difference to types of other typed programming languages, see \cite{types-hask}. New types can be defined from existing ones or compounded, which is used in \the program for \the sake of better readability. New types and some functions of them are defined in \the file \textsc{Types.hs} like this:
 
 \begin{description}
-\item[Tone]
-\item[Interval]
-\item[Intervals]
-\item[Volume]
-\item[Duration]
-\item[Chord]
-\item[remain]
-\item[showBrief]
-\item[Flow]
-\item[ChanceType]
-\item[MidiEvent]
-\item[MidiTrack]
-\item[TracksDefs]
-\item[RndGen]
-\item[floatMin]
-\item[floatZero]
-\item[floatHalf]
+\item[Tone] is a type meant as a MIDI\footnote{More about MIDI at \ref{midi}.} tone, defined as an integer.
+\item[Interval] is a type meant as an interval between two tones, defined as an integer.
+\item[Intervals] is a type meant as a list of intervals.
+\item[Volume] is a type meant as a MIDI volume, defined as an integer.
+\item[Duration] is a type meant as a duration of a tone or a chord, defined as an integer.
+\item[Chord] is a data type meant as a chord description, compounded of \the following data parts:
+
+	\begin{description}
+	\item[tones] of \the chord,
+	\item[key] of \the scale to which \the chord relates,
+	\item[intervals] of \the scale to which \the chord relates,
+	\item[begin] which is a duration since \the beginning of \the measure,
+	\item[dur] which is a duration of \the chord,
+	\item[measure] which is a duration of \the whole measure and
+	\item[beats] meant as a count of beats per measure. 
+	\end{description}
+\item[remain] is a function of a chord, defining a duration which \the chord is missing to complete \the measure. 
+\item[showBrief] is a function of a chord, defining a string which captures \the chord's information in a brief printable format.
+\item[Flow] is a type meant as a list of chords.
+\item[ChanceType] is a type meant as a function mapping a chord and a flow into a float.
+\item[MidiEvent] is a type meant as a MIDI event, defined as a pair of MIDI ticks and a MIDI message.
+\item[MidiTrack] is a type meant as a MIDI track, defined as a list of MIDI events.
+\item[TracksDefs] is a type meant as a list of definitions of how to create and set MIDI tracks.
+\item[RndGen] is a type meant as a reference to \the used random generator\footnote{More about random values generating at \ref{mgrandom}.}, StdGen is used.
+% TODO:
+\item[floatMin] is a function defining \the minimal float value used in ..., \the value 0.1 is used.
+\item[floatZero] is a function defining \the zero float value used in ..., \the value 0.001 is used.
+\item[floatHalf] is a function defining \the half float value used in ..., \the value $0.5 + floatMin$ is used.
 \end{description}
 
 \subsection{Random generator}
+\label{mgrandom}
 
 For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or chord's tones.
 
@@ -445,6 +457,7 @@ Other functions are standardized to \the form of a function of an random generat
 
 
 \section{MIDI}
+\label{midi}
 
 Due to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
 
@@ -484,6 +497,8 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 
 
 \begin{thebibliography}{9}
+
+\bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.
 
 \bibitem{rnd-hask} Randomness. \emph{Learn You a Haskell for Great Good!} [online]. [cited 24th March 2011]. $<$\url{http://learnyouahaskell.com/input-and-output\#randomness}$>$.
 

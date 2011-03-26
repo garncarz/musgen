@@ -24,7 +24,7 @@ intervalFromTo tone1 tone2 = i where
 	dist = (tone2 - tone1) `mod` scaleSize
 	i = if dist < 0 then dist + scaleSize else dist
 
-intervalAt :: Intervals -> Int -> Tone
+intervalAt :: Intervals -> Int -> Interval
 intervalAt intervals pos = intervals !! pos3 where
 	pos2 = pos `mod` length intervals
 	pos3 = if pos2 < 0 then pos2 + length intervals else pos2

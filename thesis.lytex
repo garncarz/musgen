@@ -77,7 +77,7 @@ Although a little simplifying, let's call a musical work a song.
 
 \section{Tone}
 
-Tones are musical sounds of which \the song is composed. They can be produced in many ways --- singed, played on a instrument or created synthetically. They don't even have to be produced, they can exist in an abstract form as sheet music's notes. They can have diverse qualities depending on their essence:
+Tones are musical sounds of which \the song is composed. They can be produced in many ways --- singed, played on a instrument or created synthetically. They don't even have to be produced, they can exist in an abstract form as sheet music notes. They can have diverse qualities depending on their essence:
 
 \begin{description}
 \item[Pitch] is a frequency of \the sound.\footnote{Precisely said: \the fundamental frequency.}
@@ -144,7 +144,7 @@ Harmony is a relation between notes in a chord. \The chord can be viewed as an u
 \end{figure}
 
 
-% TODO: beat, measure
+% TODO: triad, counterpoint, soprano..., beat, measure
 
 
 \section{Scale}
@@ -158,7 +158,7 @@ Songs (or their parts) are usually based on a set of tones called a scale.
 \caption{An example of two scales}
 \end{figure}
 
-A scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of scale's name stands for. Scales this thesis aims at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
+\The scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of \the scale's name stands for. Scales this thesis aims at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
 
 \begin{figure}[h!]
 \centering
@@ -226,12 +226,12 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 \item Interpretation style of \the song. Possible options are: church, pop and rock.
 \end{itemize}
 
-User can also specify song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program prints help, as captured in Appendix \ref{exemplary-use}.
+User can also specify \the song's name and make \the program generate a new flow, otherwise an old one will be used if exists. Given a parameter \verb=-?= \the program prints help, as captured in Appendix \ref{exemplary-use}.
 
 
 \section{Output}
 
-\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is song's name appended by \the suffix \verb=.flow=. An example of \the file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
+\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is \the song's name appended by \the suffix \verb=.flow=. An example of \the file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
 
 There is also a script named \textsc{midi2pdf.sh} which given \the generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Appendix \ref{example-lily}.
 
@@ -269,7 +269,6 @@ Haskell comes with a set of basic types which aren't of much difference to types
 \item[Volume] is a type meant as a MIDI volume, defined as an integer.
 \item[Duration] is a type meant as a duration of a tone or a chord, defined as an integer.
 \item[Chord] is a data type meant as a chord description, compounded of \the following data parts:
-
 	\begin{description}
 	\item[tones] of \the chord,
 	\item[key] of \the scale to which \the chord relates,
@@ -296,7 +295,7 @@ Haskell comes with a set of basic types which aren't of much difference to types
 \subsection{Random generator}
 \label{mgrandom}
 
-For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or chord's tones.
+For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or a chord's tones.
 
 When working with random numbers in Haskell, there can be chosen one of two main ways:
 
@@ -345,44 +344,46 @@ A product of \the first stage is a harmony flow. Its creation and file handling 
 \item[nextTonesChord] is a function of a past harmony flow and a random generator, defining a chord harmonicly following \the input flow, having a zero duration. Until a suitable chord is found, new ones are created invoking rndChordTones and rated by harmonyChance --- \the quality of \the suitable chord must beat a minimal required quality which is a random float between 0.5 and 0.7.
 \item[nextDurChord] is a function of a chord, a past harmony flow and a random generator, defining a chord harmonicly equivalent with \the input chord, having a duration suitable for a sequel of \the input flow. Until a suitable duration is found, new ones are created invoking rndDuration and rated by harmonyRhythmChance --- \the quality of \the suitable duration must beat a minimal required quality which is 0.5.
 \item[canBeEnd] is a function of a chord and a past harmony flow, defining a boolean value whether \the chord can end \the flow. Harmonical rule checking function isTonicTriadIn is used to determine \the possibility of ending, \the chord also can't be shorter in duration than half \the measure duration.
-\item[realPast] is a helper function of a harmony flow, defining a harmony flow which is equivalent to \the input flow if it's a regular flow, otherwise to an empty flow (that's in \the case \the input flow starts with an empty chord, meaning it's a helper flow determining flow's scale and beat).
+\item[realPast] is a helper function of a harmony flow, defining a harmony flow which is equivalent to \the input flow if it's a regular flow, otherwise to an empty flow (that's in \the case \the input flow starts with an empty chord, meaning it's a helper flow determining \the flow's scale and beat).
 \end{description}
 
 \subsection{Relations}
 
-\textsc{Relations.hs}:
+Functions evaluating musical relations are located in \the file \textsc{Relations.hs}.
 
 \begin{description}
-\item[scaleSize]
-\item[major]
-\item[minor]
-\item[chordIntervals]
-\item[majorTriad]
-\item[minorTriad]
-\item[diminishedTriad]
-\item[augmentedTriad]
-\item[toneJumpFrom]
-\item[intervalFromTo]
-\item[intervalAt]
-\item[succToneIn]
-\item[predToneIn]
-\item[isFromScale]
-\item[areFromScale]
-\item[fitsIntervalsFrom]
-\item[fitsIntervals]
-\item[hasRoot]
-\item[isTriad]
-\item[isFullTriad]
-\item[isTonicTriadIn]
-\item[isSubdominantIn]
-\item[isDominantIn]
-\item[isLeadingToneIn]
-\item[isLeadingToneOkIn]
-\item[isCounterpoint]
-\item[isSopranoMoving]
-\item[isBassMoving]
-\item[percentageMoving]
-\item[isConsonantIn]
+\item[scaleSize] is a function defining \the size of octave in semitones, \the value is 12.
+\item[major] is a function defining intervals of major scale in a relation to key tone.
+\item[minor] is a function defining intervals of minor scale in a relation to key tone.
+\item[chordIntervals] is a function defining a list of intervals that a chord can be made of. They are \the following:
+	\begin{description}
+	\item[majorTriad] which is a list of intervals making a major triad,
+	\item[minorTriad] which is a list of intervals making a minor triad,
+	\item[diminishedTriad] which is a list of intervals making a diminished triad and
+	\item[augmentedTriad] which is a list of intervals making a augmented triad.
+	\end{description}
+\item[toneJumpFrom] is a function of a list of tones and a tone, defining a minimal interval between \the tone and \the tones from \the list.
+\item[intervalFromTo] is a function of two tones, defining an interval between them in a range from 0 to $scaleSize - 1$, ignoring octaves.
+\item[intervalAt] is a function of intervals and an integer, defining an interval at \the position of \the integer from \the intervals, cycling in values. 
+\item[succToneIn] is a function of a tone meant as a scale's key, \the scale's intervals and a tone, defining a tone succeeding \the input tone in \the scale.
+\item[predToneIn] is a function of a tone meant as a scale's key, \the scale's intervals and a tone, defining a tone preceding \the input tone in \the scale.
+\item[isFromScale] is a function of a tone meant as a scale's key, \the scale's intervals and a tone, defining a truth value whether \the tone comes from \the scale.
+\item[areFromScale] is a function of a tone meant as a scale's key, \the scale's intervals and a list of tones, defining a truth value whether \the tones come from \the scale.
+\item[fitsIntervalsFrom] is a function of intervals, a tone meant as a chord's root and a list of \the chord's tones, defining a truth value whether \the chord is of \the intervals.
+\item[fitsIntervals] is a function of intervals and a list of a chord's tones, defining a truth value whether \the chord is of \the intervals, by checking all \the possible chord's roots.
+\item[hasRoot] is a function of a tone meant as a chord's root and a list of \the chord's tones, defining a truth value whether \the chord is of some intervals defined by \the function chordIntervals.
+\item[isTriad] is a function of a list of a chord's tones, defining a truth value whether \the chord is a triad.
+\item[isFullTriad] is a function of a list of a chord's tones, defining a truth value whether \the chord is a triad with no tones omitted.
+\item[isTonicTriadIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of a chord's tones, defining a truth value whether \the chord is a tonic triad within \the scale.
+\item[isSubdominantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of a chord's tones, defining a truth value whether \the chord is a subdominant within \the scale.
+\item[isDominantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of a chord's tones, defining a truth value whether \the chord is a dominant within \the scale.
+\item[isLeadingToneIn] is a function of a tone meant as a scale's key, \the scale's intervals and a tone, defining a truth value whether \the tone is \the leading-tone of \the scale.
+\item[isLeadingToneOkIn] is a function of a tone meant as a scale's key, \the scale's intervals, a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether, within \the scale, \the first chord's possible leading-tone is resolved or continued correctly into \the second chord, plus there is no more than one leading-tone at a time.
+\item[isCounterpoint] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether \the chords progress in counterpoint.
+\item[isSopranoMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether \the soprano part of \the chords moves.
+\item[isBassMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether \the bass part of \the chords moves.
+\item[percentageMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a float meant as a percentage of \the second chord's tones not being part of \the first one.
+\item[isConsonantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of tones, defining a truth value whether \the tones are consonant wihtin \the scale.
 \end{description}
 
 \subsection{Chances for harmony}

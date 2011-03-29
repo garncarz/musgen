@@ -1,5 +1,10 @@
 DATE = `date +%Y-%m-%d`
 VERSION_DATE = "versionDate = \"$(DATE)\""
+graph = mkdir -p tmp/$(1); \
+	cp -t tmp/$(1) $(3) $(4) $(5); \
+	SourceGraph tmp/$(1)/$(3); \
+	svg2pdf tmp/$(1)/SourceGraph/graphs/$(2).svg tmp/$(1).pdf
+
 
 build: tmp
 	ghc --make Main -outputdir tmp -o musgen -O2
@@ -25,6 +30,9 @@ tex: tmp
 	cd tmp && lilypond-book --pdf thesis.lytex
 	cd tmp && pdflatex thesis.tex
 	cp tmp/thesis.pdf ./
+
+graphs: tmp
+	$(call graph,interpretation,codeCluster,Interpretation.hs,InterpretationTechniques.hs)
 
 
 clean:

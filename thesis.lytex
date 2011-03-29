@@ -6,9 +6,10 @@
 % \printtrue  % yes
 
 \usepackage[utf8]{inputenc}
-\usepackage{verbatim}
 \usepackage[center]{caption}
 \usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{graphicx}
 
 \iffrench
 \usepackage[T1]{fontenc}
@@ -240,6 +241,8 @@ There is also a script named \textsc{midi2pdf.sh} which given \the generated son
 
 \The generator program is written in \textsc{Haskell} using two extra packages for processing MIDI data and command line arguments, named \textsc{HCodecs}\footnote{\url{http://hackage.haskell.org/package/HCodecs}} and \textsc{CmdArgs}\footnote{\url{http://hackage.haskell.org/package/cmdargs}}. \The program can be run with \textsc{GHC}\footnote{\url{http://www.haskell.org/ghc/}}, \the packages can be installed with \textsc{Cabal}\footnote{\url{http://www.haskell.org/cabal/}}.
 
+% TODO: sourcegraph, svg2pdf
+
 \The process of building source codes into a runnable binary can be initiated by calling program \textsc{make}\footnote{\url{http://www.gnu.org/software/make/}} with no arguments.
 
 Script \textsc{midi2pdf.sh} is written in \textsc{BASH}\footnote{\url{http://www.gnu.org/software/bash/}} and uses \textsc{LilyPond}\footnote{\url{http://lilypond.org/}}.
@@ -424,19 +427,24 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 
 \section{Interpretation}
 
-\textsc{Interpretation.hs}:
+\The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}. Functions references are captured in Appendix \ref{interpretation-diag}.
+
+\The list \textbf{interpretations} is a list of all possible interpretation styles, including:
+\begin{description}
+\item[churchTracks] interpreting flow by 5 instruments (organ, piano, acoustic bass, acoustic steel guitar and harpsichord) in a church music resembling style,
+\item[popTracks] interpreting flow by 5 instruments (synthetic strings, square lead, synthetic bass, acoustic steel guitar and sawtooth lead) in a pop music resembling style and
+\item[rockTracks] interpreting flow by 5 instruments (distorted guitar, overdriven guitar twice, electric bass and harpsichord) in a rock music resembling style.
+\end{description}
+
+Following functions are functions of a harmony flow and a random generator, defining a harmony flow interpreting \the input flow in a particular way:
 
 \begin{description}
-\item[interpretations]
-\item[churchTracks]
-\item[popTracks]
-\item[rockTracks]
-\item[harmonyTrack]
-\item[sopranoTrack]
-\item[harmonyRhythmTrack]
-\item[harmonyRhythmTrackRock]
-\item[additionTrack]
-\item[bassTrack]
+\item[harmonyTrack] defines \the same flow, copying \the harmony.
+\item[sopranoTrack] defines a soprano melody flow.
+\item[harmonyRhythmTrack] defines a rhythmical chords flow.
+\item[harmonyRhythmTrackRock] defines a rhythmical chords flow, transposed one octave down.
+\item[additionTrack] defines a random melody flow.
+\item[bassTrack] defines a bass melody flow, randomly switching fingered bass or walking bass styles.
 \end{description}
 
 \subsection{Techniques used in interpretation}
@@ -811,6 +819,13 @@ trackE = <<
   >>
 }
 \end{lilypond}
+
+
+\chapter{Functional diagrams}
+
+\section{Interpretation / InterpretationTechniques}
+\label{interpretation-diag}
+\includegraphics[width=1.1\textwidth]{interpretation.pdf}
 
 
 \end{document}

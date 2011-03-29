@@ -1,10 +1,5 @@
 DATE = `date +%Y-%m-%d`
 VERSION_DATE = "versionDate = \"$(DATE)\""
-graph = mkdir -p tmp/$(1); \
-	cp -t tmp/$(1) $(3) $(4) $(5); \
-	SourceGraph tmp/$(1)/$(3); \
-	svg2pdf tmp/$(1)/SourceGraph/graphs/$(2).svg tmp/$(1).pdf
-
 
 build: tmp
 	ghc --make Main -outputdir tmp -o musgen -O2
@@ -31,8 +26,24 @@ tex: tmp
 	cd tmp && pdflatex thesis.tex
 	cp tmp/thesis.pdf ./
 
-graphs: tmp
-	$(call graph,interpretation,codeCluster,Interpretation.hs,InterpretationTechniques.hs)
+graphs1:
+	for file in `ls *.hs`; do \
+		name=$${file%.*}; \
+		mkdir -p tmp/$$name; \
+		cp $$file tmp/$$name/; \
+		for import in `grep import $$file | sed "s/import //g"`; do \
+			if [ -f $$import.hs ]; then \
+				cp $$import.hs tmp/$$name/; \
+			fi; \
+		done; \
+	done
+
+graphs2:
+	for file in `ls *.hs`; do \
+		name=$${file%.*}; \
+		SourceGraph tmp/$$name/$$file; \
+		svg2pdf tmp/$$name/SourceGraph/graphs/codeCluster.svg tmp/$$name.pdf; \
+	done
 
 
 clean:

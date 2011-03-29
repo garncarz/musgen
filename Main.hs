@@ -5,8 +5,8 @@ import Control.Exception
 import Control.Monad
 import Flow
 import Interpretation
-import Midi
 import MGRandom
+import Midi
 import Prelude hiding (catch)
 import Random
 import Relations

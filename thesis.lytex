@@ -823,9 +823,41 @@ trackE = <<
 
 \chapter{Functional diagrams}
 
-\section{Interpretation / InterpretationTechniques}
+\section{Main}
+\label{main-diag}
+\includegraphics[width=1.1\textwidth]{Main.pdf}
+
+\section{MGRandom}
+\label{mgrandom-diag}
+\includegraphics[width=1.1\textwidth]{MGRandom.pdf}
+
+\section{Flow}
+\label{flow-diag}
+\includegraphics[width=1.1\textwidth]{Flow.pdf}
+
+\section{Relations}
+\label{relations-diag}
+\includegraphics[width=1.1\textwidth]{Relations.pdf}
+
+\section{ChanceHarmony}
+\label{chanceharm-diag}
+\includegraphics[width=1.1\textwidth]{ChanceHarmony.pdf}
+
+\section{ChanceHarmonyRhythm}
+\label{chanceharmrhyt-diag}
+\includegraphics[width=1.1\textwidth]{ChanceHarmonyRhythm.pdf}
+
+\section{Interpretation}
 \label{interpretation-diag}
-\includegraphics[width=1.1\textwidth]{interpretation.pdf}
+\includegraphics[width=1.1\textwidth]{Interpretation.pdf}
+
+\section{InterpretationTechniques}
+\label{inttechniques-diag}
+\includegraphics[width=1.1\textwidth]{InterpretationTechniques.pdf}
+
+\section{Midi}
+\label{midi-diag}
+\includegraphics[width=1.1\textwidth]{Midi.pdf}
 
 
 \end{document}

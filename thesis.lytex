@@ -252,7 +252,7 @@ See Appendix \ref{exemplary-use} for an exemplary use of \the program.
 
 \section{Main program and helpers}
 
-\textsc{Main.hs}:
+\textsc{Main.hs}:\footnote{See Appendix \ref{main-diag} for functions references.}
 
 \begin{description}
 \item[Input]
@@ -298,7 +298,7 @@ Haskell comes with a set of basic types which aren't of much difference to types
 \subsection{Random generator}
 \label{mgrandom}
 
-For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or a chord's tones.
+For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}.\footnote{See Appendix \ref{mgrandom-diag} for functions references.} They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or a chord's tones.
 
 When working with random numbers in Haskell, there can be chosen one of two main ways:
 
@@ -338,7 +338,7 @@ For more information about randomness in Haskell see \cite{rnd-hask}.
 
 \section{Harmony flow}
 
-A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:
+A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:\footnote{See Appendix \ref{flow-diag} for functions references.}
 
 \begin{description}
 \item[loadFlow] is a monad which given a filename reads a content of \the file and returns a harmony flow contained in \the content.
@@ -352,7 +352,7 @@ A product of \the first stage is a harmony flow. Its creation and file handling 
 
 \subsection{Relations}
 
-Functions evaluating musical relations are located in \the file \textsc{Relations.hs}.
+Functions evaluating musical relations are located in \the file \textsc{Relations.hs}.\footnote{See Appendix \ref{relations-diag} for functions references.}
 
 \begin{description}
 \item[scaleSize] is a function defining \the size of octave in semitones, \the value is 12.
@@ -391,7 +391,7 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 
 \subsection{Chances for harmony}
 
-\textsc{ChanceHarmony.hs}:
+\textsc{ChanceHarmony.hs}:\footnote{See Appendix \ref{chanceHarmony-diag} for functions references.}
 
 \begin{description}
 \item[harmonyChance]
@@ -414,7 +414,7 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 
 \subsection{Chances for rhythm}
 
-\textsc{ChanceHarmonyRhythm.hs}:
+\textsc{ChanceHarmonyRhythm.hs}:\footnote{See Appendix \ref{chanceHarmonyRhythm-diag} for functions references.}
 
 \begin{description}
 \item[harmonyRhythmChance]
@@ -427,7 +427,7 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 
 \section{Interpretation}
 
-\The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}. Functions references are captured in Appendix \ref{interpretation-diag}.
+\The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}.\footnote{See Appendix \ref{interpretation-diag} for functions references.}
 
 \The list \textbf{interpretations} is a list of all possible interpretation styles, including:
 \begin{description}
@@ -449,7 +449,7 @@ Following functions are functions of a harmony flow and a random generator, defi
 
 \subsection{Techniques used in interpretation}
 
-\The interpretation techniques are implemented by functions contained in \the file \textsc{InterpretationTechniques.hs}.
+\The interpretation techniques are implemented by functions contained in \the file \textsc{InterpretationTechniques.hs}.\footnote{See Appendix \ref{interpretationTechniques-diag} for functions references.}
 
 There's an auxiliary function named \textbf{octaveShift} which is a function of an integer and a musical flow, defining a flow made of \the input flow transposed by \the integer count of octaves.
 
@@ -489,7 +489,7 @@ Let's have a look at some basic MIDI messages --- as defined in \the Haskell pac
 
 \subsection{Implemented functions and monad in relation to MIDI output}
 
-These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
+These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:\footnote{See Appendix \ref{midi-diag} for functions references.}
 
 \begin{description}
 \item[toneMidi] is a function of a tone and a volume, defining a MIDI event that starts playing \the tone with \the volume.
@@ -825,39 +825,39 @@ trackE = <<
 
 \section{Main}
 \label{main-diag}
-\includegraphics[width=1.1\textwidth]{Main.pdf}
+\includegraphics[scale=0.5]{Main.pdf}
 
 \section{MGRandom}
 \label{mgrandom-diag}
-\includegraphics[width=1.1\textwidth]{MGRandom.pdf}
+\includegraphics[scale=0.5]{MGRandom.pdf}
 
 \section{Flow}
 \label{flow-diag}
-\includegraphics[width=1.1\textwidth]{Flow.pdf}
+\includegraphics[scale=0.5]{Flow.pdf}
 
 \section{Relations}
 \label{relations-diag}
-\includegraphics[width=1.1\textwidth]{Relations.pdf}
+\includegraphics[scale=0.5]{Relations.pdf}
 
 \section{ChanceHarmony}
-\label{chanceharm-diag}
-\includegraphics[width=1.1\textwidth]{ChanceHarmony.pdf}
+\label{chanceHarmony-diag}
+\includegraphics[scale=0.5]{ChanceHarmony.pdf}
 
 \section{ChanceHarmonyRhythm}
-\label{chanceharmrhyt-diag}
-\includegraphics[width=1.1\textwidth]{ChanceHarmonyRhythm.pdf}
+\label{chanceHarmonyRhythm-diag}
+\includegraphics[scale=0.5]{ChanceHarmonyRhythm.pdf}
 
 \section{Interpretation}
 \label{interpretation-diag}
-\includegraphics[width=1.1\textwidth]{Interpretation.pdf}
+\includegraphics[scale=0.5]{Interpretation.pdf}
 
 \section{InterpretationTechniques}
-\label{inttechniques-diag}
-\includegraphics[width=1.1\textwidth]{InterpretationTechniques.pdf}
+\label{interpretationTechniques-diag}
+\includegraphics[scale=0.5]{InterpretationTechniques.pdf}
 
 \section{Midi}
 \label{midi-diag}
-\includegraphics[width=1.1\textwidth]{Midi.pdf}
+\includegraphics[scale=0.5]{Midi.pdf}
 
 
 \end{document}

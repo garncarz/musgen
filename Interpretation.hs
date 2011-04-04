@@ -1,7 +1,6 @@
 module Interpretation (interpretations) where
 
 import InterpretationTechniques
-import Midi
 import MGRandom
 import Random
 import Types

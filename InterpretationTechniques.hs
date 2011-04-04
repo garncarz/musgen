@@ -1,6 +1,5 @@
 module InterpretationTechniques where
 
-import MGRandom
 import Random
 import Relations
 import Types

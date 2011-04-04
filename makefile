@@ -42,7 +42,9 @@ graphs2:
 	for file in `ls *.hs`; do \
 		name=$${file%.*}; \
 		SourceGraph tmp/$$name/$$file; \
-		svg2pdf tmp/$$name/SourceGraph/graphs/codeCluster.svg tmp/$$name.pdf; \
+		dot tmp/$$name/SourceGraph/graphs/codeCW.dot -Tsvg -Grankdir=LR \
+			-o tmp/$$name.svg; \
+		svg2pdf tmp/$$name.svg tmp/$$name.pdf; \
 	done
 
 

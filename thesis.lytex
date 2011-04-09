@@ -419,8 +419,16 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 \begin{description}
 \item[harmonyRhythmChance]
 \item[chances]
-\item[chanceMeasureTime]
-\item[chanceBeatTime]
+\item[chanceMeasureTime] is a function of a chord and a past harmony flow, defining a float reflecting \the chord's fitting with \the flow's measures:
+	\begin{description}
+	\item[1] iff \the chord ends before or just at ending of measure.
+	\item[floatZero] otherwise.
+	\end{description}
+\item[chanceBeatTime] is a function of a chord and a past harmony flow, defining a float reflecting how \the chord fits rhythm of \the flow:
+	\begin{description}
+	\item[1] iff \the chord ends at beat.
+	\item Otherwise defined by \the function chanceCopyRhythm.
+	\end{description}
 \item[chanceCopyRhythm]
 \end{description}
 

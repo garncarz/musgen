@@ -145,7 +145,7 @@ Harmony is a relation between notes in a chord. \The chord can be viewed as an u
 \end{figure}
 
 
-% TODO: triad, counterpoint, soprano..., beat, measure
+% TODO: triad, counterpoint, soprano..., beat, measure, consonance
 
 
 \section{Scale}
@@ -213,6 +213,7 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 
 \chapter{Implementation}
 
+This chapter is a bridge between \the described algorithm and \the implementation itself done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
 
 \section{Input}
 
@@ -241,25 +242,44 @@ There is also a script named \textsc{midi2pdf.sh} which given \the generated son
 
 \The generator program is written in \textsc{Haskell} using two extra packages for processing MIDI data and command line arguments, named \textsc{HCodecs}\footnote{\url{http://hackage.haskell.org/package/HCodecs}} and \textsc{CmdArgs}\footnote{\url{http://hackage.haskell.org/package/cmdargs}}. \The program can be run with \textsc{GHC}\footnote{\url{http://www.haskell.org/ghc/}}, \the packages can be installed with \textsc{Cabal}\footnote{\url{http://www.haskell.org/cabal/}}.
 
-% TODO: sourcegraph, svg2pdf
-
 \The process of building source codes into a runnable binary can be initiated by calling program \textsc{make}\footnote{\url{http://www.gnu.org/software/make/}} with no arguments.
 
 Script \textsc{midi2pdf.sh} is written in \textsc{BASH}\footnote{\url{http://www.gnu.org/software/bash/}} and uses \textsc{LilyPond}\footnote{\url{http://lilypond.org/}}.
 
 See Appendix \ref{exemplary-use} for an exemplary use of \the program.
 
+Diagrams used in this thesis are made using \textsc{SourceGraph}\footnote{\url{http://hackage.haskell.org/package/SourceGraph}}, which uses \textsc{Graphviz}\footnote{\url{http://www.graphviz.org/}}, and \textsc{svg2pdf}\footnote{\url{http://wiki.inkscape.org/wiki/index.php/Tools\#svg2pdf}}.
+
 
 \section{Main program and helpers}
 
-\textsc{Main.hs}:\footnote{See Appendix \ref{main-diag} for functions references.}
+\The executive core of \the program is contained in \the file \textsc{Main.hs}. See Figure \ref{main-diag} for functions references and Figure \ref{imports-diag} for module imports. Root elements of \the file are:
 
 \begin{description}
-\item[Input]
-\item[use]
-\item[checkArg]
-\item[main]
+\item[Input] which is a data type determining command line arguments which specify requirements on an output song.
+\item[use] which is data based on Input giving more information for arguments processing, including help descriptions.
+\item[checkArg] which is a monad which given a (non evaluated) value and its name as a string tries to evaluate it and in case of error exits \the program printing an explanatory information, meant for checking right types of \the arguments.
+\item[main] which is a monad executing this sequence:
+	\begin{enumerate}
+	\item Processing command line arguments. In case of demand of help or \the program's version, \the demanded is printed and \the program exits.
+	\item Generating a new random generator.
+	\item Checking processed arguments for being of right types.
+	\item In case a harmony flow file doesn't exist or generating of a new one is demanded, a new harmony flow is generated and saved into \the file. Otherwise it's loaded from \the file.
+	\item A MIDI file with an interpreted harmony flow is generated.
+	\end{enumerate}
 \end{description}
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{Main.pdf}
+\caption{Functions references for \the file Main.hs.}
+\label{main-diag}
+\end{figure}
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{imports.pdf}
+\caption{Module imports.}
+\label{imports-diag}
+\end{figure}
 
 \subsection{Types}
 
@@ -289,16 +309,15 @@ Haskell comes with a set of basic types which aren't of much difference to types
 \item[MidiTrack] is a type meant as a MIDI track, defined as a list of MIDI events.
 \item[TracksDefs] is a type meant as a list of definitions of how to create and set MIDI tracks.
 \item[RndGen] is a type meant as a reference to \the used random generator\footnote{More about random values generating at \ref{mgrandom}.}, StdGen is used.
-% TODO:
-\item[floatMin] is a function defining \the minimal float value used in ..., \the value 0.1 is used.
-\item[floatZero] is a function defining \the zero float value used in ..., \the value 0.001 is used.
-\item[floatHalf] is a function defining \the half float value used in ..., \the value $0.5 + floatMin$ is used.
+\item[floatMin] is a function defining \the minimal suitable float value used in chance functions\footnote{See Subsections \ref{chanceHarmony} and \ref{chanceHarmonyRhythm}.}, \the value 0.1 is used.
+\item[floatZero] is a function defining \the ``zero'' float value used in chance functions, \the value 0.001 is used.
+\item[floatHalf] is a function defining \the ``half'' float value used in chance functions, \the value $0.5 + floatMin$ is used.
 \end{description}
 
 \subsection{Random generator}
 \label{mgrandom}
 
-For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}.\footnote{See Appendix \ref{mgrandom-diag} for functions references.} They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or a chord's tones.
+For \the sake of randomization we'll utilize a set of frequently used randomization functions which are \the content of \the file \textsc{MGRandom.hs}. They use Haskell package \textsc{System.Random}\footnote{\url{http://hackage.haskell.org/packages/archive/random/1.0.0.2/doc/html/System-Random.html}} and its class \textsc{StdGen}, taking its random numbers as input for generating values more desirable like a duration or a chord's tones.
 
 When working with random numbers in Haskell, there can be chosen one of two main ways:
 
@@ -313,21 +332,20 @@ For more information about randomness in Haskell see \cite{rnd-hask}.
 \item[rndDuration] is a function of a random generator, defining a duration randomly picked from even numbers from 2 to 16.
 \item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For symplifying things, \the result is always 4.
 \item[rndIntervals] is a function of a random generator, defining an infinite list of (musical) intervals where each is a product of a random sign and an unsigned interval which is picked like this:
-
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Probability} & \textbf{Interval} \\ \hline
-25\% & 0 \\ \hline
-15\% & 4 \\ \hline
-15\% & 3 \\ \hline
-10\% & 2 \\ \hline
-10\% & 5 \\ \hline
-10\% & 6 \\ \hline
-5\% & 1 \\ \hline
-5\% & 7 \\ \hline
-5\% & randomly picked from 0 to 12 \\
-\hline
-\end{tabular}
+	\begin{tabular}{|l|l|}
+	\hline
+	\textbf{Probability} & \textbf{Interval} \\ \hline
+	25\% & 0 \\ \hline
+	15\% & 4 \\ \hline
+	15\% & 3 \\ \hline
+	10\% & 2 \\ \hline
+	10\% & 5 \\ \hline
+	10\% & 6 \\ \hline
+	5\% & 1 \\ \hline
+	5\% & 7 \\ \hline
+	5\% & randomly picked from 0 to 12 \\
+	\hline
+	\end{tabular}
 \item[rndNormal] is a function of an integer meaning an minimum, an integer meaning an maximum and a random generator, defining an integer randomly picked from \the normal distribution\footnote{Precisely said not \the normal distribution, but a slightly modified similar one --- \the Irwin–Hall distribution which is easy to implement: wanting a random number from $0$ to $max$, we sum $max$ random values from \the interval $<0, 1>$, see \cite{normal-wiki}.} of \the range.
 \item[rndTones] is a function of a random generator, defining an infinite list of random tones generated with \the use of rndNormal for \the possible MIDI tones from 0 to 127.
 \item[rndChordTones] is a function of a random generator, defining a sorted list of tones meant as a chord. It is using rndTonesCount and rndIntervals. \The tones are trying to reach \the number of rndTonesCount and are made sequentially by adding \the corresponding value of rndIntervals to \the preceding tone, starting with \the MIDI center value 64 plus \the first interval. This process is meant to ensure chords are balanced to \the center, not exaggerating.
@@ -335,10 +353,18 @@ For more information about randomness in Haskell see \cite{rnd-hask}.
 \item[testRndNormal] is a testing monad which generates 10000 tones using rndTones and prints counts of occurrences of possible tone values to verify normality of \the used randomization.
 \end{description}
 
+See Figure \ref{mgrandom-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{MGRandom.pdf}
+\caption{Functions references for \the file MGRandom.hs.}
+\label{mgrandom-diag}
+\end{figure}
+
 
 \section{Harmony flow}
 
-A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:\footnote{See Appendix \ref{flow-diag} for functions references.}
+A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:
 
 \begin{description}
 \item[loadFlow] is a monad which given a filename reads a content of \the file and returns a harmony flow contained in \the content.
@@ -350,9 +376,17 @@ A product of \the first stage is a harmony flow. Its creation and file handling 
 \item[realPast] is a helper function of a harmony flow, defining a harmony flow which is equivalent to \the input flow if it's a regular flow, otherwise to an empty flow (that's in \the case \the input flow starts with an empty chord, meaning it's a helper flow determining \the flow's scale and beat).
 \end{description}
 
+See Figure \ref{flow-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{Flow.pdf}
+\caption{Functions references for \the file Flow.hs.}
+\label{flow-diag}
+\end{figure}
+
 \subsection{Relations}
 
-Functions evaluating musical relations are located in \the file \textsc{Relations.hs}.\footnote{See Appendix \ref{relations-diag} for functions references.}
+Functions evaluating musical relations are located in \the file \textsc{Relations.hs}.
 
 \begin{description}
 \item[scaleSize] is a function defining \the size of octave in semitones, \the value is 12.
@@ -389,53 +423,67 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 \item[isConsonantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of tones, defining a truth value whether \the tones are consonant wihtin \the scale.
 \end{description}
 
-\subsection{Chances for harmony}
+See Figure \ref{relations-diag} for functions references.
 
-\textsc{ChanceHarmony.hs}:\footnote{See Appendix \ref{chanceHarmony-diag} for functions references.}
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{Relations.pdf}
+\caption{Functions references for \the file Relations.hs.}
+\label{relations-diag}
+\end{figure}
+
+\subsection{Chances for harmony}
+\label{chanceHarmony}
+
+Deciding whether a chord can be an appropriate successor to past chords harmonically is is done using functions from \the file \textsc{ChanceHarmony.hs}.
 
 \begin{description}
-\item[harmonyChance]
-\item[chances]
-\item[chanceThick]
-\item[chanceJumps]
-\item[chanceInScale]
-\item[chanceTriad]
-\item[chanceTonicStart]
-\item[chanceNotDomThenSub]
-\item[chanceLeadingTone]
-\item[chanceNotEmpty]
-\item[chance4Tones]
-\item[chanceCounterpoint]
-\item[chanceMove]
-\item[chanceConsonance]
-\item[chanceAntiRepetition]
-\item[chanceAntiRepetitionForSoprano]
+\item[harmonyChance] is a function of a possible successor chord and past chords ordered backwards, defining a float value --- reflecting how \the chord fits \the past harmonically --- as a product of elementary deciding functions, each powered by its significance, as defined by \the list \textbf{chances}, each function having \the same type signature with \the expected range of \the float being from 0 meaning not fulfilling at all to 1 meaning totally fulfilling:
+\item[chanceThick] defines whether \the chord is thick --- as not of a big distance between bass and soprano --- and not too far from \the key.
+\item[chanceJumps] defines whether there's not too much ``jumping'' from \the last past chord --- meant as too big moves in voices.
+\item[chanceInScale] defines whether \the chord comes from \the scale.
+\item[chanceTriad] defines whether \the chord is of a triad nature.
+\item[chanceTonicStart] defines whether \the chord is a tonic triad and thus can begin a song.
+\item[chanceNotDomThenSub] defines whether \the last past chord isn't dominant and at \the same time \the actual chord isn't subdominant, which would be an illegal move.
+\item[chanceLeadingTone] defines whether \the rule of leading tone isn't broken.
+\item[chanceNotEmpty] defines whether \the chord isn't empty (just a pause).
+\item[chance4Tones] defines whether \the chord has 4 unique tones (octaves differ).
+\item[chanceCounterpoint] defines whether bass and soprano are moving in a counterpoint manner.
+\item[chanceMove] defines how much voices are moving, \the most important are moves in bass and soprano.
+\item[chanceConsonance] defines whether \the progress is of a consonant nature by beginning a flow with a consonant chord and not ensuing a dissonant one by another dissonant.
+\item[chanceAntiRepetition] defines whether \the chord isn't a repetition of one of \the last three chords.
+\item[chanceAntiRepetitionForSoprano] defines whether \the soprano doesn't repeat one of \the last three tones.
 \end{description}
+
+See Figure \ref{chanceHarmony-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{ChanceHarmony.pdf}
+\caption{Functions references for \the file ChanceHarmony.hs.}
+\label{chanceHarmony-diag}
+\end{figure}
 
 \subsection{Chances for rhythm}
+\label{chanceHarmonyRhythm}
 
-\textsc{ChanceHarmonyRhythm.hs}:\footnote{See Appendix \ref{chanceHarmonyRhythm-diag} for functions references.}
+Deciding whether a chord can be an appropriate successor to past chords rhythmically is is done using functions from \the file \textsc{ChanceHarmonyRhythm.hs}.
 
 \begin{description}
-\item[harmonyRhythmChance]
-\item[chances]
-\item[chanceMeasureTime] is a function of a chord and a past harmony flow, defining a float reflecting \the chord's fitting with \the flow's measures:
-	\begin{description}
-	\item[1] iff \the chord ends before or just at ending of measure.
-	\item[floatZero] otherwise.
-	\end{description}
-\item[chanceBeatTime] is a function of a chord and a past harmony flow, defining a float reflecting how \the chord fits rhythm of \the flow:
-	\begin{description}
-	\item[1] iff \the chord ends at beat.
-	\item Otherwise defined by \the function chanceCopyRhythm.
-	\end{description}
-\item[chanceCopyRhythm]
+\item[harmonyRhythmChance] is a function of a possible successor chord and past chords ordered backwards, defining a float value --- reflecting how \the chord fits \the past rhythmically --- as a product of elementary deciding functions, each powered by its significance, as defined by \the list \textbf{chances}, each function having \the same type signature with \the expected range of \the float being from 0 meaning not fulfilling at all to 1 meaning totally fulfilling:
+\item[chanceMeasureTime] defines whether \the chord ends before or just at ending of measure, meant to prevent overlapping measures.
+\item[chanceBeatTime] defines whether \the chord ends at beat or copies a rhythmical pattern used in \the last measure, which is defined by \the function \textbf{chanceCopyRhythm}.
 \end{description}
 
+See Figure \ref{chanceHarmonyRhythm-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{ChanceHarmonyRhythm.pdf}
+\caption{Functions references for \the file ChanceHarmonyRhythm.hs.}
+\label{chanceHarmonyRhythm-diag}
+\end{figure}
 
 \section{Interpretation}
 
-\The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}.\footnote{See Appendix \ref{interpretation-diag} for functions references.}
+\The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}.
 
 \The list \textbf{interpretations} is a list of all possible interpretation styles, including:
 \begin{description}
@@ -455,9 +503,17 @@ Following functions are functions of a harmony flow and a random generator, defi
 \item[bassTrack] defines a bass melody flow, randomly switching fingered bass or walking bass styles.
 \end{description}
 
+See Figure \ref{interpretation-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{Interpretation.pdf}
+\caption{Functions references for \the file Interpretation.hs.}
+\label{interpretation-diag}
+\end{figure}
+
 \subsection{Techniques used in interpretation}
 
-\The interpretation techniques are implemented by functions contained in \the file \textsc{InterpretationTechniques.hs}.\footnote{See Appendix \ref{interpretationTechniques-diag} for functions references.}
+\The interpretation techniques are implemented by functions contained in \the file \textsc{InterpretationTechniques.hs}.
 
 There's an auxiliary function named \textbf{octaveShift} which is a function of an integer and a musical flow, defining a flow made of \the input flow transposed by \the integer count of octaves.
 
@@ -471,6 +527,14 @@ Other functions are standardized to \the form of a function of an random generat
 \item[brokenChord1\_5\_10] defines \the flow made of \the input flow where each chord is repeated in alternating forms, the first form being \the first and \the third tone of \the chord, \the second form being \the second tone transposed up by an octave; \the repetition meeting \the beat of \the flow.
 \item[walkingBass] defines \the flow made of \the input flow where each chord is arranged to a sequence of tones with \the first tone being \the first tone of \the chord, others going up and down in \the scale of \the flow to approach \the first tone of \the succeeding chord or \the first tone of \the actual chord if it's \the last one; \the sequence meeting \the beat of \the flow but twice \the speed.
 \end{description}
+
+See Figure \ref{interpretationTechniques-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{InterpretationTechniques.pdf}
+\caption{Functions references for \the file InterpretationTechniques.hs.}
+\label{interpretationTechniques-diag}
+\end{figure}
 
 
 \section{MIDI}
@@ -497,7 +561,7 @@ Let's have a look at some basic MIDI messages --- as defined in \the Haskell pac
 
 \subsection{Implemented functions and monad in relation to MIDI output}
 
-These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:\footnote{See Appendix \ref{midi-diag} for functions references.}
+These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 
 \begin{description}
 \item[toneMidi] is a function of a tone and a volume, defining a MIDI event that starts playing \the tone with \the volume.
@@ -511,6 +575,14 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 \item[midiFile] is a function of a list of MIDI tracks, defining a content of a MIDI file made of \the tracks.
 \item[exportMidi] is a monad which given a filename and a content of a MIDI file exports \the content into a file with \the name.
 \end{description}
+
+See Figure \ref{midi-diag} for functions references.
+
+\begin{figure}[t!]
+\includegraphics[scale=0.5]{Midi.pdf}
+\caption{Functions references for \the file Midi.hs.}
+\label{midi-diag}
+\end{figure}
 
 
 \begin{thebibliography}{9}
@@ -829,43 +901,5 @@ trackE = <<
 \end{lilypond}
 
 
-\chapter{Functional diagrams}
-
-\section{Main}
-\label{main-diag}
-\includegraphics[scale=0.5]{Main.pdf}
-
-\section{MGRandom}
-\label{mgrandom-diag}
-\includegraphics[scale=0.5]{MGRandom.pdf}
-
-\section{Flow}
-\label{flow-diag}
-\includegraphics[scale=0.5]{Flow.pdf}
-
-\section{Relations}
-\label{relations-diag}
-\includegraphics[scale=0.5]{Relations.pdf}
-
-\section{ChanceHarmony}
-\label{chanceHarmony-diag}
-\includegraphics[scale=0.5]{ChanceHarmony.pdf}
-
-\section{ChanceHarmonyRhythm}
-\label{chanceHarmonyRhythm-diag}
-\includegraphics[scale=0.5]{ChanceHarmonyRhythm.pdf}
-
-\section{Interpretation}
-\label{interpretation-diag}
-\includegraphics[scale=0.5]{Interpretation.pdf}
-
-\section{InterpretationTechniques}
-\label{interpretationTechniques-diag}
-\includegraphics[scale=0.5]{InterpretationTechniques.pdf}
-
-\section{Midi}
-\label{midi-diag}
-\includegraphics[scale=0.5]{Midi.pdf}
-
-
 \end{document}
+

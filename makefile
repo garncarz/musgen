@@ -27,6 +27,8 @@ tex: tmp
 	cp tmp/thesis.pdf ./
 
 graphs1:
+	mkdir -p tmp/import
+	cp *.hs tmp/import/
 	for file in `ls *.hs`; do \
 		name=$${file%.*}; \
 		mkdir -p tmp/$$name; \
@@ -39,6 +41,10 @@ graphs1:
 	done
 
 graphs2:
+	SourceGraph tmp/import/Main.hs
+	dot tmp/import/SourceGraph/graphs/imports.dot -Tsvg -Grankdir=LR \
+		-o tmp/imports.svg
+	svg2pdf tmp/imports.svg tmp/imports.pdf
 	for file in `ls *.hs`; do \
 		name=$${file%.*}; \
 		SourceGraph tmp/$$name/$$file; \

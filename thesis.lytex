@@ -125,12 +125,29 @@ A melody is a sequence of tones.
 
 \section{Chord}
 
-A chord is a set of tones sounding at a moment. Sometimes a subset of a chord can be viewed as of \the same nature as \the chord.
+A chord is a set of tones sounding at a moment. \The fundamental tone --- not necessarily \the lowest one --- on which \the chord is built is called a root. Sometimes a subset of a chord can be viewed as of \the same nature as \the chord.
 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<c' e' g' c''> <c' g' c''>}
 \caption{An example of a chord\\followed by a chord of \the same nature but with one tone suppressed}
+\end{figure}
+
+\subsection{Triad}
+
+A triad is a commonly used chord, consisting of three tones between which these intervals can occur:
+
+\begin{description}
+\item[Major] consisting of distances of 4 and 7 semitones to \the root.
+\item[Minor] consisting of distances of 3 and 7 semitones to \the root.
+\item[Diminished] consisting of distances of 3 and 6 semitones to \the root.
+\item[Augmented] consisting of distances of 4 and 8 semitones to \the root.
+\end{description}
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<c' e' g'>1 <c' es' g'> <c' es' ges'> <c' e' gis'>}
+\caption{Examples of triads: major, minor, diminished and augmented built on C}
 \end{figure}
 
 
@@ -144,8 +161,36 @@ Harmony is a relation between notes in a chord. \The chord can be viewed as an u
 \caption{An example of a progression of harmony}
 \end{figure}
 
+\subsection{Voices}
 
-% TODO: triad, counterpoint, soprano..., beat, measure, consonance
+A voice can be viewed as a vertical part of a staff. Four-part harmony has these four voices:
+
+\begin{description}
+\item[Bass] is \the lowest part.
+\item[Tenor] is \the second lowest part.
+\item[Alto] is \the second highest part.
+\item[Soprano] is \the highest part, holding a melody.
+\end{description}
+
+This thesis focuses mainly on bass and soprano.
+
+\begin{figure}[h!]
+\centering
+\subfloat[Full harmony]{\lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d'> <f' a' c'> <c' e' g'>}}
+\subfloat[Bass voice]{\lilypond[fragment, staffsize=20]{c' d' c' c'}}
+\subfloat[Soprano voice]{\lilypond[fragment, staffsize=20]{g' b' a' g'}}
+\caption{An example of voices}
+\end{figure}
+
+\subsection{Counterpoint}
+
+Counterpoint is a harmony progress where \the bass voice and \the soprano one evolve contrary.
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<d' a'> <c' b'> <d' g'> <c' a'>}
+\caption{An example of counterpoint}
+\end{figure}
 
 
 \section{Scale}
@@ -165,7 +210,17 @@ Songs (or their parts) are usually based on a set of tones called a scale.
 \centering
 \subfloat[C major]{\lilypond[fragment, staffsize=20]{c'8 d' e' f' g' a' b' c''}}
 \subfloat[C minor]{\lilypond[fragment, staffsize=20]{c'8 d' es' f' g' as' b' c''}}
-\caption{An example of scales based on C but differing in intervals}
+\caption{Scales based on C but differing in intervals}
+\end{figure}
+
+\subsection{Consonance and dissonance}
+
+A consonant chord is a chord coming from a scale and being of proper intervals, thus sounding pleasantly, while a dissonant one isn't and is tending to evolve into a consonant one to sustain \the scale. This brings richer harmony and more possibilities for melodizing.
+
+\begin{figure}[h!]
+\centering
+\lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d' f'> <c' e' g'>}
+\caption{Scale C: consonant chord C evolves to dissonant $G^7$ and then back to C}
 \end{figure}
 
 
@@ -203,6 +258,28 @@ A tone of particular interest is \the leading tone, \the last tone of \the scale
 \centering
 \lilypond[fragment, staffsize=20]{<f' a' c''> <g' b' d''> <e' g' c''>}
 \caption{A subdominant chord, followed by a dominant one resolved in a tonic one}
+\end{figure}
+
+
+\section{Rhythm}
+
+Rhythm is a timing of single tones based on a more or less regular patterns. \The fundamental repeating element of rhythm is a \textbf{beat}. Beats are arranged into regular groupes of few called \textbf{measures} (also bars). \The first beat of \the measure is usually stressed, called a downbeat. \textbf{Tempo} is a speed of a song, usually denoted as a count of beats per minute.
+
+\begin{figure}[h!]
+\centering
+\begin[fragment, staffsize=20]{lilypond}
+#(define mydrums '((tambourine default #t 0)))
+\new DrumStaff {
+	\override Staff.StaffSymbol #'line-positions = #'( 0 )
+	\override Staff.BarLine #'bar-size = #3
+	\set DrumStaff.drumStyleTable = #(alist->hash-table mydrums)
+	\drummode {
+		\time 2/4
+		tamb tamb tamb tamb tamb tamb
+	}
+}
+\end{lilypond}
+\caption{Rhythm: three measures, inside each two beats}
 \end{figure}
 
 

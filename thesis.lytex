@@ -2,6 +2,8 @@
 
 \newif \iffrench  % French?
 % \frenchtrue  % oui
+\newif \ifdiploma  % diploma thesis arrangement?
+\diplomatrue  % yes
 \newif \ifprint  % document for print?
 % \printtrue  % yes
 
@@ -52,10 +54,55 @@
 
 \begin{document}
 
+
+\ifdiploma
+
+\begin{titlepage}
+\centering
+\begin{huge}
+\begin{bfseries}
+VŠB --- Technická univerzita Ostrava\\
+Fakulta elektrotechniky a~informatiky\\
+Katedra informatiky\\
+\vfill
+Generování hudebních skladeb počítačem\\
+Generating Music Compositions by a~Computer\\
+\vfill
+\end{bfseries}
+\end{huge}
+2011
+\hfill
+\Ondrej Garncarz
+\end{titlepage}
+
+\chapter*{Declaration}
+I declare this thesis was written solely by myself. All used sources and publications are listed.
+\vskip 5cm
+\noindent Date: \today
+\hskip 0.4\linewidth
+\Ondrej Garncarz
+
+\chapter*{Abstract and keywords}
+\section*{Abstract}
+\The thesis is focused on a problem of generating music by a computer, music being random but not very different from one created by a human, following particular harmony rules and not overgoing into disharmony. Basic terms from music theory are introduced, then \the developed algorithm is described, both generally and in a relation to \the Haskell implementation. \The program is compared to similar software and a possible future development is suggested.
+\section*{Abstrakt}
+Práce se zabývá problémem generování hudby počítačem, která je náhodná, ale zároveň ne příliš odlišná od hudby složené člověkem, dodržující určitá pravidla harmonie a nevykračující do disharmonie. Jsou objasněny některé základní pojmy hudební teorie a následně je popsán vyvinutý algoritmus, jednak obecně a poté i v souvislosti k implementaci v jazyku Haskell. Program je srovnán s jemu podobnými, již existujícími, a je navržen jeho další možný vývoj.
+\section*{Keywords}
+music, composition, randomness, harmony, MIDI
+\section*{Klíčová slova}
+hudba, skladba, náhoda, harmonie, MIDI
+
+\else
 \title{Generating music compositions by a computer}
 \author{\Ondrej Garncarz}
 \date{\today}
 \maketitle
+\fi
+
+\chapter*{Acknowledgement}
+
+I'd like to thank all creators and maintainers of MIDI, Haskell and LilyPond (and many other free software) from whose work this thesis profits and hopefully extends it, in a way. Also musical composers and interprets are to be thanked for inspiring me, most notably \The Beatles.
+
 
 \tableofcontents
 
@@ -287,6 +334,8 @@ Rhythm is a timing of single tones based on a more or less regular patterns. \Th
 
 Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach.
 
+Let's see a song as an at least two dimensional playground, space of possibilities, where one dimension stands for time and the second one stands for tones. Some of games played there may be pleasant to watch, joyful or making patterns and some may be not. If we were told what moves are \the only allowed, \the game couldn't be rich in \the end, independently of \the quantity of \the allowed moves. Instead, we can list just moves we wouldn't be happy to see and let \the rest for players which brings freedom and a plenty of unexpected situations, hopefully pleasant.
+
 
 \chapter{Implementation}
 
@@ -408,7 +457,7 @@ For more information about randomness in Haskell see \cite{rnd-hask}.
 \begin{description}
 \item[rndDuration] is a function of a random generator, defining a duration randomly picked from even numbers from 2 to 16.
 \item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For symplifying things, \the result is always 4.
-\item[rndIntervals] is a function of a random generator, defining an infinite list of (musical) intervals where each is a product of a random sign and an unsigned interval which is picked like this:
+\item[rndIntervals] is a function of a random generator, defining an infinite list of (musical) intervals where each is a product of a random sign and an unsigned interval which is picked like this:\\
 	\begin{tabular}{|l|l|}
 	\hline
 	\textbf{Probability} & \textbf{Interval} \\ \hline
@@ -662,6 +711,15 @@ See Figure \ref{midi-diag} for functions references.
 \end{figure}
 
 
+\chapter{Comparison with similar software}
+
+
+\chapter{Conclusion}
+
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
 \begin{thebibliography}{9}
 
 \bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.

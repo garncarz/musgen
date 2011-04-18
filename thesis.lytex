@@ -10,7 +10,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[center]{caption}
 \usepackage{subfig}
-\usepackage{verbatim}
+\usepackage{listings}
 \usepackage{graphicx}
 
 \iffrench
@@ -99,10 +99,6 @@ hudba, skladba, náhoda, harmonie, MIDI
 \maketitle
 \fi
 
-\chapter*{Acknowledgement}
-
-I'd like to thank all creators and maintainers of MIDI, Haskell and LilyPond (and many other free software) from whose work this thesis profits and hopefully extends it, in a way. Also musical composers and interprets are to be thanked for inspiring me, most notably \The Beatles.
-
 
 \tableofcontents
 
@@ -117,7 +113,7 @@ I'd like to thank all creators and maintainers of MIDI, Haskell and LilyPond (an
 
 \chapter{Introduction to music theory}
 
-This chapter is willing to introduce some basic terms which will be useful later in \the process of creation. Understanding of relations is connected with insight into algorithms and names are \the ones this thesis will reuse.
+This chapter is willing to introduce some basic terms which will be useful later in \the process of creation. Understanding of relations is connected with insight into algorithms and names are \the ones this thesis will reuse. Presented terms and relations are --- in a very more complex way --- taught by \the book \cite{kofron} which is also a great inspiration and source for this thesis.
 
 \section{Song}
 
@@ -295,7 +291,7 @@ A diatonic function (or a harmonic function) defines a relation between a chord 
 \caption{A dominant chord, resolved in a tonic one}
 \end{figure}
 
-A tone of particular interest is \the leading tone, \the last tone of \the scale (H) --- due to \the strict harmony theory it must be resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
+A tone of particular interest is \the leading tone, \the last tone of \the scale (H) --- according to \the strict harmony theory it must be resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
 
 \subsection{Subdominant chord}
 
@@ -336,6 +332,12 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 
 Let's see a song as an at least two dimensional playground, space of possibilities, where one dimension stands for time and the second one stands for tones. Some of games played there may be pleasant to watch, joyful or making patterns and some may be not. If we were told what moves are \the only allowed, \the game couldn't be rich in \the end, independently of \the quantity of \the allowed moves. Instead, we can list just moves we wouldn't be happy to see and let \the rest for players which brings freedom and a plenty of unexpected situations, hopefully pleasant.
 
+In \the beginning it's reasonable to think over an expected output. We may want a finished song or a real-time music stream, possibly never-ending. \The first demand is leading to some calculations with \the desired output in a finite time, \the second one is more complex --- calculations have to be done faster than playing. For simplicity let's focuse on finished songs --- even so it's not too far from a streaming idea assuming computing is fast enough.
+
+Another concern is about output characteristics --- for instance from theory we know songs or their parts are based on scales, thus we may want a song to be in a random scale, a certain scale or to change \the scale randomly. According to \cite[p.~110]{kofron} \the last demand brings some new rules, for \the simplicity we will work with one scale songs. Songs are also of some tempo and rhythm, we will keep these constant as well.
+
+\The first thing to start a song with is a tonic chord so a listener accustoms to \the used scale.
+
 
 \chapter{Implementation}
 
@@ -359,9 +361,23 @@ User can also specify \the song's name and make \the program generate a new flow
 
 \section{Output}
 
-\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is \the song's name appended by \the suffix \verb=.flow=. An example of \the file containing harmony flow of a short song is depicted in Appendix \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
+\The program execution can be seen as having two phases where each produces output. \The first one's product is a file reflecting generated harmony flow. Its name is \the song's name appended by \the suffix \verb=.flow=. An example of \the file containing harmony flow of a short song is depicted in Figure \ref{example-flow}. \The second phase's product is a MIDI file containing a particular interpretation of harmony flow. \The first file can be reused in next run of program, resulting in a MIDI output with other interpretation.
 
-There is also a script named \textsc{midi2pdf.sh} which given \the generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Appendix \ref{example-lily}.
+There is also a script named \textsc{midi2pdf.sh} which given \the generated song's filename produces a PDF file containing sheet music based on \the input file, as depicted in Figure \ref{example-lily}.
+
+\begin{figure}[h!]
+\centering
+\lstinputlisting[breaklines=true]{song.flow}
+\caption{Example of saved harmony flow}
+\label{example-flow}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\lilypondfile{song.ly}
+\caption{Example of generated song in sheet music}
+\label{example-lily}
+\end{figure}
 
 
 \section{Environment}
@@ -488,6 +504,7 @@ See Figure \ref{mgrandom-diag} for functions references.
 \end{figure}
 
 
+\clearpage
 \section{Harmony flow}
 
 A product of \the first stage is a harmony flow. Its creation and file handling is taken care of by monads and functions from \the file \textsc{Flow.hs}:
@@ -607,6 +624,8 @@ See Figure \ref{chanceHarmonyRhythm-diag} for functions references.
 \label{chanceHarmonyRhythm-diag}
 \end{figure}
 
+
+\clearpage
 \section{Interpretation}
 
 \The core of \the second phase of \the program --- interpretation --- is located in \the file \textsc{Interpretation.hs}.
@@ -663,10 +682,11 @@ See Figure \ref{interpretationTechniques-diag} for functions references.
 \end{figure}
 
 
+\clearpage
 \section{MIDI}
 \label{midi}
 
-Due to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
+According to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
 
 We'll use a MIDI file format which is composed of MIDI tracks where each represents a specific interpretation of harmony flow for a specific intrument. A track is a list of MIDI events where each is defined by a delay since \the preceding event and a MIDI message.
 
@@ -722,6 +742,8 @@ See Figure \ref{midi-diag} for functions references.
 \addcontentsline{toc}{chapter}{Bibliography}
 \begin{thebibliography}{9}
 
+\bibitem{kofron} KOFROŇ, Jaroslav. \emph{Učebnice harmonie}. 10th edition, 2006. 178 pages. ISBN 80-86385-14-0.
+
 \bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.
 
 \bibitem{rnd-hask} Randomness. \emph{Learn You a Haskell for Great Good!} [online]. [cited 24th March 2011]. $<$\url{http://learnyouahaskell.com/input-and-output\#randomness}$>$.
@@ -739,14 +761,18 @@ See Figure \ref{midi-diag} for functions references.
 
 \appendix
 
-\chapter{Examples}
-
-
-\section{Exemplary use of \the program}
+\chapter{Exemplary use of \the program}
 \label{exemplary-use}
 
+\begin{enumerate}
+
+\item Installing needed packages:
 \begin{verbatim}
 $ cabal install hcodecs cmdargs
+\end{verbatim}
+
+\item Compiling \the program:
+\begin{verbatim}
 $ make
 mkdir tmp
 ghc --make Main -outputdir tmp -o musgen -O2
@@ -765,6 +791,10 @@ monyRhythm.o )
 [10 of 11] Compiling Flow             ( Flow.hs, tmp/Flow.o )
 [11 of 11] Compiling Main             ( Main.hs, tmp/Main.o )
 Linking musgen ...
+\end{verbatim}
+
+\item Asking for help:
+\begin{verbatim}
 $ ./musgen -?
 MusGen, version date: 2011-03-16
 
@@ -785,6 +815,10 @@ Generates a song fulfilling given parameters, song's name is "song" by default.
 Available styles of interpretation are: church, pop, rock.
 Output is SONG_NAME.midi with playable MIDI data and SONG_NAME.flow with
 reusable information about harmony flow.
+\end{verbatim}
+
+\item Generating a song:
+\begin{verbatim}
 $ ./musgen -k62 -smajor -b3 -t130 -m4 -ipop
 ([54,57,62,69],b0,d4,r12)
 ([57,61,64],b4,d6,r8)
@@ -808,232 +842,14 @@ $ ./musgen -k62 -smajor -b3 -t130 -m4 -ipop
 ([57,62,66],b6,d6,r6)
 Flow generated.
 MIDI generated.
+\end{verbatim}
+
+\item Generating a sheet music:
+\begin{verbatim}
 $ ./midi2pdf.sh song.midi
 \end{verbatim}
 
-
-\section{Example of saved harmony flow}
-\label{example-flow}
-
-This harmony flow was produced as seen in Appendix \ref{exemplary-use}.
-
-\begin{verbatim}
-Chord {tones = [54,57,62,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 4, measure = 12, beats = 3}
-Chord {tones = [57,61,64], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 4, dur = 6, measure = 12, beats = 3}
-Chord {tones = [57,61,66], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 10, dur = 2, measure = 12, beats = 3}
-Chord {tones = [55,59,62,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 2, measure = 12, beats = 3}
-Chord {tones = [54,57,62,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 2, dur = 10, measure = 12, beats = 3}
-Chord {tones = [59,62,66], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 2, measure = 12, beats = 3}
-Chord {tones = [57,61,64,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 2, dur = 2, measure = 12, beats = 3}
-Chord {tones = [61,64,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 4, dur = 2, measure = 12, beats = 3}
-Chord {tones = [57,62,66,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 6, dur = 4, measure = 12, beats = 3}
-Chord {tones = [61,64,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 10, dur = 2, measure = 12, beats = 3}
-Chord {tones = [59,62,66,71], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 2, measure = 12, beats = 3}
-Chord {tones = [61,66,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 2, dur = 2, measure = 12, beats = 3}
-Chord {tones = [59,62,67,71], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 4, dur = 8, measure = 12, beats = 3}
-Chord {tones = [59,62,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 10, measure = 12, beats = 3}
-Chord {tones = [57,61,66,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 10, dur = 2, measure = 12, beats = 3}
-Chord {tones = [61,64,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 10, measure = 12, beats = 3}
-Chord {tones = [57,61,64,69], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 10, dur = 2, measure = 12, beats = 3}
-Chord {tones = [59,62,66], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 12, measure = 12, beats = 3}
-Chord {tones = [55,61,64,67], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 0, dur = 6, measure = 12, beats = 3}
-Chord {tones = [57,62,66], key = 62, intervals = [0,2,4,5,7,9,11],
-begin = 6, dur = 6, measure = 12, beats = 3}
-\end{verbatim}
-
-
-\section{Example of generated song in sheet music}
-\label{example-lily}
-
-This song was produced as seen in Appendix \ref{exemplary-use}.
-
-\begin{lilypond}
-trackAchannelA =  {
-  
-  % [INSTRUMENT_NAME] Harmony
-  
-
-  \key d \major
-  
-  \time 3/4 
-  
-  \tempo 4 = 130 
-  
-}
-
-trackAchannelB = \relative c {
-  <fis a d a' >4 <a cis e >4. <a cis fis >8 <g b d g >8 <fis a d a' >8*5 
-  <b d fis >8 <a cis e a >8 <cis e g >8 <a d fis a >4 <cis e g >8 
-  <b d fis b >8 <cis fis a >8 <b d g b >2 |
-  % 4
-  <b d g >8*5 <a cis fis a >8 <cis e g >8*5 <a cis e a >8 <b d fis >2. 
-  <g cis e g >4. <a d fis >4. |
-  % 7
-  
-}
-
-trackA = <<
-  \context Voice = channelA \trackAchannelA
-  \context Voice = channelB \trackAchannelB
->>
-
-
-trackBchannelA =  {
-  
-  % [INSTRUMENT_NAME] Melody
-  
-
-  \key d \major
-  
-  \time 3/4 
-  
-  \tempo 4 = 130 
-  
-}
-
-trackBchannelB = \relative c {
-  a''4 e4. fis8 g a8*5 fis8 a g a4 g8 b a b2 |
-  % 4
-  g8*5 a8 g8*5 a8 fis2. g4. fis |
-  % 7
-  
-}
-
-trackB = <<
-  \context Voice = channelA \trackBchannelA
-  \context Voice = channelB \trackBchannelB
->>
-
-
-trackCchannelA =  {
-  
-  % [INSTRUMENT_NAME] Bass
-  
-
-  \key d \major
-  
-  \time 3/4 
-  
-  \tempo 4 = 130 
-  
-}
-
-trackCchannelB = \relative c {
-  fis,,4 a e'8 a, g fis |
-  % 2
-  g a g a b a cis a |
-  % 3
-  b cis b cis b4 g' |
-  % 4
-  b, g' d8 a cis4 |
-  % 5
-  g' e8 a, b4 fis' |
-  % 6
-  d g,8 fis g a g fis |
-  % 7
-  
-}
-
-trackC = <<
-
-  \clef "bass_8"
-  
-  \context Voice = channelA \trackCchannelA
-  \context Voice = channelB \trackCchannelB
->>
-
-
-trackDchannelA =  {
-  
-  % [INSTRUMENT_NAME] Rhythm
-  
-
-  \key d \major
-  
-  \time 3/4 
-  
-  \tempo 4 = 130 
-  
-}
-
-trackDchannelB = \relative c {
-  <fis d' >4 <a e' >4 cis'8 <a, fis' >8 <g d' >8 <fis d' >8 |
-  % 2
-  a'4 <fis, d' >4 <b fis' >8 <a e' >8 <cis g' >8 <a fis' >8 |
-  % 3
-  d' <cis, g' >8 <b fis' >8 <cis a' >8 <b g' >4 d' |
-  % 4
-  <b, g' >4 d' <b, g' >8 <a fis' >8 <cis g' >4 |
-  % 5
-  e' <cis, g' >8 <a e' >8 <b fis' >4 d' |
-  % 6
-  <b, fis' >4 <g e' >4 cis'8 <a, fis' >8 d'4 |
-  % 7
-  
-}
-
-trackD = <<
-  \context Voice = channelA \trackDchannelA
-  \context Voice = channelB \trackDchannelB
->>
-
-
-trackEchannelA =  {
-  
-  % [INSTRUMENT_NAME] Addition
-  
-
-  \key d \major
-  
-  \time 3/4 
-  
-  \tempo 4 = 130 
-  
-}
-
-trackEchannelB = \relative c {
-  d'4 cis4. a8 d a8*5 fis'8 e cis fis4 e8 d a' d,2 |
-  % 4
-  b8*5 fis'8 g8*5 cis,8 b2. g'4. a, |
-  % 7
-  
-}
-
-trackE = <<
-  \context Voice = channelA \trackEchannelA
-  \context Voice = channelB \trackEchannelB
->>
-
-
-\score {
-  <<
-    \context Staff=trackA \trackA
-    \context Staff=trackB \trackB
-    \context Staff=trackC \trackC
-    \context Staff=trackD \trackD
-    \context Staff=trackE \trackE
-  >>
-}
-\end{lilypond}
+\end{enumerate}
 
 
 \end{document}

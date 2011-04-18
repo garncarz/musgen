@@ -20,11 +20,17 @@ hlint:
 	hlint *.hs -c -i "Use head"
 
 
-tex: tmp
+tex: tmp tmp/song.flow tmp/song.ly
 	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/thesis.lytex
 	cd tmp && lilypond-book --pdf thesis.lytex
 	cd tmp && pdflatex thesis.tex
 	cp tmp/thesis.pdf ./
+
+tmp/song.flow:
+	cd tmp && ../musgen -k62 -smajor -b3 -t130 -m4 -ipop -n
+
+tmp/song.ly: tmp/song.flow
+	cd tmp && midi2ly song.midi && convert-ly song-midi.ly > song.ly
 
 graphs1:
 	mkdir -p tmp/import

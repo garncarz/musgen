@@ -269,7 +269,7 @@ A consonant chord is a chord coming from a scale and being of proper intervals, 
 
 \section{Diatonic function}
 
-A diatonic function (or a harmonic function) defines a relation between a chord and a scale. Let's consider a C major scale as a referential scale in examples.
+A diatonic function (or a harmonic function) defines a relation between a chord and a scale. Let's consider a C major scale as a referential scale in examples. \The main functions presented here come from \cite[p.~48]{kofron}.
 
 \subsection{Tonic chord}
 
@@ -291,7 +291,7 @@ A diatonic function (or a harmonic function) defines a relation between a chord 
 \caption{A dominant chord, resolved in a tonic one}
 \end{figure}
 
-A tone of particular interest is \the leading tone, \the last tone of \the scale (H) --- according to \the strict harmony theory it must be resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
+A tone of particular interest is \the \textbf{leading tone}, \the last tone of \the scale (H) --- according to \the strict harmony theory (\cite[p.~38, 47]{kofron}) it must be unique (not being in more octaves) and resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
 
 \subsection{Subdominant chord}
 
@@ -336,7 +336,145 @@ In \the beginning it's reasonable to think over an expected output. We may want 
 
 Another concern is about output characteristics --- for instance from theory we know songs or their parts are based on scales, thus we may want a song to be in a random scale, a certain scale or to change \the scale randomly. According to \cite[p.~110]{kofron} \the last demand brings some new rules, for \the simplicity we will work with one scale songs. Songs are also of some tempo and rhythm, we will keep these constant as well.
 
-\The first thing to start a song with is a tonic chord so a listener accustoms to \the used scale.
+\The constants can be set randomly but they may be considered as inputs of \the algorithm, allowing an user to demand his favorite style.
+
+\The first thing to start a song with is a tonic chord so a listener accustoms to \the used scale. Then chords progress freely, avoiding non-allowed moves, till \the ending tonic chord again closes \the song. This is a very general concept so it limits output as little as possible.
+
+% TODO: možná Gaussova křivka
+Supplying \the process with new chords is a job of a random chords generator. It takes a general random number generator and gives a couple --- tones of a chord (which are of some count) and a duration of \the chord. \The result should be random as possible, but a little adjustment can be made to accelerate \the following procedures: \the probability distribution of a tone can be \the normal (Gaussian) distribution, thus focusing more on tones around \the center, not going into extremes too often. Another adjustment could be made by telling \the chords generator about \the used scale, thus allowing it to give a scale chord more probably than an out of scale chord.
+
+So we will ask for random chords until we recieve a tonic chord. \The truth is we could generate \the chord in a fixed way, as a function of \the scale, but this would fix \the chord inversion --- making \the chord structure fusty. \The recieved tonic chord is to become \the song's beginning.
+
+Most of following supplied chords will probably sound weird because of their fortuity. Thus we want to relate them to past chords and analyze how much a possibly succeeding chord fits with \the past. Rating can be splitted into two phases: rating of harmony relations and rating of rhythm relations. This split allows us to find a harmonically fitting tones at first and let \the finding of a right duration as an independent next step. \The less combinations we have to choose from, \the more fast we will find \the right value(s).
+
+Both ratings can be of many models. \The used one is making \the final rating by composing (multiplying) elementary ratings, each of them, moreover, being of some defined importance.
+
+
+\section{Harmony rules}
+
+This section lists elementary harmony rules that can be used for rating a possible succeeding chord in a relation with past chords. Every rule is independent of others, thus \the final harmony rating must be a compound of them. Examples are based on \the C major scale. \The rules are extracted from or inspired by \cite{kofron}, a page is often specified.
+
+\begin{itemize}
+
+\item Is a leading tone treated \the right way? According to \cite[p.~38, 47]{kofron} we can't double \the leading tone into more octaves and \the leading tone has to be led one semitone up to \the tonic tone.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad, doubled]{\lilypond[fragment, staffsize=20]{<g' b' d'' b''>}}
+\subfloat[Badly resolved]{\lilypond[fragment, staffsize=20]{<g' b' d''> <e' g' c'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<g' b' d''> <e' g' c''>}}
+\caption{Treating of a leading tone rule}
+\end{figure}
+
+\clearpage
+\item If this is a beginning of \the song, is it a tonic triad chord? \The tonic triad is important for introducing \the scale and all \the examples in \cite{kofron} begin with \the tonic chord.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad, not tonic triad]{\lilypond[fragment, staffsize=20]{<d' f' b'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<c' e' g'>}}
+\caption{Beginning with a tonic triad rule}
+\end{figure}
+
+\item Isn't a subdominant chord succeeding a dominant chord? According to \cite[p.~44, 48]{kofron} we avoid appending a subdominant chord to a dominant one, as it would weaken harmony.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<e' g' c''> <f' a' c'>}}
+\subfloat[Anything else, good]{\lilypond[fragment, staffsize=20]{<d' f' b'>}}
+\caption{Subdominant not succeeding a dominant rule}
+\end{figure}
+
+\item Is it a scale chord? According to \cite[p.~48--50, 110]{kofron} scale chords are \the most important ones and fully sufficient for not long compositions.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<as' c' es'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<d' f' a'>}}
+\caption{Scale chord rule}
+\end{figure}
+
+\clearpage
+\item Is it a ``thick'' chord? This rule acts against too loose chords (having too big range or being too far from \the center of \the scale).
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<c' e'' c'''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<e' g' d''>}}
+\caption{Thick chord rule}
+\end{figure}
+
+\item Isn't there a too much ``jumping''? According to \cite[p.~39]{kofron} it seems that melody shouldn't consist of big distances between tones, we apply this rule for all \the voices as being melodies.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<e' g' d''> <c' e'' c'''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<e' g' d''> <f' b' e''>}}
+\caption{Antijumping rule}
+\end{figure}
+
+\item Is it a triad? According to \cite[p.~49--50]{kofron} it is quite efficient and sufficient for harmony to consist of triads.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<e' f' d''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<a' c'' e'>}}
+\caption{Triad rule}
+\end{figure}
+
+\item Isn't it silence? (In this thesis we avoid silence.)
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{r}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<a' c'' e'>}}
+\caption{Antisilence rule}
+\end{figure}
+
+\item Is \the count of chord tones right? We try to hold four voices harmony.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad, just two voices]{\lilypond[fragment, staffsize=20]{<c'' e'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<a' c'' e' c'>}}
+\caption{Tones count rule}
+\end{figure}
+
+\item Is a counterpoint move applied? According to \cite[p.~42, 44]{kofron} it is efficient to use counterpoint move in bass and soprano.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<f' b'> <fis' c''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<f' b'> <e' c''>}}
+\caption{Counterpoint rule}
+\end{figure}
+
+\item Is it moving? We try to avoid voices to be stuck.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<d'' f' a'> <d'' f' a'>}}
+\subfloat[Bad, soprano stuck]{\lilypond[fragment, staffsize=20]{<d'' f' a'> <d'' g' b'>}}
+\subfloat[Not good, bass stuck]{\lilypond[fragment, staffsize=20]{<d'' f' a'> <c'' f' b'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<d'' f' a'> <c'' g' b'>}}
+\caption{Moving rule}
+\end{figure}
+
+\item Is it consonant? We allow dissonant chords to interlace consonant ones, vividing \the composition.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad, two dissonant chords inline]{\lilypond[fragment, staffsize=20]{<e' g' c''> <f' g' d''> <e' g' cis''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<e' g' c''> <f' g' d''> <e' g' c''>}}
+\caption{Consonant rule}
+\end{figure}
+
+\clearpage
+\item Isn't it repeating? We try to avoid repetition of recent chords for vividness.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad, \the last chord is \the same as \the first one]{\lilypond[fragment, staffsize=20]{<c' e'' g'> <f' a' c''> <c' e'' g'>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<c' e' g' c''> <f' a' c''> <d' g' b' d''>}}
+\caption{Antirepeating rule}
+\end{figure}
+
+\item Isn't soprano repeating? We try to make soprano voice more vivid by not repeating recent soprano tones.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<c' e' g' c''> <f' a' c''> <d' g' b' d''>}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<c' e' g'> <f' a' c''> <d' g' b' d''>}}
+\caption{Antirepeating soprano rule}
+\end{figure}
+
+\end{itemize}
 
 
 \chapter{Implementation}

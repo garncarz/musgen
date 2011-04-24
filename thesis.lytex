@@ -477,6 +477,33 @@ This section lists elementary harmony rules that can be used for rating a possib
 \end{itemize}
 
 
+\section{Rhythm rules (of harmony)}
+
+\begin{itemize}
+
+\item Isn't it overlapping \the end of a measure? According to \cite[p.~50]{kofron} it's not so efficient to end \the measure with \the same chord that begins \the following one. Avoiding overlapping also makes harmony more dense, which is quite wanted as this thesis takes harmony as \the basis.
+\begin{figure}[h!]
+\centering
+\subfloat[Bad]{\lilypond[fragment, staffsize=20]{<d'' f' a'>1 ~<d'' f' a'>4}}
+\subfloat[Good]{\lilypond[fragment, staffsize=20]{<d'' f' a'>}}
+\caption{Antioverlapping rule}
+\end{figure}
+
+\item Is it ending on a beat, or least copying rhythm from \the last measure? We try to tighten \the feeling of measure beats by making chords end on beats but if there's
+\begin{figure}[h!]
+\centering
+\subfloat[Not so good]{\lilypond[fragment, staffsize=20]{\time 2/4 <g' b' d''>4.}}
+\subfloat[Good, ending on a beat]{\lilypond[fragment, staffsize=20]{\time 2/4 <g' b' d''>}}
+\subfloat[Good, copying rhythm]{\lilypond[fragment, staffsize=20]{\time 2/4 <c'' e' g'>4. <a' c'' e'>8 <g' b' d''>4.}}
+\caption{Beat-copying rule}
+\end{figure}
+
+\end{itemize}
+
+
+\section{Interpretation}
+
+
 \chapter{Implementation}
 
 This chapter is a bridge between \the described algorithm and \the implementation itself done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.

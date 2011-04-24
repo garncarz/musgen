@@ -108,7 +108,7 @@ hudba, skladba, náhoda, harmonie, MIDI
 
 \The creation of music is a wonderful process known to humankind for a very long time, interesting not only because of output. During history, people have become able to write music down and analyze it. Sheet music turns out to be made just of few primitives satisfying rules of music which are easy to be interpreted mathematically. Also, it can be transferred back to music by letting musicians interpret it or, in the last few decades, by letting even computers do it which is very easy to achieve.
 
-\The goal of this thesis is to algorithmically analyse one of possible processes of \the creation of music and to show it implemented.
+\The goal of this thesis is to algorithmically analyze one of possible processes of \the creation of music and to show it implemented.
 
 
 \chapter{Introduction to music theory}
@@ -126,26 +126,26 @@ Tones are musical sounds of which \the song is composed. They can be produced in
 \begin{description}
 \item[Pitch] is a frequency of \the sound.\footnote{Precisely said: \the fundamental frequency.}
 \item[Duration] is a time of how long \the sound is lasting.
-\item[Dynamics] is a strenght of \the expression, simplified a loudness.
-\item[Color (timbre)] is an expression itself. Because \the tone isn't just a sound wave of \the fundamental frequency but a mixture of sound waves rooted from \the loudest --- fundamental --- one, \the expression varies on ratios of their strenghts. This is what makes different instruments sound diffrently.
+\item[Dynamics] is a strength of \the expression, simplified a loudness.
+\item[Color (timbre)] is an expression itself. Because \the tone isn't just a sound wave of \the fundamental frequency but a mixture of sound waves rooted from \the loudest --- fundamental --- one, \the expression varies on ratios of their strengths. This is what makes different instruments sound differently.
 \end{description}
 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{c' cis' es' e'}
-\caption{An example of tones of different pitches, in ascending order}
+\caption{Example of tones of different pitches, in ascending order}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{f'4 f'2}
-\caption{An example of tones of different durations}
+\caption{Example of tones of different durations}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{b'\mp b'\f}
-\caption{An example of tones of different dynamics}
+\caption{Example of tones of different dynamics}
 \end{figure}
 
 It's important to remark that \the qualities can be approached as relative or absolute --- for \the musical use \the relative approach is much more important --- we want to know how tones are related to each other, we don't pay too much attention to a physical point of view.
@@ -162,7 +162,7 @@ A melody is a sequence of tones.
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{d''4 e''8 f'' b'4.}
-\caption{An example of a melody}
+\caption{Example of a melody}
 \end{figure}
 
 
@@ -173,7 +173,7 @@ A chord is a set of tones sounding at a moment. \The fundamental tone --- not ne
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<c' e' g' c''> <c' g' c''>}
-\caption{An example of a chord\\followed by a chord of \the same nature but with one tone suppressed}
+\caption{Example of a chord\\followed by a chord of \the same nature but with one tone suppressed}
 \end{figure}
 
 \subsection{Triad}
@@ -201,7 +201,7 @@ Harmony is a relation between notes in a chord. \The chord can be viewed as an u
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d'> <f' a' c'> <c' e' g'>}
-\caption{An example of a progression of harmony}
+\caption{Example of a progression of harmony}
 \end{figure}
 
 \subsection{Voices}
@@ -222,7 +222,7 @@ This thesis focuses mainly on bass and soprano.
 \subfloat[Full harmony]{\lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d'> <f' a' c'> <c' e' g'>}}
 \subfloat[Bass voice]{\lilypond[fragment, staffsize=20]{c' d' c' c'}}
 \subfloat[Soprano voice]{\lilypond[fragment, staffsize=20]{g' b' a' g'}}
-\caption{An example of voices}
+\caption{Example of voices}
 \end{figure}
 
 \subsection{Counterpoint}
@@ -232,7 +232,7 @@ Counterpoint is a harmony progress where \the bass voice and \the soprano one ev
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<d' a'> <c' b'> <d' g'> <c' a'>}
-\caption{An example of counterpoint}
+\caption{Example of counterpoint}
 \end{figure}
 
 
@@ -244,7 +244,7 @@ Songs (or their parts) are usually based on a set of tones called a scale.
 \centering
 \subfloat[C major]{\lilypond[fragment, staffsize=20]{c'8 d' e' f' g' a' b' c''}}
 \subfloat[E major]{\lilypond[fragment, staffsize=20]{e'8 fis' gis' a' b' cis'' dis'' e''}}
-\caption{An example of two scales}
+\caption{Example of two scales}
 \end{figure}
 
 \The scale is based on its key tone --- that's \the one \the scale is named after --- and intervals of included tones in relation to \the key tone --- that's what \the second part of \the scale's name stands for. Scales this thesis aims at and which are also \the most frequently used in Western music are called \the major scale and \the minor scale\footnote{There are more minor scales, this thesis aims at \the natural one.}.
@@ -263,7 +263,7 @@ A consonant chord is a chord coming from a scale and being of proper intervals, 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<c' e' g'> <g' b' d' f'> <c' e' g'>}
-\caption{Scale C: consonant chord C evolves to dissonant $G^7$ and then back to C}
+\caption{Scale C: consonant chord C evolves to dissonant G$^7$ and then back to C}
 \end{figure}
 
 
@@ -278,7 +278,7 @@ A diatonic function (or a harmonic function) defines a relation between a chord 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<c' e' g' c''>}
-\caption{A tonic chord}
+\caption{Tonic chord}
 \end{figure}
 
 \subsection{Dominant chord}
@@ -288,7 +288,7 @@ A diatonic function (or a harmonic function) defines a relation between a chord 
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<g' b' d''> <e' g' c''>}
-\caption{A dominant chord, resolved in a tonic one}
+\caption{Dominant chord, resolved in a tonic one}
 \end{figure}
 
 A tone of particular interest is \the \textbf{leading tone}, \the last tone of \the scale (H) --- according to \the strict harmony theory (\cite[p.~38, 47]{kofron}) it must be unique (not being in more octaves) and resolved and \the right resolution is into \the first higher tone of \the scale --- thus \the first tone of \the scale (C).
@@ -300,13 +300,13 @@ A tone of particular interest is \the \textbf{leading tone}, \the last tone of \
 \begin{figure}[h!]
 \centering
 \lilypond[fragment, staffsize=20]{<f' a' c''> <g' b' d''> <e' g' c''>}
-\caption{A subdominant chord, followed by a dominant one resolved in a tonic one}
+\caption{Subdominant chord, followed by a dominant one resolved in a tonic one}
 \end{figure}
 
 
 \section{Rhythm}
 
-Rhythm is a timing of single tones based on a more or less regular patterns. \The fundamental repeating element of rhythm is a \textbf{beat}. Beats are arranged into regular groupes of few called \textbf{measures} (also bars). \The first beat of \the measure is usually stressed, called a downbeat. \textbf{Tempo} is a speed of a song, usually denoted as a count of beats per minute.
+Rhythm is a timing of single tones based on a more or less regular patterns. \The fundamental repeating element of rhythm is a \textbf{beat}. Beats are arranged into regular groups of few called \textbf{measures} (also bars). \The first beat of \the measure is usually stressed, called a downbeat. \textbf{Tempo} is a speed of a song, usually denoted as a count of beats per minute.
 
 \begin{figure}[h!]
 \centering
@@ -332,7 +332,7 @@ Taking harmony and its progression as a basis in our process can lead us to a ve
 
 Let's see a song as an at least two dimensional playground, space of possibilities, where one dimension stands for time and the second one stands for tones. Some of games played there may be pleasant to watch, joyful or making patterns and some may be not. If we were told what moves are \the only allowed, \the game couldn't be rich in \the end, independently of \the quantity of \the allowed moves. Instead, we can list just moves we wouldn't be happy to see and let \the rest for players which brings freedom and a plenty of unexpected situations, hopefully pleasant.
 
-In \the beginning it's reasonable to think over an expected output. We may want a finished song or a real-time music stream, possibly never-ending. \The first demand is leading to some calculations with \the desired output in a finite time, \the second one is more complex --- calculations have to be done faster than playing. For simplicity let's focuse on finished songs --- even so it's not too far from a streaming idea assuming computing is fast enough.
+In \the beginning it's reasonable to think over an expected output. We may want a finished song or a real-time music stream, possibly never-ending. \The first demand is leading to some calculations with \the desired output in a finite time, \the second one is more complex --- calculations have to be done faster than playing. For simplicity let's focus on finished songs --- even so it's not too far from a streaming idea assuming computing is fast enough.
 
 Another concern is about output characteristics --- for instance from theory we know songs or their parts are based on scales, thus we may want a song to be in a random scale, a certain scale or to change \the scale randomly. According to \cite[p.~110]{kofron} \the last demand brings some new rules, for \the simplicity we will work with one scale songs. Songs are also of some tempo and rhythm, we will keep these constant as well.
 
@@ -343,9 +343,9 @@ Another concern is about output characteristics --- for instance from theory we 
 % TODO: možná Gaussova křivka
 Supplying \the process with new chords is a job of a random chords generator. It takes a general random number generator and gives a couple --- tones of a chord (which are of some count) and a duration of \the chord. \The result should be random as possible, but a little adjustment can be made to accelerate \the following procedures: \the probability distribution of a tone can be \the normal (Gaussian) distribution, thus focusing more on tones around \the center, not going into extremes too often. Another adjustment could be made by telling \the chords generator about \the used scale, thus allowing it to give a scale chord more probably than an out of scale chord.
 
-So we will ask for random chords until we recieve a tonic chord. \The truth is we could generate \the chord in a fixed way, as a function of \the scale, but this would fix \the chord inversion --- making \the chord structure fusty. \The recieved tonic chord is to become \the song's beginning.
+So we will ask for random chords until we receive a tonic chord. \The truth is we could generate \the chord in a fixed way, as a function of \the scale, but this would fix \the chord inversion --- making \the chord structure fusty. \The received tonic chord is to become \the song's beginning.
 
-Most of following supplied chords will probably sound weird because of their fortuity. Thus we want to relate them to past chords and analyze how much a possibly succeeding chord fits with \the past. Rating can be splitted into two phases: rating of harmony relations and rating of rhythm relations. This split allows us to find a harmonically fitting tones at first and let \the finding of a right duration as an independent next step. \The less combinations we have to choose from, \the more fast we will find \the right value(s).
+Most of following supplied chords will probably sound weird because of their fortuity. Thus we want to relate them to past chords and analyze how much a possibly succeeding chord fits with \the past. Rating can be split into two phases: rating of harmony relations and rating of rhythm relations. This split allows us to find a harmonically fitting tones at first and let \the finding of a right duration as an independent next step. \The less combinations we have to choose from, \the more fast we will find \the right value(s).
 
 Both ratings can be of many models. \The used one is making \the final rating by composing (multiplying) elementary ratings, each of them, moreover, being of some defined importance.
 
@@ -637,7 +637,7 @@ For more information about randomness in Haskell see \cite{rnd-hask}.
 
 \begin{description}
 \item[rndDuration] is a function of a random generator, defining a duration randomly picked from even numbers from 2 to 16.
-\item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For symplifying things, \the result is always 4.
+\item[rndTonesCount] is a function of a random generator, defining an integer meant as a count of tones. For simplifying things, \the result is always 4.
 \item[rndIntervals] is a function of a random generator, defining an infinite list of (musical) intervals where each is a product of a random sign and an unsigned interval which is picked like this:\\
 	\begin{tabular}{|l|l|}
 	\hline
@@ -678,9 +678,9 @@ A product of \the first stage is a harmony flow. Its creation and file handling 
 \item[loadFlow] is a monad which given a filename reads a content of \the file and returns a harmony flow contained in \the content.
 \item[produceFlow] is a monad which given a chord meant as a determination of flow's scale, an integer meant as flow's minimal required measure count and a filename produces a new harmony flow based on \the input parameters using a new random generator. \The flow is briefly printed, saved in \the file and also returned.
 \item[nextFlow] is a function of a past harmony flow, an integer meaning a measures count, an integer meaning a minimal required measures count and a random generator, defining a harmony flow which is a sequel of \the input flow.
-\item[nextTonesChord] is a function of a past harmony flow and a random generator, defining a chord harmonicly following \the input flow, having a zero duration. Until a suitable chord is found, new ones are created invoking rndChordTones and rated by harmonyChance --- \the quality of \the suitable chord must beat a minimal required quality which is a random float between 0.5 and 0.7.
-\item[nextDurChord] is a function of a chord, a past harmony flow and a random generator, defining a chord harmonicly equivalent with \the input chord, having a duration suitable for a sequel of \the input flow. Until a suitable duration is found, new ones are created invoking rndDuration and rated by harmonyRhythmChance --- \the quality of \the suitable duration must beat a minimal required quality which is 0.5.
-\item[canBeEnd] is a function of a chord and a past harmony flow, defining a boolean value whether \the chord can end \the flow. Harmonical rule checking function isTonicTriadIn is used to determine \the possibility of ending, \the chord also can't be shorter in duration than half \the measure duration.
+\item[nextTonesChord] is a function of a past harmony flow and a random generator, defining a chord harmonically following \the input flow, having a zero duration. Until a suitable chord is found, new ones are created invoking rndChordTones and rated by harmonyChance --- \the quality of \the suitable chord must beat a minimal required quality which is a random float between 0.5 and 0.7.
+\item[nextDurChord] is a function of a chord, a past harmony flow and a random generator, defining a chord harmonically equivalent with \the input chord, having a duration suitable for a sequel of \the input flow. Until a suitable duration is found, new ones are created invoking rndDuration and rated by harmonyRhythmChance --- \the quality of \the suitable duration must beat a minimal required quality which is 0.5.
+\item[canBeEnd] is a function of a chord and a past harmony flow, defining a boolean value whether \the chord can end \the flow. Harmonic rule checking function isTonicTriadIn is used to determine \the possibility of ending, \the chord also can't be shorter in duration than half \the measure duration.
 \item[realPast] is a helper function of a harmony flow, defining a harmony flow which is equivalent to \the input flow if it's a regular flow, otherwise to an empty flow (that's in \the case \the input flow starts with an empty chord, meaning it's a helper flow determining \the flow's scale and beat).
 \end{description}
 
@@ -728,7 +728,7 @@ Functions evaluating musical relations are located in \the file \textsc{Relation
 \item[isSopranoMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether \the soprano part of \the chords moves.
 \item[isBassMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a truth value whether \the bass part of \the chords moves.
 \item[percentageMoving] is a function of a list of \the first chord's tones and a list of \the second chord's tones, defining a float meant as a percentage of \the second chord's tones not being part of \the first one.
-\item[isConsonantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of tones, defining a truth value whether \the tones are consonant wihtin \the scale.
+\item[isConsonantIn] is a function of a tone meant as a scale's key, \the scale's intervals and a list of tones, defining a truth value whether \the tones are consonant within \the scale.
 \end{description}
 
 See Figure \ref{relations-diag} for functions references.
@@ -851,9 +851,9 @@ See Figure \ref{interpretationTechniques-diag} for functions references.
 \section{MIDI}
 \label{midi}
 
-According to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronical musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
+According to \cite{midi-wiki}, MIDI, standing for Musical Instrument Digital Interface, is a protocol of communication enabling different electronic musical instruments and computers to interchange digital messages about music being played. Moreover, there's a MIDI file format which allows us to save these data. Having \the well-defined file format we can operate with it in many ways, we'll use it as a final stage of our generated songs. Then we'll be able to play it, make sheet music of it and there's also a possibility of generated songs being just \the first step in a chain of creation of music.
 
-We'll use a MIDI file format which is composed of MIDI tracks where each represents a specific interpretation of harmony flow for a specific intrument. A track is a list of MIDI events where each is defined by a delay since \the preceding event and a MIDI message.
+We'll use a MIDI file format which is composed of MIDI tracks where each represents a specific interpretation of harmony flow for a specific instrument. A track is a list of MIDI events where each is defined by a delay since \the preceding event and a MIDI message.
 
 \subsection{MIDI messages}
 
@@ -882,7 +882,7 @@ These are \the functions and \the monad contained in \the file \textsc{Midi.hs}:
 \item[timeSignature] is a function of an integer, defining a MIDI event that sets \the time signature with \the integer as \the upper number, \the lower number is 4.
 \item[eventsParam] is a function of a channel number, a float and a list of MIDI events, defining an altered list where every tone playing event is set to be played on \the given channel with volume being multiplied by \the float.
 \item[midiTrack] is a function of a channel number, an instrument name, an instrument MIDI number, a volume, a list of MIDI events, a beginning chord stating \the scale of a track, and a tempo, defining a list of MIDI events fully covering \the track made of \the input list and adjusted to \the rest of arguments.
-\item[makeTracks] is a function of a list of definitions of MIDI tracks, a musical flow, a random generator and a tempo, defining a list of MIDI tracks where each is created by an interpretation of \the flow as defined for \the track with \the use of a new random generator splited from \the input one, processed by \the function midiTrack to meet \the other arguments.
+\item[makeTracks] is a function of a list of definitions of MIDI tracks, a musical flow, a random generator and a tempo, defining a list of MIDI tracks where each is created by an interpretation of \the flow as defined for \the track with \the use of a new random generator split from \the input one, processed by \the function midiTrack to meet \the other arguments.
 \item[midiFile] is a function of a list of MIDI tracks, defining a content of a MIDI file made of \the tracks.
 \item[exportMidi] is a monad which given a filename and a content of a MIDI file exports \the content into a file with \the name.
 \end{description}

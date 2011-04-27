@@ -340,7 +340,7 @@ Another concern is about output characteristics --- for instance from theory we 
 
 \The first thing to start a song with is a tonic chord so a listener accustoms to \the used scale. Then chords progress freely, avoiding non-allowed moves, till \the ending tonic chord again closes \the song. This is a very general concept so it limits output as little as possible.
 
-Supplying \the process with new chords is a job of a random chords generator. It takes a general random number generator and gives a couple --- tones of a chord (which are of some count) and a duration of \the chord. \The result should be random as possible, but a little adjustment can be made to accelerate \the following procedures: \the probability distribution of a tone can be \the normal (Gaussian) distribution, thus focusing more on tones around \the center, not going into extremes too often. Another adjustment could be made by telling \the chords generator about \the used scale, thus allowing it to give a scale chord more probably than an out of scale chord.
+Supplying \the process with new chords is a job of a random chords generator. It takes a general random number generator and gives a couple --- tones of a chord (which are of some count) and a duration of \the chord. \The result should be random as possible, but a little adjustment can be made to accelerate \the following procedures --- \the probability distribution of a tone can be \the normal (Gaussian) distribution, thus focusing more on tones around \the center, not going into extremes too often. Another adjustment could be made by telling \the chords generator about \the used scale, thus allowing it to give a scale chord more probably than an out of scale chord.
 
 So we will ask for random chords until we receive a tonic chord. \The truth is we could generate \the chord in a fixed way, as a function of \the scale, but this would fix \the chord inversion --- making \the chord structure fusty. \The received tonic chord is to become \the song's beginning.
 
@@ -510,7 +510,7 @@ Since rhythm is not \the main concern of this thesis, just a few simple rhythmic
 
 This thesis deals with these interpretation lines: a bass line, a melody line and a rhythmic line.
 
-\The bass line is fundamentally a line made of \the lowest tones of harmony flow --- \the bass voice. But not in a strict way: \the fundamental tones have to sound on a stressed beat, otherwise we can use other tones of \the chord (called \the fingered way) or we can use tones between \the fundamental ones (called \the walking bass).
+\The bass line is fundamentally a line made of \the lowest tones of harmony flow --- \the bass voice. But not in a strict way: \the fundamental tones have to sound on a stressed beat, otherwise we can use other tones of \the chord (called \the fingered way) or we can use tones between \the fundamental ones (called \the walking bass)\footnote{Inspired by \cite{klavir}.}.
 
 \begin{figure}[h!]
 \centering
@@ -530,7 +530,7 @@ This thesis deals with these interpretation lines: a bass line, a melody line an
 \caption{Interpretation of melody}
 \end{figure}
 
-\The rhythmic line which is to boost \the feeling of a rhythm of a song is made of chords of harmony flow arranged to meet song's rhythm (but allowed being faster). Chords can be split when repeated, for example \the lowest tone \the first time of \the repeating, then \the rest tones, or by a principle of \the broken chord 1--5--10 where \the first and \the third tone of a chord is alternating with \the second tone shifted up by an octave. Also percussions could be use to boost \the rhythm, but this is not treated in this thesis.
+\The rhythmic line which is to boost \the feeling of a rhythm of a song is made of chords of harmony flow arranged to meet song's rhythm (but allowed being faster). Chords can be split when repeated, for example \the lowest tone \the first time of \the repeating, then \the rest tones, or by a principle of \the broken chord 1--5--10\footnote{Inspired by \cite{klavir}.} where \the first and \the third tone of a chord is alternating with \the second tone shifted up by an octave. Also percussions could be use to boost \the rhythm, but this is not treated in this thesis.
 
 \begin{figure}[h!]
 \centering
@@ -965,6 +965,8 @@ See Figure \ref{midi-diag} for functions references.
 \begin{thebibliography}{9}
 
 \bibitem{kofron} KOFROŇ, Jaroslav. \emph{Učebnice harmonie}. 10th edition, 2006. 178 pages. ISBN 80-86385-14-0.
+
+\bibitem{klavir} KALENDA, Václav. \emph{Na klavír za několik týdnů} [online]. [cited 27th April 2011]. $<$\url{http://hobby.idnes.cz/skola-hry-na-klavir-0o1-/hobby-domov.asp?o=0&klic=145025}$>$.
 
 \bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.
 

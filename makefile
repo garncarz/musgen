@@ -20,6 +20,7 @@ hlint:
 	hlint *.hs -c -i "Use head"
 
 
+# actually needs also targets graphs1 and graphs2 to be run once before itself
 tex: tmp tmp/song.flow tmp/song.ly
 	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/thesis.lytex
 	cd tmp && lilypond-book --pdf thesis.lytex
@@ -56,6 +57,25 @@ graphs2:
 		SourceGraph tmp/$$name/$$file; \
 		dot tmp/$$name/SourceGraph/graphs/codeCW.dot -Tsvg -Grankdir=LR \
 			-o tmp/$$name.svg; \
+		svg2pdf tmp/$$name.svg tmp/$$name.pdf; \
+	done
+
+graphs2print:
+	SourceGraph tmp/import/Main.hs
+	sed "s/\(, \)\?\(fill\)\?color=[^],]*//g" \
+		tmp/import/SourceGraph/graphs/imports.dot > tmp/_imports.dot
+	sed "s/penwidth=[^],]*//g" tmp/_imports.dot > tmp/imports.dot
+	dot tmp/imports.dot -Tsvg -Grankdir=LR -o tmp/imports.svg \
+		-Gfillcolor=white -Nfillcolor=white
+	svg2pdf tmp/imports.svg tmp/imports.pdf
+	for file in `ls *.hs`; do \
+		name=$${file%.*}; \
+		SourceGraph tmp/$$name/$$file; \
+		sed "s/\(, \)\?\(fill\)\?color=[^],]*//g" \
+			tmp/$$name/SourceGraph/graphs/codeCW.dot > tmp/_$$name.dot; \
+		sed "s/penwidth=[^],]*//g" tmp/_$$name.dot > tmp/$$name.dot; \
+		dot tmp/$$name.dot -Tsvg -Grankdir=LR -o tmp/$$name.svg \
+			-Gfillcolor=white -Nfillcolor=white; \
 		svg2pdf tmp/$$name.svg tmp/$$name.pdf; \
 	done
 

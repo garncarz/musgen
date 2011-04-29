@@ -110,7 +110,7 @@ hudba, skladba, hudba generovaná počítačem, náhoda, harmonie, MIDI
 
 \The goal of this thesis is to algorithmically analyze one of possible processes of \the creation of music and to show it implemented. Thus, we start with Chapter~\ref{theory} introducing basic definitions from music theory, using them in Chapter~\ref{algorithm} to establish an algorithm, whose implementation is described in Chapter~\ref{implementation} and subsequently compared with similar programs in Chapter~\ref{comparison}.
 
-Have a good reading.
+Have a good read.
 
 
 \chapter{Introduction to music theory}
@@ -550,7 +550,7 @@ Also \the very harmonic flow can be a line in \the interpretation, just for \the
 \chapter{Implementation}
 \label{implementation}
 
-This chapter is a bridge between \the described algorithm and \the implementation itself done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
+This chapter is a bridge between \the described algorithm and \the implementation itself --- named MusGen --- done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
 
 \section{Input}
 
@@ -1010,9 +1010,17 @@ Making MusGen was quite a fun and I'm looking forward to extend it and maybe coo
 \addcontentsline{toc}{chapter}{Bibliography}
 \begin{thebibliography}{99}
 
-\bibitem{kofron} KOFROŇ, Jaroslav. \emph{Učebnice harmonie}. 10th edition, 2006. 178 pages. ISBN 80-86385-14-0.
+\bibitem{kofron}
+\iffrench KOFRON, Jaroslav. \emph{Ucebnice harmonie}.
+\else KOFROŇ, Jaroslav. \emph{Učebnice harmonie}.
+\fi
+10th edition, 2006. 178 pages. ISBN 80-86385-14-0.
 
-\bibitem{klavir} KALENDA, Václav. \emph{Na klavír za několik týdnů} [online]. [cited 27th April 2011]. $<$\url{http://hobby.idnes.cz/skola-hry-na-klavir-0o1-/hobby-domov.asp?o=0&klic=145025}$>$.
+\bibitem{klavir}
+\iffrench KALENDA, Václav. \emph{Na klavír za nekolik tydnu}
+\else KALENDA, Václav. \emph{Na klavír za několik týdnů}
+\fi
+[online]. [cited 27th April 2011]. $<$\url{http://hobby.idnes.cz/skola-hry-na-klavir-0o1-/hobby-domov.asp?o=0&klic=145025}$>$.
 
 \bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.
 

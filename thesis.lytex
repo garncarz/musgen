@@ -955,6 +955,38 @@ See Figure \ref{midi-diag} for functions references.
 
 \chapter{Comparison with similar software}
 
+MusGen is not \the only software targeting computer music creation --- according to \cite{algorithms} a lot of similar software exists and a lot of papers has been published. Let's take a look at some programs generating music in a relation to MusGen.
+
+\section{WolframTones}
+
+WolframTones\footnote{Homepage \url{http://tones.wolfram.com/}.} comes with an algorithm which, according to \cite{wolfram}, works this way:
+
+\begin{itemize}
+\item There's a 2D matrix.
+\item Color (just black or white) of every cell in \the matrix is defined in a relation to neighbour cells.
+\item A strip from \the matrix is taken.
+\item One dimension from \the strip is considered as a pitch, \the other one as a time.
+\item Black cells from \the strip are instrumentalized based on their position. Multiple instruments are supported, thus a melody or bass line can exist and \the piece can be supplemented by percussion.
+\end{itemize}
+
+Compared to Musgen, it's more deterministic --- just \the rule of coloring is optional and bringing a space of possibilities --- and it doesn't obey classical music rules, actually it produces output which is to be musical naturally but maybe not so much in a Western way.
+
+\section{FractMus}
+
+FractMus\footnote{Homepage \url{http://www.gustavodiazjerez.com/fractmus_overview.html}.} is another program using mathematical formulas to create a song. Described as just a helping tool in \the process of creation of music, it can be seen as an example of \the group of programs which not tend to compose \the final piece but just help \the user use algorithms and computation in \the process.
+
+MusGen can be seen in this way as well --- generated songs being in \the MIDI format can be changed, taken as a basis for more elaborated songs.
+
+\section{C.P.U. Bach}
+
+C.P.U. Bach\footnote{No homepage, also works only on an uncommon platform called 3DO.} has, according to \cite{cpubach}, a lot of similarity with MusGen: it uses a so called ``weighted exhaustive search'' which seems to obey rules what can or cannot be produced, but it encompasses more things like ``tendencies'' --- not so strict rules --- and it also tries to create a song from parts which gives more musical sense. Actually, being more enhanced, MusGen would probably be very close to this.
+
+\section{Virtual music composer}
+
+Virtual music composer\footnote{Homepage \url{http://www.virtualmusiccomposer.com/}.} is an example of programs which are similar in input and output to MusGen but there's no insight into their algorithms because they're not free software and there's no description of their principles released.
+
+Virtual music composer takes few input parameters determining output's scale and style and just creates MIDI, like MusGen.
+
 
 \chapter{Conclusion}
 
@@ -976,9 +1008,15 @@ See Figure \ref{midi-diag} for functions references.
 
 \bibitem{midi-wiki} Musical Instrument Digital Interface. \emph{Wikipedia, the free encyclopedia} [online]. [cited 18th March 2011]. $<$\url{http://en.wikipedia.org/wiki/Musical_Instrument_Digital_Interface}$>$.
 
-\bibitem{midi-hcodecs} Codec.Midi. [online]. [cited 18th March 2011]. $<$\url{http://hackage.haskell.org/packages/archive/HCodecs/0.2/doc/html/Codec-Midi.html}$>$.
+\bibitem{midi-hcodecs} Codec.Midi. \emph{HackageDB} [online]. [cited 18th March 2011]. $<$\url{http://hackage.haskell.org/packages/archive/HCodecs/0.2/doc/html/Codec-Midi.html}$>$.
 
 \bibitem{midi-tempo} MIDI File Format. \emph{\The Sonic Spot} [online]. [cited 18th March 2011]. $<$\url{http://www.sonicspot.com/guide/midifiles.html}$>$.
+
+\bibitem{algorithms} Algorithmic composition resources. \emph{Algorithmic.net} [online]. [cited 29th April 2011]. $<$\url{http://www.flexatone.net/algoNet/}$>$.
+
+\bibitem{wolfram} How WolframTones Works. \emph{WolframTones} [online]. [cited 29th April 2011]. $<$\url{http://tones.wolfram.com/about/how.html}$>$.
+
+\bibitem{cpubach} MEIER, Sidney K. --- et al.  System for real-time music composition and synthesis. \emph{Google patents} [online]. [cited 29th April 2011]. $<$\url{http://www.google.com/patents?vid=USPAT5496962}$>$.
 
 \end{thebibliography}
 

@@ -108,10 +108,13 @@ hudba, skladba, hudba generovaná počítačem, náhoda, harmonie, MIDI
 
 \The creation of music is a wonderful process known to humankind for a very long time, interesting not only because of output. During history, people have become able to write music down and analyze it. Sheet music turns out to be made just of few primitives satisfying rules of music which are easy to be interpreted mathematically. Also, it can be transferred back to music by letting musicians interpret it or, in the last few decades, by letting even computers do it which is very easy to achieve.
 
-\The goal of this thesis is to algorithmically analyze one of possible processes of \the creation of music and to show it implemented.
+\The goal of this thesis is to algorithmically analyze one of possible processes of \the creation of music and to show it implemented. Thus, we start with Chapter~\ref{theory} introducing basic definitions from music theory, using them in Chapter~\ref{algorithm} to establish an algorithm, whose implementation is described in Chapter~\ref{implementation} and subsequently compared with similar programs in Chapter~\ref{comparison}.
+
+Have a good reading.
 
 
 \chapter{Introduction to music theory}
+\label{theory}
 
 This chapter is willing to introduce some basic terms which will be useful later in \the process of creation. Understanding of relations is connected with insight into algorithms and names are \the ones this thesis will reuse. Presented terms and relations are --- in a very more complex way --- taught by \the book \cite{kofron} which is also a great inspiration and source for this thesis.
 
@@ -327,6 +330,7 @@ Rhythm is a timing of single tones based on a more or less regular patterns. \Th
 
 
 \chapter{One of possible processes of \the creation of music}
+\label{algorithm}
 
 Taking harmony and its progression as a basis in our process can lead us to a very straightforward approach. This chapter deals with an algorithmic concept I've designed, sections are describing details of it.
 
@@ -544,6 +548,7 @@ Also \the very harmonic flow can be a line in \the interpretation, just for \the
 
 
 \chapter{Implementation}
+\label{implementation}
 
 This chapter is a bridge between \the described algorithm and \the implementation itself done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
 
@@ -954,6 +959,7 @@ See Figure \ref{midi-diag} for functions references.
 
 
 \chapter{Comparison with similar software}
+\label{comparison}
 
 MusGen is not \the only software targeting computer music creation --- according to \cite{algorithms} a lot of similar software exists and a lot of papers has been published. Let's take a look at some programs generating music in a relation to MusGen.
 
@@ -990,11 +996,19 @@ Virtual music composer takes few input parameters determining output's scale and
 
 \chapter{Conclusion}
 
+After introducing necessary music theory terms in a brief way, \the core of \the thesis --- \the algorithm --- was presented. Its development came from self-experimenting with both practical (MIDI) and theoretical (harmony theory, mainly taught by \the great book \cite{kofron}) stuff. Its principle is very easy and lightweight, thus not tending to create a complex masterpieces but mainly showing \the possibility of creating a framework which can give algorithmic music and can be extended by more, especially harmonic, rules to get closer to classical Western music.
+
+\The implementation done in language Haskell proves \the functionality of \the algorithm and also describes it including used rules in a mathematical bright way, not seeing Haskell so much as a programming language but more as a definition language.
+
+\The comparison with similar software shows there's more people wanting to create and improve programs generating random music which leads to propositions of \the next development: letting extending a count of harmony rules aside, melody and rhythm are two things where only cornerstones were put and thus can be developed almost any way. Also a too much of randomness may be more than sufferable making output too much chaotic --- if \the random seed repeats sometimes, we could be able to produce more accustomed songs with choruses and verses. Then, a lot of people would surely appreciate a possibility of engaging a percussion stuff.
+
+Making MusGen was quite a fun and I'm looking forward to extend it and maybe cooperate with other people interested in music and computers.
+
 
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 
 \bibitem{kofron} KOFROŇ, Jaroslav. \emph{Učebnice harmonie}. 10th edition, 2006. 178 pages. ISBN 80-86385-14-0.
 

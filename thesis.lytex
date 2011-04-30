@@ -550,7 +550,7 @@ Also \the very harmonic flow can be a line in \the interpretation, just for \the
 \chapter{Implementation}
 \label{implementation}
 
-This chapter is a bridge between \the described algorithm and \the implementation itself --- named MusGen --- done in \the language \textsc{Haskell}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
+This chapter is a bridge between \the described algorithm and \the implementation itself --- named MusGen --- done in \the language \textsc{Haskell}\footnote{For \the reason for choosing Haskell see \url{http://i.imgur.com/hF6mS.jpg}.}. Mathematically straightforward and self-describing that Haskell source lines are, they can also be supplemented by a text in a natural language for an easier insight.
 
 \section{Input}
 

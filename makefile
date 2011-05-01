@@ -79,6 +79,25 @@ graphs2print:
 		svg2pdf tmp/$$name.svg tmp/$$name.pdf; \
 	done
 
+graphs2french:
+	SourceGraph tmp/import/Main.hs
+	sed -e "s/\(, \)\?\(fill\)\?color=[^],]*//g" \
+		-e "s/penwidth=[^],]*//g" \
+		tmp/import/SourceGraph/graphs/imports.dot > tmp/imports.dot
+	dot tmp/imports.dot -Tsvg -Grankdir=LR -o tmp/imports.svg \
+		-Gfillcolor=white -Nfillcolor=white -Nfontname=isabella
+	svg2pdf tmp/imports.svg tmp/imports.pdf
+	for file in `ls *.hs`; do \
+		name=$${file%.*}; \
+		SourceGraph tmp/$$name/$$file; \
+		sed -e "s/\(, \)\?\(fill\)\?color=[^],]*//g" \
+			-e "s/penwidth=[^],]*//g" \
+			tmp/$$name/SourceGraph/graphs/codeCW.dot > tmp/$$name.dot; \
+		dot tmp/$$name.dot -Tsvg -Grankdir=LR -o tmp/$$name.svg \
+			-Gfillcolor=white -Nfillcolor=white -Nfontname=isabella; \
+		svg2pdf tmp/$$name.svg tmp/$$name.pdf; \
+	done
+
 
 clean:
 	rm -fr *~ tmp musgen

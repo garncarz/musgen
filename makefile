@@ -21,11 +21,23 @@ hlint:
 
 
 # actually needs also targets graphs1 and graphs2 to be run once before itself
-tex: tmp tmp/song.flow tmp/song.ly
-	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/thesis.lytex
-	cd tmp && lilypond-book --pdf thesis.lytex
-	cd tmp && pdflatex thesis.tex
-	cp tmp/thesis.pdf ./
+pdf: tmp/song.flow tmp/song.ly
+	mkdir -p tmp/pdf
+	sed "s/\\\the\ /\\\article\ /g" thesis.lytex > tmp/pdf/thesis.lytex
+	cp tmp/*.pdf tmp/song.{flow,ly} tmp/pdf/
+	cd tmp/pdf && lilypond-book --pdf thesis.lytex
+	cd tmp/pdf && pdflatex thesis.tex
+	cp tmp/pdf/thesis.pdf ./
+
+html: tmp/song.flow tmp/song.ly
+	mkdir -p tmp/html
+	sed -e "s/\\\the\ /\\\article\ /g" -e "s/% \\\htmltrue/\\\htmltrue/g" \
+		thesis.lytex > tmp/html/thesis.lytex
+	for file in tmp/*.pdf; do \
+		base=$${file##*/}; convert $$file tmp/html/$${base%.*}.png; done
+	cp tmp/song.{flow,ly} tmp/html/
+	cd tmp/html && lilypond-book thesis.lytex
+	cd tmp/html && htlatex thesis.tex 'html,2'
 
 tmp/song.flow:
 	cd tmp && ../musgen -k62 -smajor -b3 -t130 -m4 -ipop -n

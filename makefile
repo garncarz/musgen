@@ -39,11 +39,23 @@ html: tmp/song.flow tmp/song.ly
 	cd tmp/html && lilypond-book thesis.lytex
 	cd tmp/html && htlatex thesis.tex 'html,2'
 
+ppt: tmp/song.ly tmp/song.au
+	mkdir -p tmp/ppt
+	cp -l prezentace.lytex tmp/ppt/
+	cp tmp/imports.pdf tmp/song.{ly,au} tmp/ppt/
+	cd tmp/ppt && lilypond-book --pdf prezentace.lytex
+	cd tmp/ppt && pdflatex prezentace.tex
+	cp tmp/ppt/prezentace.pdf ./
+
 tmp/song.flow:
 	cd tmp && ../musgen -k62 -smajor -b3 -t130 -m4 -ipop -n
 
 tmp/song.ly: tmp/song.flow
 	cd tmp && midi2ly song.midi && convert-ly song-midi.ly > song.ly
+
+tmp/song.au: tmp/song.flow
+	timidity tmp/song.midi -Ou -s 44100 --output-mono --output-16bit \
+		--output-ulaw
 
 graphs1:
 	mkdir -p tmp/import

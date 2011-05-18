@@ -1,0 +1,37 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[IL2]{fontenc}
+\usepackage{multimedia}
+% \usepackage{movie15}
+
+\usetheme{Dresden}
+
+\title[MusGen]{Generování hudebních skladeb počítačem}
+\author{Ondřej Garncarz}
+\institute[VŠB-TUO]{Vysoká škola Báňská --- Technická univerzita Ostrava}
+\date{2011}
+
+\begin{document}
+
+
+\frame{\titlepage}
+
+
+\begin{frame}
+\frametitle{Ukázka}
+\lilypondfile[staffsize=15]{song.ly}
+\sound[inlinesound]{Zvuková ukázka}{song.au}
+% \includemovie[text={Zvuková ukázka}]{}{}{song.mp3}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Implementace}
+\includegraphics[width=\textwidth]{imports}
+\end{frame}
+
+
+\end{document}
+

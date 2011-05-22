@@ -6,7 +6,7 @@
 \usepackage{multimedia}
 % \usepackage{movie15}
 
-\usetheme{Dresden}
+\usetheme{Goettingen}
 
 \title[MusGen]{Generování hudebních skladeb počítačem}
 \author{Ondřej Garncarz}
@@ -19,6 +19,14 @@
 \frame{\titlepage}
 
 
+\section{Myšlenka}
+\begin{frame}
+\frametitle{Myšlenka}
+
+\end{frame}
+
+
+\section{Ukázka}
 \begin{frame}
 \frametitle{Ukázka}
 \lilypondfile[staffsize=15]{song.ly}
@@ -27,6 +35,7 @@
 \end{frame}
 
 
+\section{Implementace}
 \begin{frame}
 \frametitle{Implementace}
 \includegraphics[width=\textwidth]{imports}

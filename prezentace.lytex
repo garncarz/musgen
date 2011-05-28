@@ -4,7 +4,8 @@
 \usepackage[czech]{babel}
 \usepackage[IL2]{fontenc}
 \usepackage{multimedia}
-% \usepackage{movie15}
+\usepackage{multicol}
+\usepackage{pifont}
 
 \usetheme{Goettingen}
 
@@ -12,6 +13,10 @@
 \author{Ondřej Garncarz}
 \institute[VŠB-TUO]{Vysoká škola Báňská --- Technická univerzita Ostrava}
 \date{2011}
+
+\def \good {\item[\ding{51}]}
+\def \bad {\item[\ding{55}]}
+\newcommand{\tack}[1]{\leavevmode$\vcenter{\hbox{#1}}$}
 
 \begin{document}
 
@@ -22,16 +27,65 @@
 \section{Myšlenka}
 \begin{frame}
 \frametitle{Myšlenka}
+\begin{itemize}
+\item Skladba složená z~akordů
+\item Akordy se vyvíjejí a~zároveň neporušují harmonická pravidla
+\item Při interpretaci si jednotlivé nástroje rozebírají harmonii
+\end{itemize}
+\end{frame}
 
+
+\section{Harmonie}
+\begin{frame}
+\frametitle{Pravidla harmonie}
+Vytvářené akordy mají svobodu --- stačí, když neporušují pravidla, např.:
+\begin{multicols}{2}
+\begin{itemize}
+\item Nevybočují z~tóniny:
+	\begin{itemize}
+	\bad \tack \lilypond[fragment, staffsize=12]{<as' c' es'>}
+	\good \tack \lilypond[fragment, staffsize=12]{<d' f' a'>}
+	\end{itemize}
+\item Je uplatněn protipohyb:
+	\begin{itemize}
+	\bad \tack \lilypond[fragment, staffsize=12]{<f' b'> <fis' c''>}
+	\good \tack \lilypond[fragment, staffsize=12]{<f' b'> <e' c''>}
+	\end{itemize}
+\item Je správně veden citlivý tón:
+	\begin{itemize}
+	\bad \tack \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c'>}
+	\good \tack \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c''>}
+	\end{itemize}
+\item Akord nepřesahuje takt:
+	\begin{itemize}
+	\bad \tack \lilypond[fragment, staffsize=12]{<d'' f' a'>1 ~<d'' f' a'>4}
+	\good \tack \lilypond[fragment, staffsize=12]{<d'' f' a'>}
+	\end{itemize}
+\end{itemize}
+\end{multicols}
+\end{frame}
+
+
+\section{Interpretace}
+\begin{frame}
+\frametitle{Interpretace}
+Při interpretaci si jednotlivé nástroje rozebírají harmonii různými způsoby:
+\begin{multicols}{2}
+\begin{itemize}
+\item Původní harmonie:\\ \lilypond[fragment, staffsize=12]{<c' e' g'>4 <e' g' b'>2 <c' f' a'>4}
+\item Kráčející bas:\\ \lilypond[fragment, staffsize=12]{c'8 d' e' f' e' d' c' d'}
+\item Soprán:\\ \lilypond[fragment, staffsize=12]{g'4 b'2 a'4}
+\item Lámané akordy 1--5--10:\\ \lilypond[fragment, staffsize=12]{<c' g'>8 e'' <e' b'> g'' <e' b'> g'' <c' a'> f''}
+\end{itemize}
+\end{multicols}
 \end{frame}
 
 
 \section{Ukázka}
 \begin{frame}
 \frametitle{Ukázka}
-\lilypondfile[staffsize=15]{song.ly}
+\lilypondfile[staffsize=12]{song.ly}
 \sound[inlinesound]{Zvuková ukázka}{song.au}
-% \includemovie[text={Zvuková ukázka}]{}{}{song.mp3}
 \end{frame}
 
 
@@ -39,6 +93,13 @@
 \begin{frame}
 \frametitle{Implementace}
 \includegraphics[width=\textwidth]{imports}
+\end{frame}
+
+
+\section*{}
+\begin{frame}
+\centering
+Konec\\
 \end{frame}
 
 

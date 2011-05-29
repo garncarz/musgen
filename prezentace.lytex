@@ -1,3 +1,4 @@
+\AtBeginDocument{\hypersetup{pdftitle=MusGen}}
 \documentclass{beamer}
 
 \usepackage[utf8]{inputenc}
@@ -7,6 +8,8 @@
 \usepackage{multicol}
 \usepackage{pifont}
 
+\hypersetup{unicode}
+
 \usetheme{Goettingen}
 
 \title[MusGen]{Generování hudebních skladeb počítačem}
@@ -14,9 +17,9 @@
 \institute[VŠB-TUO]{Vysoká škola Báňská --- Technická univerzita Ostrava}
 \date{2011}
 
-\def \good {\item[\ding{51}]}
-\def \bad {\item[\ding{55}]}
 \newcommand{\tack}[1]{\leavevmode$\vcenter{\hbox{#1}}$}
+\def \good {\item[\ding{51}] \hspace{-10pt} \tack}
+\def \bad {\item[\ding{55}] \hspace{-10pt} \tack}
 
 \begin{document}
 
@@ -24,13 +27,24 @@
 \frame{\titlepage}
 
 
+\section{Historie}
+\begin{frame}
+\frametitle{Historie}
+\begin{itemize}
+\item KOFROŇ, Jaroslav. \emph{Učebnice harmonie}. 10.~edice, 2006.
+\item Experimentování s~MIDI a~nástroji LilyPond a~MuseScore, vytvoření několika vlastních skladeb.
+\item Proces tvorby vykazoval určité opakující se jevy, potvrzoval možnost algoritmizace.
+\end{itemize}
+\end{frame}
+
+
 \section{Myšlenka}
 \begin{frame}
 \frametitle{Myšlenka}
 \begin{itemize}
-\item Skladba složená z~akordů
-\item Akordy se vyvíjejí a~zároveň neporušují harmonická pravidla
-\item Při interpretaci si jednotlivé nástroje rozebírají harmonii
+\item Kompozice na harmonickém základu --- skladba složená z~akordů.
+\item Akordy se vyvíjejí a~zároveň neporušují harmonická pravidla.
+\item Při interpretaci si jednotlivé nástroje rozebírají (latentní) harmonii.
 \end{itemize}
 \end{frame}
 
@@ -43,23 +57,23 @@ Vytvářené akordy mají svobodu --- stačí, když neporušují pravidla, nap�
 \begin{itemize}
 \item Nevybočují z~tóniny:
 	\begin{itemize}
-	\bad \tack \lilypond[fragment, staffsize=12]{<as' c' es'>}
-	\good \tack \lilypond[fragment, staffsize=12]{<d' f' a'>}
+	\bad \lilypond[fragment, staffsize=12]{<as' c' es'>}
+	\good \lilypond[fragment, staffsize=12]{<d' f' a'>}
 	\end{itemize}
 \item Je uplatněn protipohyb:
 	\begin{itemize}
-	\bad \tack \lilypond[fragment, staffsize=12]{<f' b'> <fis' c''>}
-	\good \tack \lilypond[fragment, staffsize=12]{<f' b'> <e' c''>}
+	\bad \lilypond[fragment, staffsize=12]{<f' b'> <fis' c''>}
+	\good \lilypond[fragment, staffsize=12]{<f' b'> <e' c''>}
 	\end{itemize}
 \item Je správně veden citlivý tón:
 	\begin{itemize}
-	\bad \tack \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c'>}
-	\good \tack \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c''>}
+	\bad \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c'>}
+	\good \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c''>}
 	\end{itemize}
 \item Akord nepřesahuje takt:
 	\begin{itemize}
-	\bad \tack \lilypond[fragment, staffsize=12]{<d'' f' a'>1 ~<d'' f' a'>4}
-	\good \tack \lilypond[fragment, staffsize=12]{<d'' f' a'>}
+	\bad \lilypond[fragment, staffsize=12]{<d'' f' a'>1 ~<d'' f' a'>4}
+	\good \lilypond[fragment, staffsize=12]{<d'' f' a'>}
 	\end{itemize}
 \end{itemize}
 \end{multicols}
@@ -96,10 +110,24 @@ Při interpretaci si jednotlivé nástroje rozebírají harmonii různými způs
 \end{frame}
 
 
+\section{Závěr}
+\begin{frame}
+\frametitle{Závěr}
+\begin{itemize}
+\item Vytvořen rámec pro generování náhodné hudby, umí již určitá pravidla.
+\item Stránky \url{http://musgen.go.to/}.
+\item V~rámci harmonie možnost uplatnění více pravidel či inspirace různými kulturami.
+\item Melodičnost a~rytmika jsou teprve na začátku.
+\item Možná spolupráce s~Fakultou umění?
+\end{itemize}
+\end{frame}
+
+
 \section*{}
 \begin{frame}
 \centering
 Konec\\
+(prezentace)\\
 \end{frame}
 
 

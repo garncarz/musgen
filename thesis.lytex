@@ -1037,17 +1037,15 @@ Making MusGen was quite a fun and I'm looking forward to extend it and maybe coo
 
 \bibitem{types-hask} Types and Typeclasses. \emph{Learn You a Haskell for Great Good!} [online]. [cited 25th March 2011]. $<$\url{http://learnyouahaskell.com/types-and-typeclasses}$>$.
 
-\bibitem{rnd-hask} Randomness. \emph{Learn You a Haskell for Great Good!} [online]. [cited 24th March 2011]. $<$
-\ifhtml \url{http://learnyouahaskell.com/input-and-output#randomness}
-\else \url{http://learnyouahaskell.com/input-and-output\#randomness}
+\bibitem{rnd-hask} Randomness. \emph{Learn You a Haskell for Great Good!} [online]. [cited 24th March 2011].
+\ifhtml $<$\url{http://learnyouahaskell.com/input-and-output#randomness}$>$.
+\else $<$\url{http://learnyouahaskell.com/input-and-output\#randomness}$>$.
 \fi
-$>$.
 
-\bibitem{normal-wiki} Normal distribution --- Generating values from normal distribution. \emph{Wikipedia, \the free encyclopedia} [online]. [cited 22nd March 2011]. $<$
-\ifhtml \url{http://en.wikipedia.org/wiki/Normal_distribution#Generating_values_from_normal_distribution}
-\else \url{http://en.wikipedia.org/wiki/Normal_distribution\#Generating_values_from_normal_distribution}
+\bibitem{normal-wiki} Normal distribution --- Generating values from normal distribution. \emph{Wikipedia, \the free encyclopedia} [online]. [cited 22nd March 2011].
+\ifhtml $<$\url{http://en.wikipedia.org/wiki/Normal_distribution#Generating_values_from_normal_distribution}$>$.
+\else $<$\url{http://en.wikipedia.org/wiki/Normal_distribution\#Generating_values_from_normal_distribution}$>$.
 \fi
-$>$.
 
 \bibitem{midi-wiki} Musical Instrument Digital Interface. \emph{Wikipedia, \the free encyclopedia} [online]. [cited 18th March 2011]. $<$\url{http://en.wikipedia.org/wiki/Musical_Instrument_Digital_Interface}$>$.
 

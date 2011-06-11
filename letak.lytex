@@ -1,0 +1,76 @@
+\documentclass[landscape, a4paper, fontscale=1]{baposter}
+
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{pifont}
+
+\definecolor{skyblue}{rgb}{0, 0.75, 1}
+
+\newcommand{\tack}[1]{\leavevmode$\vcenter{\hbox{#1}}$}
+\def \good {\item[\ding{51}] \hspace{-10pt} \tack}
+\def \bad {\item[\ding{55}] \hspace{-10pt} \tack}
+
+\begin{document}
+
+\begin{poster}
+{
+	grid=no,
+	bgColorOne=white,
+	bgColorTwo=white,
+	borderColor=skyblue,
+	headerColorOne=black,
+	headerColorTwo=skyblue,
+	headerFontColor=white,
+	textborder=roundedleft,
+	headershape=roundedright,
+	headerborder=closed
+}
+{}
+{MusGen}
+{Ondřej Garncarz}
+{}
+
+\headerbox{Pravidla harmonie}{name=harmonie, column=0, row=0, span=2}{
+Vytvářené akordy mají svobodu --- stačí, když neporušují pravidla, např.:
+\begin{multicols}{2}
+\begin{itemize}
+\item Nevybočují z~tóniny:
+	\begin{itemize}
+	\bad \lilypond[fragment, staffsize=12]{<as' c' es'>}
+	\good \lilypond[fragment, staffsize=12]{<d' f' a'>}
+	\end{itemize}
+\item Je uplatněn protipohyb:
+	\begin{itemize}
+	\bad \lilypond[fragment, staffsize=12]{<f' b'> <fis' c''>}
+	\good \lilypond[fragment, staffsize=12]{<f' b'> <e' c''>}
+	\end{itemize}
+\item Je správně veden citlivý tón:
+	\begin{itemize}
+	\bad \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c'>}
+	\good \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c''>}
+	\end{itemize}
+\item Akord nepřesahuje takt:
+	\begin{itemize}
+	\bad \lilypond[fragment, staffsize=12]{<d'' f' a'>1 ~<d'' f' a'>4}
+	\good \lilypond[fragment, staffsize=12]{<d'' f' a'>}
+	\end{itemize}
+\end{itemize}
+\end{multicols}
+}
+
+\headerbox{Interpretace}{name=interpretace, column=2, row=1, span=2, above=bottom}{
+Při interpretaci si jednotlivé nástroje rozebírají harmonii různými způsoby:
+\begin{multicols}{2}
+\begin{itemize}
+\item Původní harmonie:\\ \lilypond[fragment, staffsize=12]{<c' e' g'>4 <e' g' b'>2 <c' f' a'>4}
+\item Kráčející bas:\\ \lilypond[fragment, staffsize=12]{c'8 d' e' f' e' d' c' d'}
+\item Soprán:\\ \lilypond[fragment, staffsize=12]{g'4 b'2 a'4}
+\item Lámané akordy 1--5--10:\\ \lilypond[fragment, staffsize=12]{<c' g'>8 e'' <e' b'> g'' <e' b'> g'' <c' a'> f''}
+\end{itemize}
+\end{multicols}
+}
+
+\end{poster}
+
+\end{document}
+

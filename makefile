@@ -47,6 +47,14 @@ ppt: tmp/song.ly tmp/song.au
 	cd tmp/ppt && pdflatex prezentace.tex
 	cp tmp/ppt/prezentace.pdf ./
 
+letak:
+	mkdir -p tmp/letak
+	cp -l letak.lytex baposter.cls tmp/letak/
+	cd tmp/letak && lilypond-book --pdf letak.lytex
+	cd tmp/letak && pdflatex letak.tex
+	cp tmp/letak/letak.pdf ./
+
+
 tmp/song.flow:
 	cd tmp && ../musgen -k62 -smajor -b3 -t130 -m4 -ipop -n
 

@@ -1,6 +1,9 @@
-\documentclass[landscape, a4paper, fontscale=1]{baposter}
+\documentclass[landscape, a4paper, fontscale=0.971]{baposter}
 
 \usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[IL2]{fontenc}
+
 \usepackage{multicol}
 \usepackage{pifont}
 
@@ -10,10 +13,17 @@
 \def \good {\item[\ding{51}] \hspace{-10pt} \tack}
 \def \bad {\item[\ding{55}] \hspace{-10pt} \tack}
 
+\newcommand{\colitems}[1]{
+	\begin{multicols}{2} \begin{itemize}
+	#1
+	\end{itemize} \end{multicols}
+}
+
 \begin{document}
 
 \begin{poster}
 {
+	columns=5,
 	grid=no,
 	bgColorOne=white,
 	bgColorTwo=white,
@@ -27,45 +37,68 @@
 }
 {}
 {MusGen}
-{Ondřej Garncarz}
+{Ondřej Garncarz\\ Vysoká škola báňská -- Technická univerzita Ostrava}
 {}
 
-\headerbox{Pravidla harmonie}{name=harmonie, column=0, row=0, span=2}{
-Vytvářené akordy mají svobodu --- stačí, když neporušují pravidla, např.:
-\begin{multicols}{2}
+\headerbox{Cíl}{name=cil, column=0, row=0, span=2}{
 \begin{itemize}
-\item Nevybočují z~tóniny:
-	\begin{itemize}
-	\bad \lilypond[fragment, staffsize=12]{<as' c' es'>}
-	\good \lilypond[fragment, staffsize=12]{<d' f' a'>}
-	\end{itemize}
-\item Je uplatněn protipohyb:
-	\begin{itemize}
-	\bad \lilypond[fragment, staffsize=12]{<f' b'> <fis' c''>}
-	\good \lilypond[fragment, staffsize=12]{<f' b'> <e' c''>}
-	\end{itemize}
-\item Je správně veden citlivý tón:
-	\begin{itemize}
-	\bad \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c'>}
-	\good \lilypond[fragment, staffsize=12]{<g' b' d''> <e' g' c''>}
-	\end{itemize}
-\item Akord nepřesahuje takt:
-	\begin{itemize}
-	\bad \lilypond[fragment, staffsize=12]{<d'' f' a'>1 ~<d'' f' a'>4}
-	\good \lilypond[fragment, staffsize=12]{<d'' f' a'>}
-	\end{itemize}
+\item Naučit počítač vytvářet skladby nenepodobné těm vytvořeným člověkem, důraz na harmonii.
+\item Vychází z~Učebnice harmonie Jaroslava Kofroně a~autorových pokusů s~komponováním.
 \end{itemize}
-\end{multicols}
 }
 
-\headerbox{Interpretace}{name=interpretace, column=2, row=1, span=2, above=bottom}{
+\headerbox{Vstup}{name=vstup, column=0, row=1, span=2, below=cil}{
+\begin{itemize}
+\item Uživatel může upřesnit tóninu, počet dob v~taktu, tempo, minimální délku a~styl interpretace.
+\item Nebo jsou užity náhodné hodnoty.
+\end{itemize}
+}
+
+\headerbox{Výstup}{name=vystup, column=0, row=2, span=2, below=vstup}{
+\begin{itemize}
+\item MIDI soubor obsahující náhodnou skladbu s~požadovanými vlastnostmi.
+\item Textová definice užité harmonie pro opětovné užití.
+\end{itemize}
+}
+
+\headerbox{Ukázka krátké skladby}{name=ukazka, column=2, row=0, span=3, bottomaligned=vystup}{
+\lilypondfile[staffsize=17]{song.ly}
+}
+
+\headerbox{Pravidla harmonie}{name=harmonie, column=0, row=3, span=3, below=vystup}{
+Vytvářené akordy mají svobodu --- stačí, když neporušují pravidla, např.:
+\colitems{
+	\item Nevybočují z~tóniny:
+		\colitems{
+			\bad \lilypond[fragment, staffsize=14]{<as' c' es'>}
+			\good \lilypond[fragment, staffsize=14]{<d' f' a'>}
+		}
+	\item Je uplatněn protipohyb:
+		\colitems{
+			\bad \lilypond[fragment, staffsize=14]{<f' b'> <fis' c''>}
+			\good \lilypond[fragment, staffsize=14]{<f' b'> <e' c''>}
+		}
+	\item Je správně veden citlivý tón:
+		\colitems{
+			\bad \lilypond[fragment, staffsize=14]{<g' b' d''> <e' g' c'>}
+			\good \lilypond[fragment, staffsize=14]{<g' b' d''> <e' g' c''>}
+		}
+	\item Akord nepřesahuje takt:
+		\colitems{
+			\bad \lilypond[fragment, staffsize=14]{<d'' f' a'>1 ~<d'' f' a'>4}
+			\good \lilypond[fragment, staffsize=14]{<d'' f' a'>}
+		}
+}
+}
+
+\headerbox{Interpretace}{name=interpretace, column=3, row=3, span=2, below=ukazka, bottomaligned=harmonie}{
 Při interpretaci si jednotlivé nástroje rozebírají harmonii různými způsoby:
 \begin{multicols}{2}
 \begin{itemize}
-\item Původní harmonie:\\ \lilypond[fragment, staffsize=12]{<c' e' g'>4 <e' g' b'>2 <c' f' a'>4}
-\item Kráčející bas:\\ \lilypond[fragment, staffsize=12]{c'8 d' e' f' e' d' c' d'}
-\item Soprán:\\ \lilypond[fragment, staffsize=12]{g'4 b'2 a'4}
-\item Lámané akordy 1--5--10:\\ \lilypond[fragment, staffsize=12]{<c' g'>8 e'' <e' b'> g'' <e' b'> g'' <c' a'> f''}
+\item Původní harmonie:\\ \lilypond[fragment, staffsize=14]{<c' e' g'>4 <e' g' b'>2 <c' f' a'>4}
+\item Kráčející bas:\\ \lilypond[fragment, staffsize=14]{c'8 d' e' f' e' d' c' d'}
+\item Soprán:\\ \lilypond[fragment, staffsize=14]{g'4 b'2 a'4}
+\item Lámané akordy 1--5--10:\\ \lilypond[fragment, staffsize=14]{<c' g'>8 e'' <e' b'> g'' <e' b'> g'' <c' a'> f''}
 \end{itemize}
 \end{multicols}
 }

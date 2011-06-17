@@ -47,9 +47,10 @@ ppt: tmp/song.ly tmp/song.au
 	cd tmp/ppt && pdflatex prezentace.tex
 	cp tmp/ppt/prezentace.pdf ./
 
-letak:
+letak: tmp/song.ly
 	mkdir -p tmp/letak
-	cp -l letak.lytex baposter.cls tmp/letak/
+	cp -l letak.lytex tmp/letak/
+	cp baposter.cls tmp/song.ly tmp/letak/
 	cd tmp/letak && lilypond-book --pdf letak.lytex
 	cd tmp/letak && pdflatex letak.tex
 	cp tmp/letak/letak.pdf ./

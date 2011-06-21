@@ -42,7 +42,7 @@
 
 \headerbox{Cíl}{name=cil, column=0, row=0, span=2}{
 \begin{itemize}
-\item Naučit počítač vytvářet skladby nenepodobné těm vytvořeným člověkem, důraz na harmonii.
+\item Naučit počítač vytvářet skladby ne nepodobné těm vytvořeným člověkem, důraz na harmonii.
 \item Vychází z~Učebnice harmonie Jaroslava Kofroně a~autorových pokusů s~komponováním.
 \end{itemize}
 }

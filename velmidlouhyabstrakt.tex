@@ -4,6 +4,8 @@
 \usepackage[czech]{babel}
 \usepackage[IL2]{fontenc}
 
+\renewcommand{\baselinestretch}{1.2}
+
 \usepackage[unicode]{hyperref}
 \hypersetup{
 	pdftitle={Abstrakt},
@@ -17,7 +19,32 @@
 \date{}
 \maketitle
 
-Práce se zabývá problémem generování hudby počítačem, která je náhodná, ale zároveň ne příliš odlišná od hudby složené člověkem, dodržující určitá pravidla harmonie a nevykračující do disharmonie. Jsou objasněny některé základní pojmy hudební teorie a následně je popsán vyvinutý algoritmus, jednak obecně a~poté i~v~souvislosti k~implementaci v~jazyku Haskell. Program je srovnán s~jemu podobnými, již existujícími, a~je navržen jeho další možný vývoj.
+\section*{Problém, cíl}
+
+Je odpozorováno, že hudba není záležitostí zcela náhodnou, ale proto, aby byla vnímána jako příjemná a hudební, řídí se určitými pravidly. Tato pravidla jsou důkladně studována a popisována, jako například v~\textsc{Učebnici harmonie} od Jaroslava Kofroně. Cílem této práce je vyvinout algoritmus, který bude produkovat náhodnou hudbu, na základě těchto pravidel.
+
+
+\section*{Výzkum}
+
+S~pomocí uvedené učebnice a~digitálního hudebního formátu MIDI autor pravidla trénoval, jednak se~cvičebnicí, jednak skládáním vlastních skladeb. Základní procvičenou sadu pravidel a~postupy komponování zapsal i~v podobě definic funkcionálního jazyka \textsc{Haskell}, jež společně s~minimem pomocných funkcí a~monád tvoří funkční program.
+
+
+\section*{Obsah práce}
+
+V~textu diplomové práce jsou objasněny některé základní pojmy hudební teorie a následně je popsán vyvinutý algoritmus, jednak obecně a~poté i~v~souvislosti k~implementaci v~jazyku Haskell. Program je srovnán s~jemu podobnými, již existujícími, a~je navržen jeho další možný vývoj.
+
+
+\section*{Přínos}
+
+Jelikož většina čtenářů je zřejmě zběhlá pouze v~jedné oblasti (teorii hudby, či programování), může tato práce pomoci nahlédnout i~do té druhé.
+
+Krom toho byl vytvořen fungující program, jež dokládá, v~závislosti na subjektivní kvalitě hudebního výstupu alespoň částečnou, možnost algoritmizace procesu komponování. Skladby vytvořené programem, jimž je možné pomocí vstupních argumentů nastavit určité vlastnosti, mohou být využity jako základy člověkem složených písní. Program taktéž může posloužit jako softwarový rámec, jež je možné pomocí nových pravidel a~funkcí lehce rozšiřovat, a~tak obohacovat hudební výstup.
+
+
+\section*{Pokračování}
+
+Autor má v~plánu nadále pokračovat se studiem a~experimentováním s~hudební teorií a~komponováním, taktéž s~rozšířováním vyvinutého programu. Tato práce tedy může posloužit k~proškolení zájemců o~spolupráci.
+
 
 \end{document}
 

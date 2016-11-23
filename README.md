@@ -1,4 +1,7 @@
-# [Generating Music Compositions by a Computer](http://garncarz.cz/musgen)
+# Generating Music Compositions by a Computer
+
+[<img src="https://garncarz.github.io/musgen-haskell/song.png" alt="Sample of a produced short song" align="right">](https://garncarz.github.io/musgen-haskell/song.ogg)
+
 
 ## Abstract
 
@@ -26,3 +29,10 @@ You need to use the command line (`cmd.exe`).
 Help: `musgen -?`
 
 Generating a song (with example parameters): `musgen -k62 -smajor -b3 -t130 -m4 -ipop`
+
+
+## Files
+
+[Thesis](https://garncarz.github.io/musgen-haskell/thesis.pdf)
+
+[Presentation](https://garncarz.github.io/musgen-haskell/prezentace.pdf) (only in Czech)

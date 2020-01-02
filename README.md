@@ -36,3 +36,6 @@ Generating a song (with example parameters): `musgen -k62 -smajor -b3 -t130 -m4 
 [Thesis](https://garncarz.github.io/musgen-haskell/thesis.pdf)
 
 [Presentation](https://garncarz.github.io/musgen-haskell/prezentace.pdf) (only in Czech)
+
+
+<!-- ❄️ Hello to the GitHub Archive! ❄️ -->
